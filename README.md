@@ -1,2 +1,4 @@
-# status-list
-Tracking digests and other related bits and pieces
+StatusList
+==========
+
+A Symfony project created on July 11, 2016, 6:12 pm.
