@@ -5,6 +5,9 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\AddPaperType;
+use AppBundle\Entity\AddPaper;
+use AppBundle\Entity\Paper;
 
 class DefaultController extends Controller
 {
@@ -26,26 +29,42 @@ class DefaultController extends Controller
      */
     public function showListAction(Request $request)
     {
+
+
+        $paper = new Paper;
+        $form = $this->createForm(AddPaperType::class, $paper);
+        $em = $this->getDoctrine()->getManager();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($paper);
+            $em->flush();
+
+            // ... perform some action, such as saving the task to the database
+
+            //return $this->redirectToRoute('task_success');
+        }
+
+        $papers = $em->getRepository(Paper::class)->findAll();
+
+
         return $this->render('papers/index.html.twig', [
-            'papers' => [[
-                'manNo' => 12342,
-                'corrAuth' => 'Smith',
-                'paperType' => 'TR',
-                'subArea1' => 'BIOCHEM',
-                'subArea2' => 'BIOPHYS'
-            ], [
-                'manNo' => 17945,
-                'corrAuth' => 'Jones',
-                'paperType' => 'RA',
-                'subArea1' => 'NEURO',
-                'subArea2' => 'CELL'
-            ], [
-                'manNo' => 16111,
-                'corrAuth' => 'McDougal',
-                'paperType' => 'SR',
-                'subArea1' => 'PLANT',
-                'subArea2' => 'EPI'
-            ]]
+            'papers' => $papers,
+            'form' => $form->createView(),
+            'addPaper' => $paper
+
+
         ]);
+    }
+
+    /**
+     * Creates form for updating list of papers
+     * @Route("/addpaper", name="addpaper")
+     */
+    public function AddPaper()
+    {
+
+        return $this->render('papers/index.html.twig', array());
     }
 }

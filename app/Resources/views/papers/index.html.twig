@@ -14,18 +14,25 @@
                 <th>Subject Area</th>
             </tr>
             {% for paper in papers %}
-                <tr><td>{{ paper.manNo }}</td>
-                    <td>{{ paper.corrAuth }}</td>
-                    <td>{{ paper.paperType }}</td>
-                    <td>{{ paper.subArea1 }}</td>
-                    <td>{{ paper.subArea2 }}</td>
+                <tr><td>{{ paper.manuscriptNo }}</td>
+                    <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.subjectArea1 }}</td>
+                    <td>{{ paper.subjectArea2 }}</td>
                 </tr>
             {% endfor %}
 
         </table>
     </div>
 
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    {{ dump(addPaper) }}
 {% endblock %}
+
+
 
 {% block stylesheets %}
     <style>
