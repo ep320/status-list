@@ -1,0 +1,22 @@
+{
+  "name": "statusbase",
+  "homepage": "https://github.com/ep320/statusbase",
+  "authors": [
+    "ep320 <ep320cam@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
