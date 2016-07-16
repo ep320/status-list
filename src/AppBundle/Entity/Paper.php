@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="paper")
  */
-
 class Paper
 {
     /**
@@ -38,12 +37,18 @@ class Paper
     private $articleType;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\ManyToOne(targetEntity="SubjectArea", inversedBy="primaryPapers")
+     * @ORM\JoinColumn(name="subject_area1", referencedColumnName="code", nullable=false)
+     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
+     * @Assert\Valid()
      */
     private $subjectArea1;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=true)
+     * @ORM\ManyToOne(targetEntity="SubjectArea", inversedBy="secondaryPapers")
+     * @ORM\JoinColumn(name="subject_area2", referencedColumnName="code")
+     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
+     * @Assert\Valid()
      */
     private $subjectArea2;
 
