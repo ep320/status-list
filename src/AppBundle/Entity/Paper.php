@@ -2,6 +2,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity
@@ -28,7 +30,10 @@ class Paper
     private $correspondingAuthor;
 
     /**
-     * @ORM\Column(type="string", length=3)
+     * @ORM\ManyToOne(targetEntity="ArticleType", inversedBy="papers")
+     * @ORM\JoinColumn(name="article_type", referencedColumnName="code", nullable=false)
+     * @Assert\Type(type="AppBundle\Entity\ArticleType")
+     * @Assert\Valid()
      */
     private $articleType;
 
