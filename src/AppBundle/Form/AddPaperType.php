@@ -1,7 +1,6 @@
 <?php
 namespace AppBundle\Form;
 
-use AppBundle\AppBundle;
 use AppBundle\Entity\ArticleType;
 use AppBundle\Entity\SubjectArea;
 use Symfony\Component\Form\AbstractType;
@@ -27,11 +26,11 @@ class AddPaperType extends AbstractType
             ->
             add('subjectArea1', EntityType::class, array(
                 'class' => SubjectArea::class,
-                'choice_label' => 'code'
+                'choice_label' => 'description'
             ))
             ->add('subjectArea2', EntityType::class, array(
                 'class' => SubjectArea::class,
-                'choice_label' => 'code'
+                'choice_label' => 'description'
             ))
             ->add('save', SubmitType::class);
     }

@@ -44,15 +44,18 @@ class ImportCommand extends ContainerAwareCommand
             $matches = [];
             preg_match('#([A-Z]+)-\w+-([0-9]{5})#', $row['MS Tracking No.'], $matches);
 
+            $subjectArea = $em->getRepository(SubjectArea::class)
+                ->findOneBy(['description' => $row['Major Subject Area(s)']]);
+
             if (array_key_exists(intval($matches[2]), $newPapers)) {
-                $newPapers[intval($matches[2])]->setSubjectArea2($em->getReference(SubjectArea::class, $row['Major Subject Area(s)']));
+                $newPapers[intval($matches[2])]->setSubjectArea2($subjectArea);
                 continue;
             }
             $newPaper = new Paper;
             $newPaper->setArticleType($em->getReference(ArticleType::class, $matches[1]));
             $newPaper->setManuscriptNo(intval($matches[2]));
             $newPaper->setCorrespondingAuthor($row['Corresponding Author']);
-            $newPaper->setSubjectArea1($em->getReference(SubjectArea::class, $row['Major Subject Area(s)']));
+            $newPaper->setSubjectArea1($subjectArea);
             $newPapers[$newPaper->getManuscriptNo()] = $newPaper;
             $em->persist($newPaper);
         }

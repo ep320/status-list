@@ -14,7 +14,8 @@
                 <th>Subject Area</th>
             </tr>
             {% for paper in papers %}
-                <tr><td>{{ paper.manuscriptNo }}</td>
+                <tr>
+                    <td>{{ paper.manuscriptNo }}</td>
                     <td>{{ paper.correspondingAuthor }}</td>
                     <td>{{ paper.articleType }}</td>
                     <td>{{ paper.subjectArea1 }}</td>

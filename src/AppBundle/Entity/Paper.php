@@ -38,7 +38,7 @@ class Paper
 
     /**
      * @ORM\ManyToOne(targetEntity="SubjectArea", inversedBy="primaryPapers")
-     * @ORM\JoinColumn(name="subject_area1", referencedColumnName="code", nullable=false)
+     * @ORM\JoinColumn(name="subject_area1", referencedColumnName="id", nullable=false)
      * @Assert\Type(type="AppBundle\Entity\SubjectArea")
      * @Assert\Valid()
      */
@@ -46,7 +46,7 @@ class Paper
 
     /**
      * @ORM\ManyToOne(targetEntity="SubjectArea", inversedBy="secondaryPapers")
-     * @ORM\JoinColumn(name="subject_area2", referencedColumnName="code")
+     * @ORM\JoinColumn(name="subject_area2", referencedColumnName="id")
      * @Assert\Type(type="AppBundle\Entity\SubjectArea")
      * @Assert\Valid()
      */

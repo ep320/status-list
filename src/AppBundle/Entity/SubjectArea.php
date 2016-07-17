@@ -13,10 +13,16 @@ class SubjectArea
 {
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="integer")
      * @ORM\Id
      */
-    private $code;
+    private $id;
+
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=100)
+     */
+    private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Paper", mappedBy="subjectArea1")
@@ -37,17 +43,37 @@ class SubjectArea
     /**
      * @return mixed
      */
-    public function getCode()
+    public function getId()
     {
-        return $this->code;
+        return $this->id;
     }
 
     /**
-     * @param mixed $code
+     * @param mixed $id
+     * @return SubjectArea
      */
-    public function setCode($code)
+    public function setId($id)
     {
-        $this->code = $code;
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     * @return SubjectArea
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
     }
 
     /**
@@ -60,10 +86,12 @@ class SubjectArea
 
     /**
      * @param mixed $primaryPapers
+     * @return SubjectArea
      */
     public function setPrimaryPapers($primaryPapers)
     {
         $this->primaryPapers = $primaryPapers;
+        return $this;
     }
 
     /**
@@ -76,11 +104,14 @@ class SubjectArea
 
     /**
      * @param mixed $secondaryPapers
+     * @return SubjectArea
      */
     public function setSecondaryPapers($secondaryPapers)
     {
         $this->secondaryPapers = $secondaryPapers;
+        return $this;
     }
+
 
     public function getPapers()
     {
@@ -90,7 +121,7 @@ class SubjectArea
 
     public function __toString()
     {
-        return $this->getCode();
+        return $this->getDescription();
     }
 
 }
