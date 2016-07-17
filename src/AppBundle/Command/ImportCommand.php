@@ -54,7 +54,7 @@ class ImportCommand extends ContainerAwareCommand
             $newPaper = new Paper;
             $newPaper->setArticleType($em->getReference(ArticleType::class, $matches[1]));
             $newPaper->setManuscriptNo(intval($matches[2]));
-            $newPaper->setCorrespondingAuthor($row['Corresponding Author']);
+            $newPaper->setCorrespondingAuthor(html_entity_decode($row['Corresponding Author']));
             $newPaper->setSubjectArea1($subjectArea);
             $newPapers[$newPaper->getManuscriptNo()] = $newPaper;
             $em->persist($newPaper);
