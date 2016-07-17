@@ -24,8 +24,31 @@ class ImportCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $papersFromCSV = $this->parseCSV($input->getArgument('filename'));
+        $output->writeln(sprintf('There are <info>%d</info> papers', count($papersFromCSV)));
+        /**
+         * @var $em EntityManager
+         */
+        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+
+        /**
+         * @var $paperFromCSV Paper
+         */
+        foreach ($papersFromCSV as $paperFromCSV) {
+            $output->writeln(sprintf('Handling paper <info>%05d</info>', $paperFromCSV->getManuscriptNo()));
+            if ($em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $paperFromCSV->getManuscriptNo()])) {
+                $output->writeln(sprintf('Paper <info>%05d</info> is present and correct', $paperFromCSV->getManuscriptNo()));
+            } else {
+                $output->writeln(sprintf('Adding <info>%05d</info> to table', $paperFromCSV->getManuscriptNo()));
+                $em->persist($paperFromCSV);
+            }
+        }
+        $em->flush();
+    }
+
+    protected function parseCSV($filename)
+    {
         ini_set('auto_detect_line_endings', true);
-        $filename = $input->getArgument('filename');
         if (!file_exists($filename)) {
             throw new \Exception('File not found');
         }
@@ -57,10 +80,7 @@ class ImportCommand extends ContainerAwareCommand
             $newPaper->setCorrespondingAuthor(html_entity_decode($row['Corresponding Author']));
             $newPaper->setSubjectArea1($subjectArea);
             $newPapers[$newPaper->getManuscriptNo()] = $newPaper;
-            $em->persist($newPaper);
         }
-        $em->flush();
-        //$contents=file_get_contents($filename);
-        $output->writeln($reader->getColumnHeaders());
+        return $newPapers;
     }
 }
