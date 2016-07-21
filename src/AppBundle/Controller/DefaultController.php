@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\AddPaperType;
 use AppBundle\Entity\AddPaper;
@@ -51,8 +53,22 @@ class DefaultController extends Controller
                 'Your changes were saved!'
             );
 
-            var_dump($ejpImportForm->get('ejpImport')->getData());
-
+            $csvParser = new CSVParser($em);
+            /**
+             * @var $uploadedFile UploadedFile
+             **/
+            $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
+            $csvPapers = $csvParser->parseCSV($uploadedFile->openFile());
+            /**
+             * @var $paperFromCSV Paper
+             */
+            foreach ($csvPapers as $paperFromCSV) {
+                if ($em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $paperFromCSV->getManuscriptNo()])) {
+                } else {
+                    $em->persist($paperFromCSV);
+                }
+            }
+            $em->flush();
         }
 
 
@@ -91,6 +107,6 @@ class DefaultController extends Controller
         $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
 
         return $this->render('papers/paper.html.twig',
-            ['paper'=> $paper]);
+            ['paper' => $paper]);
     }
 }

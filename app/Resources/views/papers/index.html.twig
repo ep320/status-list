@@ -20,7 +20,11 @@
             </tr>
             {% for paper in papers %}
                 <tr>
-                    <td>{{ paper.manuscriptNo }}</td>
+                    <td>
+                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                            {{ paper.manuscriptNo }}
+                        </a>
+                    </td>
                     <td>{{ paper.correspondingAuthor }}</td>
                     <td>{{ paper.articleType }}</td>
                     <td>{{ paper.subjectArea1 }}</td>
