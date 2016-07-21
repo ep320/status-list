@@ -1,26 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for flash_message in app.session.flashBag.get('notice') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
     <div id="title">
-        <h1>Statusbase</h1>
+        <h1>Statusbase: Paper {{ paper.manuscriptNo }}</h1>
     </div>
     <div id="table">
         <table class="table table-condensed table-responsive">
             <tr>
-                <th>Manuscript No.</th>
                 <th>Author</th>
                 <th>Article Type</th>
                 <th>Subject Area</th>
                 <th>Subject Area</th>
             </tr>
-            {% for paper in papers %}
+            {% for field in paper.manuscriptNo %}
+
                 <tr>
-                    <td>{{ paper.manuscriptNo }}</td>
                     <td>{{ paper.correspondingAuthor }}</td>
                     <td>{{ paper.articleType }}</td>
                     <td>{{ paper.subjectArea1 }}</td>
@@ -31,13 +25,6 @@
         </table>
     </div>
 
-    {{ form_start(addPaperForm) }}
-    {{ form_widget(addPaperForm) }}
-    {{ form_end(addPaperForm) }}
-
-    {{ form_start(ejpImportForm) }}
-    {{ form_widget(ejpImportForm) }}
-    {{ form_end(ejpImportForm) }}
 {% endblock %}
 
 

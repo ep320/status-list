@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\EJPImportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,31 +33,42 @@ class DefaultController extends Controller
 
 
         $paper = new Paper;
-        $form = $this->createForm(AddPaperType::class, $paper);
+        $ejpImportForm = $this->createForm(EJPImportType::class);
+        $addPaperForm = $this->createForm(AddPaperType::class, $paper);
         $em = $this->getDoctrine()->getManager();
 
-        $form->handleRequest($request);
+        $addPaperForm->handleRequest($request);
+        $ejpImportForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($addPaperForm->isSubmitted() && $addPaperForm->isValid()) {
             $em->persist($paper);
             $em->flush();
-
-            // ... perform some action, such as saving the task to the database
-
-            //return $this->redirectToRoute('task_success');
         }
+
+        if ($ejpImportForm->isSubmitted() && $ejpImportForm->isValid()) {
+            $this->addFlash(
+                'notice',
+                'Your changes were saved!'
+            );
+
+            var_dump($ejpImportForm->get('ejpImport')->getData());
+
+        }
+
 
         $papers = $em->getRepository(Paper::class)->findAll();
 
 
         return $this->render('papers/index.html.twig', [
             'papers' => $papers,
-            'form' => $form->createView(),
+            'addPaperForm' => $addPaperForm->createView(),
+            'ejpImportForm' => $ejpImportForm->createView(),
             'addPaper' => $paper
 
 
         ]);
     }
+
 
     /**
      * Creates form for updating list of papers
@@ -66,5 +78,19 @@ class DefaultController extends Controller
     {
 
         return $this->render('papers/index.html.twig', array());
+    }
+
+    /**
+     * Shows details of one paper
+     *
+     * @Route("/papers/{manuscriptNo}", requirements={"manuscriptNo"="\d+"}, name="paperdetails")
+     */
+    public function showPaperAction($manuscriptNo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
+
+        return $this->render('papers/paper.html.twig',
+            ['paper'=> $paper]);
     }
 }
