@@ -46,8 +46,7 @@ class RebuildCommand extends ContainerAwareCommand
             $output->writeln(sprintf('Handling event <comment>%s</comment> on paper <comment>%s</comment> (<comment>%s</comment>)',
                 get_class($event),
                 $event->getPaperId(),
-                $event->getTime()->format('d-m-Y H:i:s'),
-                json_encode($event->getPayload())
+                $event->getTime()->format('d-m-Y H:i:s')
             ));
             $output->writeln(sprintf('    : %s',
                 json_encode($event->getPayload())
