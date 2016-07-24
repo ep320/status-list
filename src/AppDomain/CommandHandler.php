@@ -2,38 +2,80 @@
 
 namespace AppDomain;
 
-use AppDomain\Command\AddCommentCommand;
-use AppDomain\Command\AddPaper;
+use AppDomain\Command\AddPaperManually;
+use AppDomain\Command\ImportPaperDetails;
 use AppDomain\Event\PaperAdded;
+use AppDomain\Event\PaperEvent;
+use Doctrine\ORM\EntityManager;
 
 class CommandHandler {
     /**
-     * @var EventPublisher;
+     * @var EntityManager
      */
-    private $eventPublisher;
+    private $entityManager;
 
-    public function __construct(EventPublisher $eventPublisher) {
-        $this->eventPublisher = $eventPublisher;
+    public function __construct(EntityManager $entityManager) {
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * Validate an AddPaper command, and publish PaperAdded on success
      *
-     * @param AddPaper $command
      */
-    public function addPaper(AddPaper $command) {
+    private function findByManuscriptNo(int $manuscriptNo) {
+        $this->entityManager->
+    }
+
+    /**
+     * Validate an AddPaperManually command, and publish PaperAdded on success
+     *
+     * @param AddPaperManually $command
+     */
+    public function addPaperManually(AddPaperManually $command) {
         
         $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2);
-        $subjectAreas[] = $command->subjectArea2;
+        if ($command->subjectArea2){
+            $subjectAreas[] = $command->subjectArea2;
+        }
 
         $event = (new PaperAdded(
             $command->manuscriptNo,
             $command->correspondingAuthor,
             $command->articleType,
-            $subjectAreas
+            $subjectAreas,
+            'Manual'
         ));
 
-        $this->eventPublisher->publish($event);
+        $this->publish($event);
+
+    }
+
+    /**
+     * Validate an ImportPaperDetails command, and publish PaperAdded on success
+     *
+     * @param ImportPaperDetails $command
+     */
+    public function importPaperDetails (ImportPaperDetails $command) {
+
+        $subjectAreas = [$command->subjectArea1];
+        if ($command->subjectArea2){
+            $subjectAreas[] = $command->subjectArea2;
+        }
+
+        $event = (new PaperAdded(
+            $command->manuscriptNo,
+            $command->correspondingAuthor,
+            $command->articleType,
+            $subjectAreas,
+            'Imported'
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public function publish(PaperEvent $event) {
+        $this->entityManager->persist($event);
+        $this->entityManager->flush($event);
+        return;
     }
 }

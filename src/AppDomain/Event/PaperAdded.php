@@ -19,13 +19,14 @@ class PaperAdded extends PaperEvent {
      * @param ArticleType $articleType
      * @param SubjectArea[] $subjectAreas
      */
-    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, array $subjectAreas = [])
+    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, array $subjectAreas = [], string $source)
     {
         parent::__construct(Uuid::uuid4(), 1, [
             'manuscriptNo' => $manuscriptNo,
             'author' => $author,
             'articleTypeCode' => $articleType->getCode(),
-            'subjectAreaIds'=> array_map(function (SubjectArea $subjectArea) { return $subjectArea->getId(); }, $subjectAreas)
+            'subjectAreaIds'=> array_map(function (SubjectArea $subjectArea) { return $subjectArea->getId(); }, $subjectAreas),
+            'source'=> $source
         ]);
     }
 

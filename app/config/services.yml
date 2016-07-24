@@ -4,14 +4,10 @@ parameters:
 #    parameter_name: value
 
 services:
-    event_publisher:
-        class: AppDomain\EventPublisher
-        arguments:
-            - "@doctrine.orm.events_entity_manager"
     command_handler:
         class: AppDomain\CommandHandler
         arguments:
-            - "@event_publisher"
+            - "@doctrine.orm.events_entity_manager"
     paper_repository:
         class: Doctrine\ORM\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]

@@ -3,7 +3,7 @@ namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddPaper
+class ImportPaperDetails
 {
     /**
      *
