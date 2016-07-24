@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppDomain\Command\AddCommentCommand;
+use AppDomain\CommandHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\AddPaperType;
-use AppBundle\Entity\AddPaper;
+use AppDomain\Command\AddPaperManually;
 use AppBundle\Entity\Paper;
 
 class DefaultController extends Controller
@@ -31,14 +33,14 @@ class DefaultController extends Controller
     {
 
 
-        $paper = new Paper;
-        $form = $this->createForm(AddPaperType::class, $paper);
+        $addPaperCommand = new AddPaperManually();
+        $form = $this->createForm(AddPaperType::class, $addPaperCommand);
         $em = $this->getDoctrine()->getManager();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($paper);
+            $this->getCommandHandler()->addPaperManually($addPaperCommand);
             $em->flush();
 
             // ... perform some action, such as saving the task to the database
@@ -52,19 +54,17 @@ class DefaultController extends Controller
         return $this->render('papers/index.html.twig', [
             'papers' => $papers,
             'form' => $form->createView(),
-            'addPaper' => $paper
+            'addPaper' => $addPaperCommand
 
 
         ]);
     }
 
     /**
-     * Creates form for updating list of papers
-     * @Route("/addpaper", name="addpaper")
+     * @return CommandHandler;
      */
-    public function AddPaper()
+    private function getCommandHandler()
     {
-
-        return $this->render('papers/index.html.twig', array());
+        return $this->get('command_handler');
     }
 }
