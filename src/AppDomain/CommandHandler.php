@@ -9,13 +9,15 @@ use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
-class CommandHandler {
+class CommandHandler
+{
     /**
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
@@ -25,13 +27,14 @@ class CommandHandler {
      * @param int $manuscriptNo
      * @return bool
      */
-    private function doesPaperExist(int $manuscriptNo) {
+    private function doesPaperExist(int $manuscriptNo)
+    {
         /**
          * @var $result \PDOStatement
          */
         $result = $this->entityManager->getConnection()->executeQuery(
-            'select * from paper_event where json_contains(payload, ?)',
-            [json_encode(['manuscriptNo'=>$manuscriptNo])]
+            'SELECT * FROM paper_event WHERE json_contains(payload, ?)',
+            [json_encode(['manuscriptNo' => $manuscriptNo])]
         );
 
         return $result->fetch() !== false;
@@ -42,16 +45,16 @@ class CommandHandler {
      *
      * @param AddPaperManually $command
      */
-    public function addPaperManually(AddPaperManually $command) {
+    public function addPaperManually(AddPaperManually $command)
+    {
 
-        if ($this->doesPaperExist($command->manuscriptNo))
-        {
+        if ($this->doesPaperExist($command->manuscriptNo)) {
             throw new \Exception('A paper with this manuscript no. is already in statusbase');
         }
 
-        
+
         $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2){
+        if ($command->subjectArea2) {
             $subjectAreas[] = $command->subjectArea2;
         }
 
@@ -72,10 +75,14 @@ class CommandHandler {
      *
      * @param ImportPaperDetails $command
      */
-    public function importPaperDetails (ImportPaperDetails $command) {
+    public function importPaperDetails(ImportPaperDetails $command)
+    {
+        if ($this->doesPaperExist($command->manuscriptNo)) {
+            return;
+        }
 
         $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2){
+        if ($command->subjectArea2) {
             $subjectAreas[] = $command->subjectArea2;
         }
 
@@ -91,7 +98,8 @@ class CommandHandler {
 
     }
 
-    public function publish(PaperEvent $event) {
+    public function publish(PaperEvent $event)
+    {
         $this->entityManager->persist($event);
         $this->entityManager->flush($event);
         return;

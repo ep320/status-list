@@ -2,9 +2,11 @@
 
 namespace AppBundle\EJPImport;
 
+use AppBundle\Command\ImportCommand;
 use AppBundle\Entity\ArticleType;
 use AppBundle\Entity\Paper;
 use AppBundle\Entity\SubjectArea;
+use AppDomain\Command\ImportPaperDetails;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 
@@ -28,7 +30,7 @@ class CSVParser {
         $reader = new CsvReader($file);
         $reader->setStrict(false);
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);
-        $newPapers = [];
+        $importCommands = [];
 
         /**
          * @var $em EntityManager
@@ -42,18 +44,18 @@ class CSVParser {
             $subjectArea = $em->getRepository(SubjectArea::class)
                 ->findOneBy(['description' => $row['Major Subject Area(s)']]);
 
-            if (array_key_exists(intval($matches[2]), $newPapers)) {
-                $newPapers[intval($matches[2])]->setSubjectArea2($subjectArea);
+            if (array_key_exists(intval($matches[2]), $importCommands)) {
+                $importCommands[intval($matches[2])]->subjectArea2 = $subjectArea;
                 continue;
             }
-            $newPaper = new Paper;
-            $newPaper->setArticleType($em->getReference(ArticleType::class, $matches[1]));
-            $newPaper->setManuscriptNo(intval($matches[2]));
-            $newPaper->setCorrespondingAuthor(html_entity_decode($row['Corresponding Author']));
-            $newPaper->setSubjectArea1($subjectArea);
-            $newPapers[$newPaper->getManuscriptNo()] = $newPaper;
+            $importCommand = new ImportPaperDetails();
+            $importCommand->manuscriptNo = intval($matches[2]);
+            $importCommand->articleType = $em->getReference(ArticleType::class, $matches[1]);
+            $importCommand->correspondingAuthor = html_entity_decode($row['Corresponding Author']);
+            $importCommand->subjectArea1 = $subjectArea;
+            $importCommands[$importCommand->manuscriptNo] = $importCommand;
         }
-        return $newPapers;
+        return $importCommands;
     }
 
 }

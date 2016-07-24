@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppDomain\Command\ImportPaperDetails;
 use AppDomain\CommandHandler;
 use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
@@ -59,15 +60,12 @@ class DefaultController extends Controller
              * @var $uploadedFile UploadedFile
              **/
             $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
-            $csvPapers = $csvParser->parseCSV($uploadedFile->openFile());
+            $importCommands = $csvParser->parseCSV($uploadedFile->openFile());
             /**
-             * @var $paperFromCSV Paper
+             * @var $importCommand ImportPaperDetails
              */
-            foreach ($csvPapers as $paperFromCSV) {
-                if ($em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $paperFromCSV->getManuscriptNo()])) {
-                } else {
-                    $em->persist($paperFromCSV);
-                }
+            foreach ($importCommands as $importCommand) {
+                $this->getCommandHandler()->importPaperDetails($importCommand);
             }
             $em->flush();
         }
