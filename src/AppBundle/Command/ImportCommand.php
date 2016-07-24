@@ -26,7 +26,12 @@ class ImportCommand extends ContainerAwareCommand
          */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $csvParser = new CSVParser($em);
-        $papersFromCSV = $csvParser->parseCSV($input->getArgument('filename'));
+        $filename = $input->getArgument('filename');
+        if (!file_exists($filename)) {
+            throw new \Exception('File not found');
+        }
+        $file = new \SplFileObject($filename);
+        $papersFromCSV = $csvParser->parseCSV($file);
         $output->writeln(sprintf('There are <info>%d</info> papers', count($papersFromCSV)));
 
         /**

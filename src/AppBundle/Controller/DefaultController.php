@@ -2,10 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppDomain\Command\AddCommentCommand;
 use AppDomain\CommandHandler;
+use AppBundle\EJPImport\CSVParser;
+use AppBundle\Form\EJPImportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\AddPaperType;
 use AppDomain\Command\AddPaperManually;
@@ -34,18 +36,40 @@ class DefaultController extends Controller
 
 
         $addPaperCommand = new AddPaperManually();
-        $form = $this->createForm(AddPaperType::class, $addPaperCommand);
+        $addPaperForm = $this->createForm(AddPaperType::class, $addPaperCommand);
+        $ejpImportForm = $this->createForm(EJPImportType::class);
         $em = $this->getDoctrine()->getManager();
 
-        $form->handleRequest($request);
+        $addPaperForm->handleRequest($request);
+        $ejpImportForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($addPaperForm->isSubmitted() && $addPaperForm->isValid()) {
             $this->getCommandHandler()->addPaperManually($addPaperCommand);
             $em->flush();
+        }
 
-            // ... perform some action, such as saving the task to the database
+        if ($ejpImportForm->isSubmitted() && $ejpImportForm->isValid()) {
+            $this->addFlash(
+                'notice',
+                'Your changes were saved!'
+            );
 
-            //return $this->redirectToRoute('task_success');
+            $csvParser = new CSVParser($em);
+            /**
+             * @var $uploadedFile UploadedFile
+             **/
+            $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
+            $csvPapers = $csvParser->parseCSV($uploadedFile->openFile());
+            /**
+             * @var $paperFromCSV Paper
+             */
+            foreach ($csvPapers as $paperFromCSV) {
+                if ($em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $paperFromCSV->getManuscriptNo()])) {
+                } else {
+                    $em->persist($paperFromCSV);
+                }
+            }
+            $em->flush();
         }
 
         $papers = $em->getRepository(Paper::class)->findAll();
@@ -53,7 +77,8 @@ class DefaultController extends Controller
 
         return $this->render('papers/index.html.twig', [
             'papers' => $papers,
-            'form' => $form->createView(),
+            'addPaperForm' => $addPaperForm->createView(),
+            'ejpImportForm' => $ejpImportForm->createView(),
             'addPaper' => $addPaperCommand
 
 
@@ -66,5 +91,19 @@ class DefaultController extends Controller
     private function getCommandHandler()
     {
         return $this->get('command_handler');
+    }
+
+    /**
+     * Shows details of one paper
+     *
+     * @Route("/papers/{manuscriptNo}", requirements={"manuscriptNo"="\d+"}, name="paperdetails")
+     */
+    public function showPaperAction($manuscriptNo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
+
+        return $this->render('papers/paper.html.twig',
+            ['paper' => $paper]);
     }
 }

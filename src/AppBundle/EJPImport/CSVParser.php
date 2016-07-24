@@ -18,15 +18,13 @@ class CSVParser {
     public function __construct(EntityManager $em)
     {
         $this->em=$em;
+        ini_set('auto_detect_line_endings', true);
+
     }
 
-    public function parseCSV($filename)
+    public function parseCSV(\SplFileObject $file)
     {
-        ini_set('auto_detect_line_endings', true);
-        if (!file_exists($filename)) {
-            throw new \Exception('File not found');
-        }
-        $file = new \SplFileObject($filename);
+
         $reader = new CsvReader($file);
         $reader->setStrict(false);
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);

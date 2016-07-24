@@ -1,47 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for flash_message in app.session.flashBag.get('notice') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
     <div id="title">
-        <h1>Statusbase</h1>
+        <h1>Statusbase: Paper {{ paper.manuscriptNo }}</h1>
     </div>
-    <div id="table">
-        <table class="table table-condensed table-responsive">
-            <tr>
-                <th>Manuscript No.</th>
-                <th>Author</th>
-                <th>Article Type</th>
-                <th>Subject Area</th>
-                <th>Subject Area</th>
-            </tr>
-            {% for paper in papers %}
-                <tr>
-                    <td>
-                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
-                            {{ paper.manuscriptNo }}
-                        </a>
-                    </td>
-                    <td>{{ paper.correspondingAuthor }}</td>
-                    <td>{{ paper.articleType }}</td>
-                    <td>{{ paper.subjectArea1 }}</td>
-                    <td>{{ paper.subjectArea2 }}</td>
-                </tr>
-            {% endfor %}
+    <div id="list">
+        <ul class="ul list-group">
+            <li class="list-group-item">
+                <span class="label label-default label-pill pull-xs-left">Author</span>
+                {{ paper.correspondingAuthor }}</li>
+            <li class="list-group-item">
+                <span class="label label-default label-pill pull-xs-left">Article Type</span>
+                {{ paper.articleType }}</li>
 
-        </table>
+            <li class="list-group-item">
+                <span class="label label-default label-pill pull-xs-left">Subject Areas</span>
+                {{ paper.subjectArea1 }} {{ paper.subjectArea2 }}</li>
+            <li class="list-group-item">
+                <h3>
+                    <small>Author</small> {{ paper.correspondingAuthor }}</h3>
+            </li>
+            <li class="list-group-item">
+                <h3>
+                    <small>Article Type</small> {{ paper.articleType }}</h3>
+            </li>
+            <li class="list-group-item">
+                <h3>
+                    <small>Subject Area</small> <ul><li>{{ paper.subjectArea1 }}</li><li> {{ paper.subjectArea2 }}</li></ul></h3>
+            </li>
+
+        </ul>
     </div>
 
-    {{ form_start(addPaperForm) }}
-    {{ form_widget(addPaperForm) }}
-    {{ form_end(addPaperForm) }}
 
-    {{ form_start(ejpImportForm) }}
-    {{ form_widget(ejpImportForm) }}
-    {{ form_end(ejpImportForm) }}
 {% endblock %}
 
 
