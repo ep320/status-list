@@ -2,15 +2,15 @@
 
 namespace AppBundle\EJPImport;
 
-use AppBundle\Command\ImportCommand;
+
 use AppBundle\Entity\ArticleType;
-use AppBundle\Entity\Paper;
 use AppBundle\Entity\SubjectArea;
 use AppDomain\Command\ImportPaperDetails;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 
-class CSVParser {
+class CSVParser
+{
 
     private $em;
 
@@ -19,7 +19,7 @@ class CSVParser {
      */
     public function __construct(EntityManager $em)
     {
-        $this->em=$em;
+        $this->em = $em;
         ini_set('auto_detect_line_endings', true);
 
     }
@@ -36,6 +36,12 @@ class CSVParser {
          * @var $em EntityManager
          */
         $em = $this->em;
+
+        if (!in_array('MS Tracking No.', $reader->getColumnHeaders())) {
+            throw new \Exception('Please upload a correctly formatted .csv file (column headers in 4th row');
+
+        }
+
         foreach ($reader as $row) {
 
             $matches = [];
