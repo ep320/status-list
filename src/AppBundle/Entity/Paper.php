@@ -1,20 +1,20 @@
 <?php
 namespace AppBundle\Entity;
 
+use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\PaperRepository")
  * @ORM\Table(name="paper")
  */
 class Paper
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=100)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
@@ -51,6 +51,28 @@ class Paper
      * @Assert\Valid()
      */
     private $subjectArea2;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $_version;
+
+    /**
+     * @param $paperId
+     * @param $manuscriptNo
+     * @param $correspondingAuthor
+     * @param $articleType
+     * @param $subjectArea1
+     * @param $subjectArea2
+     */
+    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType, $subjectArea1, $subjectArea2) {
+        $this->id = $paperId;
+        $this->manuscriptNo = $manuscriptNo;
+        $this->correspondingAuthor = $correspondingAuthor;
+        $this->articleType = $articleType;
+        $this->subjectArea1 = $subjectArea1;
+        $this->subjectArea2 = $subjectArea2;
+    }
 
     /**
      * @return mixed
@@ -101,52 +123,14 @@ class Paper
     }
 
     /**
-     * @param mixed $id
+     * Set the appropriate fields in response to an event. Eg, if the event is an instanceof 'InsightDecisionMade',
+     * update the insight decision field on this snapshot. Also, always update the _version field to the event sequence
+     * so that we know which events we've already processed.
+     *
+     * @param PaperEvent $event
      */
-    public function setId($id)
+    public function applyEvent(PaperEvent $event)
     {
-        $this->id = $id;
+        $this->_version = $event->getSequence();
     }
-
-    /**
-     * @param mixed $manuscriptNo
-     */
-    public function setManuscriptNo($manuscriptNo)
-    {
-        $this->manuscriptNo = $manuscriptNo;
-    }
-
-    /**
-     * @param mixed $correspondingAuthor
-     */
-    public function setCorrespondingAuthor($correspondingAuthor)
-    {
-        $this->correspondingAuthor = $correspondingAuthor;
-    }
-
-    /**
-     * @param mixed $articleType
-     */
-    public function setArticleType($articleType)
-    {
-        $this->articleType = $articleType;
-    }
-
-    /**
-     * @param mixed $subjectArea1
-     */
-    public function setSubjectArea1($subjectArea1)
-    {
-        $this->subjectArea1 = $subjectArea1;
-    }
-
-    /**
-     * @param mixed $subjectArea2
-     */
-    public function setSubjectArea2($subjectArea2)
-    {
-        $this->subjectArea2 = $subjectArea2;
-    }
-
-
 }

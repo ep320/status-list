@@ -4,6 +4,22 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    event_publisher:
+        class: AppDomain\EventPublisher
+        arguments:
+            - "@doctrine.orm.events_entity_manager"
+    command_handler:
+        class: AppDomain\CommandHandler
+        arguments:
+            - "@event_publisher"
+    paper_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - AppBundle\Entity\Paper
+    paper_event_handler:
+        class: AppBundle\PaperHandler
+        arguments:
+            - "@paper_repository"
+        tags:
+            - { name: doctrine.orm.entity_listener, entity_manager: events, entity: AppDomain\Event\PaperEvent, event: postPersist }

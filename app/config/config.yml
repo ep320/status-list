@@ -62,8 +62,25 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: true
+                mappings:
+                    AppBundle:  ~
+            events:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: false
+                mappings:
+                    AppDomain\Event:
+                        type: annotation
+                        dir: '%kernel.root_dir%/../src/AppDomain/Event'
+                        is_bundle: false
+                        prefix: AppDomain\Event
+                        alias: AppDomain
 
 # Swiftmailer Configuration
 swiftmailer:
