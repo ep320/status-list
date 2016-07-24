@@ -7,6 +7,7 @@ use AppDomain\Command\ImportPaperDetails;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class CommandHandler {
     /**
@@ -19,10 +20,21 @@ class CommandHandler {
     }
 
     /**
+     * Check whether manuscript no of imported paper matches a manuscript no already in statusbase
      *
+     * @param int $manuscriptNo
+     * @return bool
      */
-    private function findByManuscriptNo(int $manuscriptNo) {
-        $this->entityManager->
+    private function doesPaperExist(int $manuscriptNo) {
+        /**
+         * @var $result \PDOStatement
+         */
+        $result = $this->entityManager->getConnection()->executeQuery(
+            'select * from paper_event where json_contains(payload, ?)',
+            [json_encode(['manuscriptNo'=>$manuscriptNo])]
+        );
+
+        return $result->fetch() !== false;
     }
 
     /**
@@ -31,6 +43,12 @@ class CommandHandler {
      * @param AddPaperManually $command
      */
     public function addPaperManually(AddPaperManually $command) {
+
+        if ($this->doesPaperExist($command->manuscriptNo))
+        {
+            throw new \Exception('A paper with this manuscript no. is already in statusbase');
+        }
+
         
         $subjectAreas = [$command->subjectArea1];
         if ($command->subjectArea2){

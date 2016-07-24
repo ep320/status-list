@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e7b9a7b207b78d4eb40de09878e89d36",
-    "content-hash": "2dd8bfd572d457ddb14d11137a7e1ab1",
+    "hash": "c715d5d0e0ad685206828f02d80a481d",
+    "content-hash": "2fb2037920b0a98eee9190016924c9f2",
     "packages": [
         {
             "name": "ddeboer/data-import",
@@ -402,17 +402,22 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.4",
+            "version": "2.5.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/dbal.git",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769"
+                "url": "https://github.com/rh389/dbal.git",
+                "reference": "71c27d5ac1b8ce7e81e6596755fb686f93701151"
             },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
-                "reference": "abbdfd1cff43a7b99d027af3be709bc8fc7d4769",
-                "shasum": ""
+            "archive": {
+                "exclude": [
+                    "!vendor",
+                    "tests",
+                    "*phpunit.xml",
+                    ".travis.yml",
+                    "build.xml",
+                    "build.properties",
+                    "composer.phar"
+                ]
             },
             "require": {
                 "doctrine/common": ">=2.4,<2.7-dev",
@@ -439,11 +444,14 @@
                     "Doctrine\\DBAL\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
                 {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
@@ -451,10 +459,6 @@
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
                 },
                 {
                     "name": "Jonathan Wage",
@@ -469,7 +473,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-01-05 22:11:12"
+            "time": "2016-07-24 14:59:14"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -2368,9 +2372,18 @@
             "time": "2016-06-29 05:42:25"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "2.5.5",
+            "alias_normalized": "2.5.5.0",
+            "version": "2.5.9999999.9999999-dev",
+            "package": "doctrine/dbal"
+        }
+    ],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "doctrine/dbal": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
