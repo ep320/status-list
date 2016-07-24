@@ -60,7 +60,7 @@ abstract class PaperEvent
     /**
      * @return mixed
      */
-    protected function getPayload()
+    public function getPayload()
     {
         return $this->payload;
     }
