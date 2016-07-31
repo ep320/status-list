@@ -14,17 +14,14 @@ use AppBundle\Form\AddPaperType;
 use AppDomain\Command\AddPaperManually;
 use AppBundle\Entity\Paper;
 
-class DefaultController extends Controller
+class PaperListController extends Controller
 {
     /**
      * @Route("/", name="homepage")
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir') . '/..'),
-        ]);
+        return $this->redirectToRoute("papers");
     }
 
     /**
@@ -91,17 +88,5 @@ class DefaultController extends Controller
         return $this->get('command_handler');
     }
 
-    /**
-     * Shows details of one paper
-     *
-     * @Route("/papers/{manuscriptNo}", requirements={"manuscriptNo"="\d+"}, name="paperdetails")
-     */
-    public function showPaperAction($manuscriptNo)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
 
-        return $this->render('papers/paper.html.twig',
-            ['paper' => $paper]);
-    }
 }

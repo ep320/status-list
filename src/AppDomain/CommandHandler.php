@@ -4,6 +4,8 @@ namespace AppDomain;
 
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\ImportPaperDetails;
+use AppDomain\Command\MarkAnswersReceived;
+use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
@@ -104,4 +106,31 @@ class CommandHandler
         $this->entityManager->flush($event);
         return;
     }
+
+    public function markAnswersReceived(MarkAnswersReceived $command)
+    {
+
+        $event = (new AnswersReceived(
+            $command->paperId,
+            $this->getEventCount($command->paperId)+1,
+            $command->answersQuality
+        ));
+
+        $this->publish($event);
+
+    }
+
+    private function getEventCount(string $paperId)
+    {
+        $result = $this->entityManager->createQuery(
+            'SELECT COUNT(e.sequence) FROM AppDomain:PaperEvent e WHERE e.paperId = :paperId'
+        );
+        $result->setParameter('paperId', $paperId);
+        $count = $result->getSingleScalarResult();
+
+        return $count;
+    }
+
+
 }
+

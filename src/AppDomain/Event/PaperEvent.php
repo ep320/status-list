@@ -10,7 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="name", type="string")
  * @ORM\DiscriminatorMap({
- *     "PaperAdded" = "PaperAdded"
+ *     "PaperAdded" = "PaperAdded",
+ *     "AnswersReceived" = "AnswersReceived"
  * })
  */
 abstract class PaperEvent

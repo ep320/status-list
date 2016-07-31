@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Entity;
 
+use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -53,6 +54,11 @@ class Paper
     private $subjectArea2;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $answersStatus;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
      */
     private $_version;
@@ -72,6 +78,7 @@ class Paper
         $this->articleType = $articleType;
         $this->subjectArea1 = $subjectArea1;
         $this->subjectArea2 = $subjectArea2;
+        $this->_version = 1;
     }
 
     /**
@@ -123,6 +130,16 @@ class Paper
     }
 
     /**
+     * @return mixed
+     */
+    public function getAnswersStatus()
+    {
+        return $this->answersStatus;
+    }
+
+
+
+    /**
      * Set the appropriate fields in response to an event. Eg, if the event is an instanceof 'InsightDecisionMade',
      * update the insight decision field on this snapshot. Also, always update the _version field to the event sequence
      * so that we know which events we've already processed.
@@ -131,6 +148,9 @@ class Paper
      */
     public function applyEvent(PaperEvent $event)
     {
+        if($event instanceof AnswersReceived){
+            $this->answersStatus = $event->getAnswersQuality();
+        }
         $this->_version = $event->getSequence();
     }
 }

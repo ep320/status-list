@@ -28,9 +28,17 @@
                 <h3>
                     <small>Subject Area</small> <ul><li>{{ paper.subjectArea1 }}</li><li> {{ paper.subjectArea2 }}</li></ul></h3>
             </li>
+<li class="list-group-item">
+                <h3>
+                    <small>Quality of author answers</small> {{ paper.answersStatus }}</h3>
+            </li>
 
         </ul>
     </div>
+
+    {{ form_start(answersReceivedForm) }}
+    {{ form_widget(answersReceivedForm) }}
+    {{ form_end(answersReceivedForm) }}
 
 
 {% endblock %}
