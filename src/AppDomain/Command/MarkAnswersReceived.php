@@ -16,4 +16,9 @@ class MarkAnswersReceived {
      */
     public $answersQuality;
 
+    /**
+     * @var boolean
+     */
+    public $isInDigestForm;
+
 }

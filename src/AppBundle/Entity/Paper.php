@@ -58,6 +58,12 @@ class Paper
      */
     private $answersStatus;
 
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $answersInDigestForm;
+
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -71,7 +77,8 @@ class Paper
      * @param $subjectArea1
      * @param $subjectArea2
      */
-    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType, $subjectArea1, $subjectArea2) {
+    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType, $subjectArea1, $subjectArea2)
+    {
         $this->id = $paperId;
         $this->manuscriptNo = $manuscriptNo;
         $this->correspondingAuthor = $correspondingAuthor;
@@ -79,6 +86,7 @@ class Paper
         $this->subjectArea1 = $subjectArea1;
         $this->subjectArea2 = $subjectArea2;
         $this->_version = 1;
+        $this->answersInDigestForm = false;
     }
 
     /**
@@ -137,6 +145,13 @@ class Paper
         return $this->answersStatus;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAnswersInDigestForm()
+    {
+        return $this->answersInDigestForm;
+    }
 
 
     /**
@@ -148,8 +163,9 @@ class Paper
      */
     public function applyEvent(PaperEvent $event)
     {
-        if($event instanceof AnswersReceived){
+        if ($event instanceof AnswersReceived) {
             $this->answersStatus = $event->getAnswersQuality();
+            $this->answersInDigestForm = $event->getIsInDigestForm();
         }
         $this->_version = $event->getSequence();
     }

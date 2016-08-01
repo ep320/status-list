@@ -113,7 +113,8 @@ class CommandHandler
         $event = (new AnswersReceived(
             $command->paperId,
             $this->getEventCount($command->paperId)+1,
-            $command->answersQuality
+            $command->answersQuality,
+            $command->isInDigestForm
         ));
 
         $this->publish($event);

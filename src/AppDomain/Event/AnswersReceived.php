@@ -10,7 +10,8 @@ use Ramsey\Uuid\Uuid;
 /**
  * @ORM\Entity
  */
-class AnswersReceived extends PaperEvent {
+class AnswersReceived extends PaperEvent
+{
 
     /**
      * AnswersReceived constructor.
@@ -18,14 +19,23 @@ class AnswersReceived extends PaperEvent {
      * @param int $sequence
      * @param string $answersQuality
      */
-    public function __construct(string $paperId, int $sequence, string $answersQuality)
+    public function __construct(string $paperId, int $sequence, string $answersQuality, bool $isInDigestForm)
     {
         parent::__construct($paperId, $sequence, [
-            'answersQuality'=>$answersQuality
+            'answersQuality' => $answersQuality,
+            'isInDigestForm' => $isInDigestForm
         ]);
     }
 
-    public function getAnswersQuality() {
+    public function getAnswersQuality()
+    {
         return $this->getFromPayload('answersQuality');
     }
+
+
+    public function getIsInDigestForm()
+    {
+        return $this->getFromPayload('isInDigestForm');
+    }
+
 }
