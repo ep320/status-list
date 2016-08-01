@@ -5,35 +5,29 @@
         <h1>Statusbase: Paper {{ paper.manuscriptNo }}</h1>
     </div>
     <div id="list">
-        <ul class="ul list-group">
-            <li class="list-group-item">
-                <span class="label label-default label-pill pull-xs-left">Author</span>
-                {{ paper.correspondingAuthor }}</li>
-            <li class="list-group-item">
-                <span class="label label-default label-pill pull-xs-left">Article Type</span>
-                {{ paper.articleType }}</li>
+        <dl class="dl-horizontal">
 
-            <li class="list-group-item">
-                <span class="label label-default label-pill pull-xs-left">Subject Areas</span>
-                {{ paper.subjectArea1 }} {{ paper.subjectArea2 }}</li>
-            <li class="list-group-item">
-                <h3>
-                    <small>Author</small> {{ paper.correspondingAuthor }}</h3>
-            </li>
-            <li class="list-group-item">
-                <h3>
-                    <small>Article Type</small> {{ paper.articleType }}</h3>
-            </li>
-            <li class="list-group-item">
-                <h3>
-                    <small>Subject Area</small> <ul><li>{{ paper.subjectArea1 }}</li><li> {{ paper.subjectArea2 }}</li></ul></h3>
-            </li>
-<li class="list-group-item">
-                <h3>
-                    <small>Quality of author answers</small> {{ paper.answersStatus }}</h3>
-            </li>
+            <dt>
+                Author
+            </dt>
+            <dd>{{ paper.correspondingAuthor }}</dd>
+            <dt>
 
-        </ul>
+                Article Type
+            </dt>
+            <dd>{{ paper.articleType }}</dd>
+            <dt>
+                Subject Area
+            </dt>
+            <dd>{{ paper.subjectArea1 }}</dd>
+            <dd>{{ paper.subjectArea2 }}</dd>
+
+            <dt>
+                Author answers
+            </dt>
+            <dd>{{ paper.answersStatus }}</h3></dd>
+
+        </dl>
     </div>
 
     {{ form_start(answersReceivedForm) }}
