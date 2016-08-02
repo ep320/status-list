@@ -170,7 +170,7 @@ class Paper
         }
         if ($event instanceof AnswersReceivedUndone) {
             $this->answersStatus = null;
-            $this->answersInDigestFormDigest = null;
+            $this->answersInDigestForm = false;
         }
         $this->_version = $event->getSequence();
     }
