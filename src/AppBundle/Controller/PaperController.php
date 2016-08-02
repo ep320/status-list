@@ -10,6 +10,7 @@ use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\AddPaperType;
@@ -39,20 +40,35 @@ class PaperController extends Controller
          */
         $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
 
-        $markAnswersRecievedCommand = new MarkAnswersReceived();
-        $markAnswersRecievedCommand->paperId = $paper->getId();
-        $answersReceivedForm = $this->createForm(MarkAnswersReceivedType::class, $markAnswersRecievedCommand);
 
-        $answersReceivedForm->handleRequest($request);
+        $answersForm;
+        if ($paper->getAnswersStatus()) { //Answers already submitted. Show/handle undo requests
+            $builder = $this->createFormBuilder();
+            $builder->add('Undo', SubmitType::class);
+            $answersForm = $builder->getForm();
+            $answersForm->handleRequest($request);
+            if ($answersForm->isSubmitted()) {
+                $this->getCommandHandler()->undoAnswersReceived($paper->getId());
+                $em->flush();
 
+               return $this->redirectToRoute('paperdetails', ['manuscriptNo'=>$manuscriptNo]);
+            }
+        } else { //Answers not submitted, show full answers form
+            $markAnswersReceivedCommand = new MarkAnswersReceived();
+            $markAnswersReceivedCommand->paperId = $paper->getId();
+            $answersForm = $this->createForm(MarkAnswersReceivedType::class, $markAnswersReceivedCommand);
+            $answersForm->handleRequest($request);
+            if ($answersForm->isSubmitted() && $answersForm->isValid()) {
+                $this->getCommandHandler()->markAnswersReceived($markAnswersReceivedCommand);
+                $em->flush();
 
-        if ($answersReceivedForm->isSubmitted() && $answersReceivedForm->isValid()) {
-            $this->getCommandHandler()->markAnswersReceived($markAnswersRecievedCommand);
-            $em->flush();
+               return $this->redirectToRoute('paperdetails', ['manuscriptNo'=>$manuscriptNo]);
+            }
         }
+
         return $this->render('papers/paper.html.twig', [
             'paper' => $paper,
-            'answersReceivedForm' => $answersReceivedForm->createView()
+            'answersForm' => $answersForm->createView()
         ]);
     }
 

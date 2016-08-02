@@ -11,7 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorColumn(name="name", type="string")
  * @ORM\DiscriminatorMap({
  *     "PaperAdded" = "PaperAdded",
- *     "AnswersReceived" = "AnswersReceived"
+ *     "AnswersReceived" = "AnswersReceived",
+ *     "AnswersReceivedUndone" = "AnswersReceivedUndone"
  * })
  */
 abstract class PaperEvent
@@ -42,7 +43,7 @@ abstract class PaperEvent
      */
     private $time;
 
-    public function __construct($paperId, $sequence, $payload)
+    public function __construct($paperId, $sequence, $payload = null)
     {
         $this->paperId = $paperId;
         $this->sequence = $sequence;

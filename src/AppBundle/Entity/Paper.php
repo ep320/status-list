@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
+use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -166,6 +167,10 @@ class Paper
         if ($event instanceof AnswersReceived) {
             $this->answersStatus = $event->getAnswersQuality();
             $this->answersInDigestForm = $event->getIsInDigestForm();
+        }
+        if ($event instanceof AnswersReceivedUndone) {
+            $this->answersStatus = null;
+            $this->answersInDigestFormDigest = null;
         }
         $this->_version = $event->getSequence();
     }

@@ -6,6 +6,7 @@ use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\ImportPaperDetails;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Event\AnswersReceived;
+use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
@@ -119,6 +120,11 @@ class CommandHandler
 
         $this->publish($event);
 
+    }
+
+    public function undoAnswersReceived(string $paperId){
+        $event = (new AnswersReceivedUndone($paperId, $this->getEventCount($paperId)+1));
+        $this->publish($event);
     }
 
     private function getEventCount(string $paperId)
