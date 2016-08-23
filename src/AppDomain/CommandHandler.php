@@ -3,10 +3,17 @@
 namespace AppDomain;
 
 use AppDomain\Command\AddPaperManually;
+use AppDomain\Command\AssignDigestWriter;
 use AppDomain\Command\ImportPaperDetails;
 use AppDomain\Command\MarkAnswersReceived;
+use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
+use AppDomain\Event\DigestReceived;
+use AppDomain\Event\DigestSignedOff;
+use AppDomain\Event\DigestWriterAssigned;
+use AppDomain\Event\NoDigestDecided;
+use AppDomain\Event\NoDigestDecidedUndone;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
@@ -108,12 +115,31 @@ class CommandHandler
         return;
     }
 
+    public function markNoDigestDecided(MarkNoDigestDecided $command)
+    {
+
+        $event = (new NoDigestDecided(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->noDigestReason
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public function undoNoDigestDecided(string $paperId)
+    {
+        $event = (new NoDigestDecidedUndone($paperId, $this->getEventCount($paperId) + 1));
+        $this->publish($event);
+    }
+
     public function markAnswersReceived(MarkAnswersReceived $command)
     {
 
         $event = (new AnswersReceived(
             $command->paperId,
-            $this->getEventCount($command->paperId)+1,
+            $this->getEventCount($command->paperId) + 1,
             $command->answersQuality,
             $command->isInDigestForm
         ));
@@ -122,8 +148,32 @@ class CommandHandler
 
     }
 
-    public function undoAnswersReceived(string $paperId){
-        $event = (new AnswersReceivedUndone($paperId, $this->getEventCount($paperId)+1));
+    public function undoAnswersReceived(string $paperId)
+    {
+        $event = (new AnswersReceivedUndone($paperId, $this->getEventCount($paperId) + 1));
+        $this->publish($event);
+    }
+
+    public function assignDigestWriter(AssignDigestWriter $command)
+    {
+        $event = (new DigestWriterAssigned(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->writer->getId(),
+            $command->dueDate
+        ));
+        $this->publish($event);
+    }
+
+    public function markDigestReceived($paperId)
+    {
+        $event = (new DigestReceived($paperId, $this->getEventCount($paperId) + 1, true));
+        $this->publish($event);
+    }
+
+    public function markDigestSignedOff($paperId)
+    {
+        $event = (new DigestSignedOff($paperId, $this->getEventCount($paperId) + 1, true));
         $this->publish($event);
     }
 

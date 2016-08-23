@@ -1,0 +1,228 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div id="title">
+        <h1>Statusbase</h1>
+    </div>
+    <div id="links">
+        <a href="{{ path('homepage') }}">
+            Main list
+        </a>
+    </div>
+    <div id="table">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <th>Manuscript No.</th>
+                <th>Author</th>
+                <th>Article Type</th>
+                <th>Subject Area</th>
+                <th>Subject Area</th>
+                <th>Author Answers</th>
+                <th>Author wrote digest?</th>
+                <th>Digest writer</th>
+                <th>Digest due</th>
+                <th>Digest received?</th>
+            </tr>
+            {% for paper in papers if not paper.digestSignedOff %}
+                {% if paper.digestReceived %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                                {{ paper.manuscriptNo }}
+                            </a>
+                        </td>
+                        <td>{{ paper.correspondingAuthor }}</td>
+                        <td>{{ paper.articleType }}</td>
+                        <td>{{ paper.subjectArea1 }}</td>
+                        <td>{{ paper.subjectArea2 }}</td>
+                        <td>{{ paper.answersStatus }}</td>
+                        <td>{{ paper.answersInDigestForm ? '✔':'' }}</td>
+                        <td>{{ paper.digestWrittenBy }}</td>
+                        <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
+                        <td>{{ paper.digestReceived ? '✔':'' }}</td>
+                        <td>{{ form_start(signOffDigestForm) }}
+                            {{ form_widget(signOffDigestForm) }}
+                            {{ form_end(signOffDigestForm) }}</td>
+                    </tr>
+                {% elseif paper.digestWrittenBy %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                                {{ paper.manuscriptNo }}
+                            </a>
+                        </td>
+                        <td>{{ paper.correspondingAuthor }}</td>
+                        <td>{{ paper.articleType }}</td>
+                        <td>{{ paper.subjectArea1 }}</td>
+                        <td>{{ paper.subjectArea2 }}</td>
+                        <td>{{ paper.answersStatus }}</td>
+                        <td>{{ paper.answersInDigestForm ? '✔':'' }}</td>
+                        <td>{{ paper.digestWrittenBy }}</td>
+                        <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
+                        <td>{{ paper.digestReceived ? '✔':'' }}</td>
+                    </tr>
+
+                {% elseif paper.answersStatus %}
+
+                    <tr>
+                        <td>
+                            <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                                {{ paper.manuscriptNo }}
+                            </a>
+                        </td>
+                        <td>{{ paper.correspondingAuthor }}</td>
+                        <td>{{ paper.articleType }}</td>
+                        <td>{{ paper.subjectArea1 }}</td>
+                        <td>{{ paper.subjectArea2 }}</td>
+                        <td>{{ paper.answersStatus }}</td>
+                        <td>{{ paper.answersInDigestForm ? '✔':'' }}</td>
+                        <td>{{ paper.digestWrittenBy }}</td>
+                        <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
+                        <td>{{ paper.digestReceived ? '✔':'' }}</td>
+                    </tr>
+
+                {% else %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                                {{ paper.manuscriptNo }}
+                            </a>
+                        </td>
+                        <td>{{ paper.correspondingAuthor }}</td>
+                        <td>{{ paper.articleType }}</td>
+                        <td>{{ paper.subjectArea1 }}</td>
+                        <td>{{ paper.subjectArea2 }}</td>
+                        <td>{{ paper.answersStatus }}</td>
+                        <td>{{ paper.answersInDigestForm ? '✔':'' }}</td>
+                        <td>{{ paper.digestWrittenBy }}</td>
+                        <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
+                        <td>{{ paper.digestReceived ? '✔':'' }}</td>
+                    </tr>
+
+                {% endif %}
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+{% endblock %}
+
+
+
+{% block stylesheets %}
+    <style>
+        body {
+            background: #F5F5F5;
+            font: 18px/1.5 sans-serif;
+        }
+
+        h1, h2 {
+            line-height: 1.2;
+            margin: 0 0 .5em;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        h2 {
+            font-size: 21px;
+            margin-bottom: 1em;
+        }
+
+        p {
+            margin: 0 0 1em 0;
+        }
+
+        a {
+            color: #0000F0;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        code {
+            background: #F5F5F5;
+            max-width: 100px;
+            padding: 2px 6px;
+            word-wrap: break-word;
+        }
+
+        #wrapper {
+            background: #FFF;
+            margin: 1em auto;
+            max-width: 800px;
+            width: 95%;
+        }
+
+        #container {
+            padding: 2em;
+        }
+
+        #welcome, #status {
+            margin-bottom: 2em;
+        }
+
+        #welcome h1 span {
+            display: block;
+            font-size: 75%;
+        }
+
+        #icon-status, #icon-book {
+            float: left;
+            height: 64px;
+            margin-right: 1em;
+            margin-top: -4px;
+            width: 64px;
+        }
+
+        #icon-book {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            #wrapper {
+                width: 80%;
+                margin: 2em auto;
+            }
+
+            #icon-book {
+                display: inline-block;
+            }
+
+            #status a, #next a {
+                display: block;
+            }
+
+            @-webkit-keyframes fade-in {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            @keyframes fade-in {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            .sf-toolbar {
+                opacity: 0;
+                -webkit-animation: fade-in 1s .2s forwards;
+                animation: fade-in 1s .2s forwards;
+            }
+        }
+    </style>
+{% endblock %}

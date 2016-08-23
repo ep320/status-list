@@ -2,8 +2,14 @@
 namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
+use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
+use AppDomain\Event\DigestSignedOff;
+use AppDomain\Event\DigestWriterAssigned;
+use AppDomain\Event\DigestReceived;
+use AppDomain\Event\NoDigestDecidedUndone;
 use AppDomain\Event\PaperEvent;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -55,6 +61,12 @@ class Paper
     private $subjectArea2;
 
     /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $noDigestStatus;
+
+
+    /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $answersStatus;
@@ -64,6 +76,30 @@ class Paper
      * @ORM\Column(type="boolean")
      */
     private $answersInDigestForm;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="DigestWriter", inversedBy="papersAssigned")
+     * @ORM\JoinColumn(name="digest_written_by", referencedColumnName="id", nullable=true)
+     * @Assert\Type(type="AppBundle\Entity\DigestWriter")
+     * @Assert\Valid()
+     */
+    private $digestWrittenBy;
+
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $digestDueDate;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $digestReceived;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $digestSignedOff;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -88,6 +124,7 @@ class Paper
         $this->subjectArea2 = $subjectArea2;
         $this->_version = 1;
         $this->answersInDigestForm = false;
+
     }
 
     /**
@@ -141,6 +178,15 @@ class Paper
     /**
      * @return mixed
      */
+    public function getNoDigestStatus()
+    {
+        return $this->noDigestStatus;
+    }
+
+
+    /**
+     * @return mixed
+     */
     public function getAnswersStatus()
     {
         return $this->answersStatus;
@@ -154,6 +200,38 @@ class Paper
         return $this->answersInDigestForm;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDigestWrittenBy()
+    {
+        return $this->digestWrittenBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigestDueDate()
+    {
+        return $this->digestDueDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigestReceived()
+    {
+        return $this->digestReceived;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDigestSignedOff()
+    {
+        return $this->digestSignedOff;
+    }
+
 
     /**
      * Set the appropriate fields in response to an event. Eg, if the event is an instanceof 'InsightDecisionMade',
@@ -162,8 +240,14 @@ class Paper
      *
      * @param PaperEvent $event
      */
-    public function applyEvent(PaperEvent $event)
+    public function applyEvent(PaperEvent $event, EntityManager $em)
     {
+        if ($event instanceof NoDigestDecided) {
+            $this->noDigestStatus = $event->getNoDigestReason();
+        }
+        if ($event instanceof NoDigestDecidedUndone) {
+            $this->noDigestStatus = null;
+        }
         if ($event instanceof AnswersReceived) {
             $this->answersStatus = $event->getAnswersQuality();
             $this->answersInDigestForm = $event->getIsInDigestForm();
@@ -171,6 +255,16 @@ class Paper
         if ($event instanceof AnswersReceivedUndone) {
             $this->answersStatus = null;
             $this->answersInDigestForm = false;
+        }
+        if ($event instanceof DigestWriterAssigned) {
+            $this->digestWrittenBy = $em->getReference(DigestWriter::class, $event->getDigestWriterAssigned());
+            $this->digestDueDate = $event->getDigestDueDate();
+        }
+        if ($event instanceof DigestReceived) {
+            $this->digestReceived = $event->getDigestReceived();
+        }
+        if ($event instanceof DigestSignedOff) {
+            $this->digestSignedOff = $event->getDigestSignedOff();
         }
         $this->_version = $event->getSequence();
     }

@@ -10,9 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="name", type="string")
  * @ORM\DiscriminatorMap({
+ *     "DigestWriterAssigned" = "DigestWriterAssigned",
  *     "PaperAdded" = "PaperAdded",
+ *     "NoDigestDecided" = "NoDigestDecided",
+ * "NoDigestDecidedUndone" = "NoDigestDecidedUndone",
  *     "AnswersReceived" = "AnswersReceived",
- *     "AnswersReceivedUndone" = "AnswersReceivedUndone"
+ *     "AnswersReceivedUndone" = "AnswersReceivedUndone",
+ *     "DigestReceived" = "DigestReceived",
+ * "DigestSignedOff" = "DigestSignedOff"
  * })
  */
 abstract class PaperEvent

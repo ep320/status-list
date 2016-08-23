@@ -81,6 +81,19 @@ class PaperListController extends Controller
     }
 
     /**
+     * @Route("/papers/digesttodolist", name="digestlist")
+     */
+    public function DigestListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $papers = $em->getRepository(Paper::class)->findAll();
+
+        return $this->render('papers/maindigestpage.html.twig', [
+            'papers' => $papers
+        ]);
+    }
+
+    /**
      * @return CommandHandler;
      */
     private function getCommandHandler()

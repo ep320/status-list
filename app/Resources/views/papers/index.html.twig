@@ -9,6 +9,11 @@
     <div id="title">
         <h1>Statusbase</h1>
     </div>
+    <div id="links">
+        <a href="{{ path('digestlist') }}">
+            Update digest info from list
+        </a>
+    </div>
     <div id="table">
         <table class="table table-condensed table-responsive">
             <tr>
@@ -19,6 +24,9 @@
                 <th>Subject Area</th>
                 <th>Author Answers</th>
                 <th>Author wrote digest?</th>
+                <th>Digest writer</th>
+                <th>Digest due</th>
+                <th>Digest received?</th>
             </tr>
             {% for paper in papers %}
                 <tr>
@@ -33,6 +41,9 @@
                     <td>{{ paper.subjectArea2 }}</td>
                     <td>{{ paper.answersStatus }}</td>
                     <td>{{ paper.answersInDigestForm ? '✔':''}}</td>
+                    <td>{{ paper.digestWrittenBy }}</td>
+                    <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
+                    <td>{{ paper.digestReceived ? '✔':'' }}</td>
                 </tr>
             {% endfor %}
 

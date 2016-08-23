@@ -4,6 +4,7 @@ namespace AppBundle;
 use AppBundle\Entity\Paper;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class PaperHandler
@@ -12,10 +13,16 @@ class PaperHandler
      * @var PaperRepository
      */
     private $paperRepository;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
     
-    public function __construct(PaperRepository $paperRepository)
+    public function __construct(PaperRepository $paperRepository, EntityManager $entityManager)
     {
         $this->paperRepository = $paperRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -28,7 +35,7 @@ class PaperHandler
             /**
              * @var $existingPaper Paper
              */
-            $existingPaper->applyEvent($paperEvent);
+            $existingPaper->applyEvent($paperEvent, $this->entityManager);
         }
     }
 

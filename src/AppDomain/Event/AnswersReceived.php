@@ -2,10 +2,9 @@
 
 namespace AppDomain\Event;
 
-use AppBundle\Entity\ArticleType;
-use AppBundle\Entity\SubjectArea;
+
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
+
 
 /**
  * @ORM\Entity

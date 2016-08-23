@@ -23,6 +23,11 @@
             <dd>{{ paper.subjectArea2 }}</dd>
 
             <dt>
+                No digest
+            </dt>
+            <dd>{{ paper.noDigestStatus }}</h3></dd>
+
+            <dt>
                 Author answers
             </dt>
             <dd>{{ paper.answersStatus }}</h3></dd>
@@ -30,13 +35,37 @@
             <dt>Author wrote digest?</dt>
             <dd>{{ paper.answersInDigestForm ? '✔':''}}</dd>
 
+            <dt>Digest writer</dt>
+            <dd>{{ paper.digestWrittenBy }}</dd>
+
+            <dt>Digest due date</dt>
+            <dd>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</dd>
+
+            <dt>Digest Received?</dt>
+            <dd>{{ paper.digestReceived ? '✔':''}}</dd>
+
+            <dt>Digest signed off?</dt>
+            <dd>{{ paper.digestSignedOff ? '✔':''}}</dd>
+
         </dl>
     </div>
 
 
+    {{ form_start(noDigestForm) }}
+    {{ form_widget(noDigestForm) }}
+    {{ form_end(noDigestForm) }}
+
     {{ form_start(answersForm) }}
     {{ form_widget(answersForm) }}
     {{ form_end(answersForm) }}
+
+    {{ form_start(digestWriterForm) }}
+    {{ form_widget(digestWriterForm) }}
+    {{ form_end(digestWriterForm) }}
+
+    {{ form_start(signOffDigestForm) }}
+    {{ form_widget(signOffDigestForm) }}
+    {{ form_end(signOffDigestForm) }}
 
 {% endblock %}
 

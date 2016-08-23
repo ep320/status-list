@@ -22,7 +22,7 @@ class MarkAnswersReceivedType extends AbstractType
                 'label' =>'Author wrote digest?',
                 'required' => false
                 ))
-            ->add('save', SubmitType::class);
+            ->add('save answers info', SubmitType::class);
     }
 }
 
