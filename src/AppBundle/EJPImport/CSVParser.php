@@ -59,6 +59,8 @@ class CSVParser
             $importCommand->articleType = $em->getReference(ArticleType::class, $matches[1]);
             $importCommand->correspondingAuthor = html_entity_decode($row['Corresponding Author']);
             $importCommand->subjectArea1 = $subjectArea;
+            $importCommand->insightDecision = $row['Insight?'];
+            $importCommand->insightComment = $row['Justification'];
             $importCommands[$importCommand->manuscriptNo] = $importCommand;
         }
         return $importCommands;

@@ -61,6 +61,16 @@ class Paper
     private $subjectArea2;
 
     /**
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $insightDecision;
+
+    /**
+     * @ORM\Column(type="string", length=1000, nullable=true)
+     */
+    private $insightComment;
+
+    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $noDigestStatus;
@@ -73,13 +83,13 @@ class Paper
 
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $answersInDigestForm;
 
     /**
      * @ORM\ManyToOne(targetEntity="DigestWriter", inversedBy="papersAssigned")
-     * @ORM\JoinColumn(name="digest_written_by", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="digest_written_by", referencedColumnName="id")
      * @Assert\Type(type="AppBundle\Entity\DigestWriter")
      * @Assert\Valid()
      */
@@ -92,12 +102,12 @@ class Paper
     private $digestDueDate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $digestReceived;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $digestSignedOff;
 
@@ -114,7 +124,8 @@ class Paper
      * @param $subjectArea1
      * @param $subjectArea2
      */
-    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType, $subjectArea1, $subjectArea2)
+    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType,
+                                $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
     {
         $this->id = $paperId;
         $this->manuscriptNo = $manuscriptNo;
@@ -122,6 +133,8 @@ class Paper
         $this->articleType = $articleType;
         $this->subjectArea1 = $subjectArea1;
         $this->subjectArea2 = $subjectArea2;
+        $this->insightDecision = $insightDecision;
+        $this->insightComment = $insightComment;
         $this->_version = 1;
         $this->answersInDigestForm = false;
 
@@ -174,6 +187,23 @@ class Paper
     {
         return $this->subjectArea2;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightDecision()
+    {
+        return $this->insightDecision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightComment()
+    {
+        return $this->insightComment;
+    }
+
 
     /**
      * @return mixed

@@ -32,4 +32,14 @@ class ImportPaperDetails
      * @Assert\Valid()
      */
     public $subjectArea2;
+
+    /**
+     *
+     */
+    public $insightDecision;
+
+    /**
+     *
+     */
+    public $insightComment;
 }

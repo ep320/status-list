@@ -18,15 +18,20 @@ class PaperAdded extends PaperEvent {
      * @param $author
      * @param ArticleType $articleType
      * @param SubjectArea[] $subjectAreas
+     * @param $insightDecision
+     * @param $insightComment
      */
-    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, array $subjectAreas = [], string $source)
+    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, array $subjectAreas = [], string $source,
+    string $insightDecision, string $insightComment)
     {
         parent::__construct(Uuid::uuid4(), 1, [
             'manuscriptNo' => $manuscriptNo,
             'author' => $author,
             'articleTypeCode' => $articleType->getCode(),
             'subjectAreaIds'=> array_map(function (SubjectArea $subjectArea) { return $subjectArea->getId(); }, $subjectAreas),
-            'source'=> $source
+            'source'=> $source,
+            'insightDecision' => $insightDecision,
+        'insightComment' => $insightComment
         ]);
     }
 
@@ -44,5 +49,13 @@ class PaperAdded extends PaperEvent {
 
     public function getSubjectAreaIds() {
         return $this->getFromPayload('subjectAreaIds');
+    }
+
+    public function getInsightDecision() {
+        return $this->getFromPayload('insightDecision');
+    }
+
+    public function getInsightComment() {
+        return $this->getFromPayload('insightComment');
     }
 }

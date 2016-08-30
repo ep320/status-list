@@ -11,6 +11,7 @@ use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\CommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Paper;
@@ -29,6 +30,7 @@ class PaperController extends Controller
      * Shows details of one paper
      *
      * @Route("/papers/{manuscriptNo}", requirements={"manuscriptNo"="\d+"}, name="paperdetails")
+     * @Method({"GET"})
      */
     public function showPaperAction(Request $request, $manuscriptNo)
     {
@@ -38,8 +40,10 @@ class PaperController extends Controller
          */
         $paper = $em->getRepository(Paper::class)->findOneBy(['manuscriptNo' => $manuscriptNo]);
 
+        $validFormSubmitted = false;
 
-        $answersForm;
+
+        $answersForm = $this->buildAnswersForm();
         if ($paper->getAnswersStatus()) { //Answers already submitted. Show/handle undo requests
             $builder = $this->createFormBuilder();
             $builder->add('Undo answers', SubmitType::class);
@@ -47,9 +51,7 @@ class PaperController extends Controller
             $answersForm->handleRequest($request);
             if ($answersForm->isSubmitted()) {
                 $this->getCommandHandler()->undoAnswersReceived($paper->getId());
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         } else { //Answers not submitted, show full answers form
             $markAnswersReceivedCommand = new MarkAnswersReceived();
@@ -58,9 +60,7 @@ class PaperController extends Controller
             $answersForm->handleRequest($request);
             if ($answersForm->isSubmitted() && $answersForm->isValid()) {
                 $this->getCommandHandler()->markAnswersReceived($markAnswersReceivedCommand);
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         }
 
@@ -72,9 +72,7 @@ class PaperController extends Controller
             $noDigestForm->handleRequest($request);
             if ($noDigestForm->isSubmitted()) {
                 $this->getCommandHandler()->undoNoDigestDecided($paper->getId());
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         } else { //No digest decision not submitted, show full no digest form
             $markNoDigestDecidedCommand = new MarkNoDigestDecided();
@@ -83,11 +81,11 @@ class PaperController extends Controller
             $noDigestForm->handleRequest($request);
             if ($noDigestForm->isSubmitted() && $noDigestForm->isValid()) {
                 $this->getCommandHandler()->markNoDigestDecided($markNoDigestDecidedCommand);
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         }
+
+
 
         //need to add functionality to skip to editing form if writer = features team
         $assignDigestWriterForm;
@@ -98,9 +96,7 @@ class PaperController extends Controller
             $assignDigestWriterForm->handleRequest($request);
             if ($assignDigestWriterForm->isSubmitted()) {
                 $this->getCommandHandler()->markDigestReceived($paper->getId());
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         } else { //Digest not yet assigned to writer
 
@@ -110,21 +106,23 @@ class PaperController extends Controller
             $assignDigestWriterForm->handleRequest($request);
             if ($assignDigestWriterForm->isSubmitted() && $assignDigestWriterForm->isValid()) {
                 $this->getCommandHandler()->assignDigestWriter($assignWriterCommand);
-                $em->flush();
-
-                return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+                $validFormSubmitted = true;
             }
         }
 
-        $signOffDigestForm;
+        //Sign off digest
         $builder = $this->createFormBuilder();
         $builder->add('sign off digest', SubmitType::class);
         $signOffDigestForm = $builder->getForm();
         $signOffDigestForm->handleRequest($request);
         if ($signOffDigestForm->isSubmitted()) {
             $this->getCommandHandler()->markDigestSignedOff($paper->getId());
-            $em->flush();
+            $validFormSubmitted = true;
+        }
 
+        //If any form has been submitted and is valid, save changes to database and redirect back here.
+        if ($validFormSubmitted) {
+            $em->flush();
             return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
         }
 
@@ -139,6 +137,28 @@ class PaperController extends Controller
 
 
     }
+    /**
+     * Shows details of one paper
+     *
+     * @Route("/papers/{manuscriptNo}", requirements={"manuscriptNo"="\d+"}, name="paperdetails")
+     * @Method({"POST"})
+     */
+    public function postPaperAction(Request $request, $manuscriptNo)
+    {
+        $answersForm=$this->buildAnswersForm();
+        $answersForm->handleRequest($request);
+        if ($answersForm->isSubmitted()) {
+            $this->getCommandHandler()->undoAnswersReceived($paper->getId());
+            $em->flush();
 
+            return $this->redirectToRoute('paperdetails', ['manuscriptNo' => $manuscriptNo]);
+        }
+    }
+
+    private function buildAnswersForm(){
+        $builder = $this->createFormBuilder();
+        $builder->add('Undo answers', SubmitType::class);
+        return $builder->getForm();
+    }
 
 }

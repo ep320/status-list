@@ -35,7 +35,9 @@ class PaperRepository extends EntityRepository
             $paperAdded->getCorrespondingAuthor(),
             $articleType,
             $subjectArea1,
-            $subjectArea2
+            $subjectArea2,
+            $paperAdded->getInsightDecision(),
+            $paperAdded->getInsightComment()
         );
 
         $this->getEntityManager()->persist($paper);
