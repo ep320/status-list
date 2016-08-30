@@ -67,8 +67,10 @@ class PaperListController extends Controller
             $em->flush();
         }
 
-        $papers = $em->getRepository(Paper::class)->findAll();
+        //Flush again to flush any changes picked up by PaperEvent postPersist
+        $em->flush();
 
+        $papers = $em->getRepository(Paper::class)->findAll();
 
         return $this->render('papers/index.html.twig', [
             'papers' => $papers,

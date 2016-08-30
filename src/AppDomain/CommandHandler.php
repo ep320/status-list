@@ -101,7 +101,9 @@ class CommandHandler
             $command->correspondingAuthor,
             $command->articleType,
             $subjectAreas,
-            'Imported'
+            'Imported',
+            $command->insightDecision,
+            $command->insightComment
         ));
 
         $this->publish($event);
