@@ -86,6 +86,24 @@ abstract class PaperEvent
     }
 
     /**
+     * @param string $key
+     * @param mixed $default
+     * @return \DateTime
+     */
+    protected function getDateTimeFromPayload(string $key, $default = null)
+    {
+        if ($this->payload && isset($this->payload[$key]) && ($rawDate = $this->payload[$key])) {
+            if ($rawDate instanceof \DateTime) {
+                return $rawDate;
+            }
+            if (is_array($rawDate)) {
+                return \DateTime::createFromFormat('Y-m-d H:i:s.u', $rawDate['date'], new \DateTimeZone($rawDate['timezone']));
+            }
+        }
+        return $default;
+    }
+
+    /**
      * @return int
      */
     public function getSequence()

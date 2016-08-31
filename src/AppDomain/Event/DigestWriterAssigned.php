@@ -34,8 +34,6 @@ class DigestWriterAssigned extends PaperEvent
 
     public function getDigestDueDate()
     {
-        return $this->getFromPayload('digestDueDate');
+        return $this->getDateTimeFromPayload('digestDueDate');
     }
-
-
 }
