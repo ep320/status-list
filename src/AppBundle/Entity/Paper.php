@@ -32,6 +32,11 @@ class Paper
     private $manuscriptNo;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateAdded;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     private $correspondingAuthor;
@@ -119,16 +124,20 @@ class Paper
     /**
      * @param $paperId
      * @param $manuscriptNo
+     * @param $dateAdded
      * @param $correspondingAuthor
      * @param $articleType
      * @param $subjectArea1
      * @param $subjectArea2
+     * @param $insightDecision
+     * @param $insightComment
      */
-    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType,
+    public function __construct($paperId, $manuscriptNo, \DateTime $dateAdded, $correspondingAuthor, $articleType,
                                 $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
     {
         $this->id = $paperId;
         $this->manuscriptNo = $manuscriptNo;
+        $this->dateAdded = $dateAdded;
         $this->correspondingAuthor = $correspondingAuthor;
         $this->articleType = $articleType;
         $this->subjectArea1 = $subjectArea1;
@@ -154,6 +163,14 @@ class Paper
     public function getManuscriptNo()
     {
         return $this->manuscriptNo;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAdded()
+    {
+        return $this->dateAdded;
     }
 
     /**
