@@ -6,6 +6,8 @@ use AppDomain\Command\ImportPaperDetails;
 use AppDomain\CommandHandler;
 use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
+use AppDomain\Event\PaperAdded;
+use AppDomain\Event\PaperEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -91,6 +93,21 @@ class PaperListController extends Controller
         $papers = $em->getRepository(Paper::class)->findAll();
 
         return $this->render('papers/maindigestpage.html.twig', [
+            'papers' => $papers
+        ]);
+    }
+
+    /**
+     * @Route("/papers/insightsforstatuslist", name="insightsforstatuslist")
+     */
+    public function InsightsForStatusListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        //$papers = $em->getRepository(Paper::class)->findByInsightDecision(['no', 'yes']);
+        $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['id'=>'ASC']);
+
+
+        return $this->render('papers/insightlistforstatuslist.html.twig', [
             'papers' => $papers
         ]);
     }
