@@ -103,7 +103,7 @@ class PaperListController extends Controller
     public function InsightsForStatusListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['dateAdded'=>'ASC']);
+        $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['dateAdded'=>'DESC']);
 
 
         return $this->render('papers/insightlistforstatuslist.html.twig', [
