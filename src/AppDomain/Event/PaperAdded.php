@@ -15,17 +15,19 @@ class PaperAdded extends PaperEvent {
     /**
      * PaperAdded constructor.
      * @param $manuscriptNo
+     * @param $dateAdded
      * @param $author
      * @param ArticleType $articleType
      * @param SubjectArea[] $subjectAreas
      * @param $insightDecision
      * @param $insightComment
      */
-    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, array $subjectAreas = [], string $source,
+    public function __construct(int $manuscriptNo, \DateTime $dateAdded, string $author, ArticleType $articleType, array $subjectAreas = [], string $source,
     string $insightDecision, string $insightComment)
     {
         parent::__construct(Uuid::uuid4(), 1, [
             'manuscriptNo' => $manuscriptNo,
+            'dateAdded' => $dateAdded,
             'author' => $author,
             'articleTypeCode' => $articleType->getCode(),
             'subjectAreaIds'=> array_map(function (SubjectArea $subjectArea) { return $subjectArea->getId(); }, $subjectAreas),
@@ -38,6 +40,11 @@ class PaperAdded extends PaperEvent {
     public function getManuscriptNo() {
         return $this->getFromPayload('manuscriptNo');
     }
+
+    public function getdateAdded() {
+        return $this->getFromPayload('dateAdded');
+    }
+
 
     public function getCorrespondingAuthor() {
         return $this->getFromPayload('author');

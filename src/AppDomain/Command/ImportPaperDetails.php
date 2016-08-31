@@ -13,6 +13,12 @@ class ImportPaperDetails
     /**
      *
      */
+    public $dateAdded;
+
+
+    /**
+     *
+     */
     public $correspondingAuthor;
 
     /**
