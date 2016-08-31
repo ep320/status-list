@@ -98,7 +98,6 @@ class CommandHandler
 
         $event = (new PaperAdded(
             $command->manuscriptNo,
-            $command->dateAdded,
             $command->correspondingAuthor,
             $command->articleType,
             $subjectAreas,
