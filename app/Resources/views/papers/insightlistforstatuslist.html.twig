@@ -24,6 +24,7 @@
                 <th>Subject Area</th>
                 <th>Insight Decision</th>
                 <th>Justification</th>
+                <th>Date uploaded</th>
 
             </tr>
             {% for paper in papers %}
@@ -39,6 +40,7 @@
                     <td>{{ paper.subjectArea2 }}</td>
                     <td>{{ paper.insightDecision }}</td>
                     <td>{{ paper.insightComment }}</td>
+                    <td>{{ paper.dateAdded is empty ? "" : paper.dateAdded|date("m/d/Y") }}</td>
 
                 </tr>
             {% endfor %}

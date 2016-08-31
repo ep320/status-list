@@ -66,12 +66,12 @@ class Paper
     private $subjectArea2;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $insightDecision;
 
     /**
-     * @ORM\Column(type="string", length=1000, nullable=true)
+     * @ORM\Column(type="string", length=1500, nullable=true)
      */
     private $insightComment;
 
