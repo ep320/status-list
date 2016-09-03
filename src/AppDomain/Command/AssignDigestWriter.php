@@ -6,13 +6,8 @@ namespace AppDomain\Command;
 use AppBundle\Entity\DigestWriter;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AssignDigestWriter
+class AssignDigestWriter extends AbstractPaperCommand
 {
-    /**
-     * @var string
-     */
-    public $paperId;
-
     /**
      * @var DigestWriter
      */
