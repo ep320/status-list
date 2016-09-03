@@ -30,6 +30,10 @@ class CSVParser
         $reader = new CsvReader($file);
         $reader->setStrict(false);
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);
+
+        /**
+         * @var $importCommands ImportPaperDetails[]
+         */
         $importCommands = [];
 
         /**
@@ -48,20 +52,23 @@ class CSVParser
             preg_match('#(?<articleType>[A-Z]+)-\w+-(?<manuscriptNo>[0-9]{5})(R(?<revision>\d+))?(-(?<hadAppeal>\w))?#',
                 $row['MS Tracking No.'], $matches);
 
+            /**
+             * @var $subjectArea SubjectArea
+             */
             $subjectArea = $em->getRepository(SubjectArea::class)
                 ->findOneBy(['description' => $row['Major Subject Area(s)']]);
 
             if (array_key_exists(intval($matches['manuscriptNo']), $importCommands)) {
-                $importCommands[intval($matches['manuscriptNo'])]->subjectArea2 = $subjectArea;
+                $importCommands[intval($matches['manuscriptNo'])]->subjectAreaId2 = $subjectArea->getId();
                 continue;
             }
             $importCommand = new ImportPaperDetails();
             $importCommand->manuscriptNo = intval($matches['manuscriptNo']);
-            $importCommand->articleType = $em->getReference(ArticleType::class, $matches['articleType']);
+            $importCommand->articleTypeCode = $matches['articleType'];
             $importCommand->correspondingAuthor = html_entity_decode($row['Corresponding Author']);
             $importCommand->revision = isset($matches['revision']) ? intval($matches['revision']) : 0;
             $importCommand->hadAppeal = isset($matches['hadAppeal']) && $matches['hadAppeal'] == 'A';
-            $importCommand->subjectArea1 = $subjectArea;
+            $importCommand->subjectAreaId1 = $subjectArea->getId();
             $importCommand->insightDecision = $row['Insight?'];
             $importCommand->insightComment = $row['Justification'];
             $importCommands[$importCommand->manuscriptNo] = $importCommand;

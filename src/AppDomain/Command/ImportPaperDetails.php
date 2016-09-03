@@ -6,50 +6,47 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ImportPaperDetails
 {
     /**
-     *
+     * @var int
      */
     public $manuscriptNo;
 
     /**
-     *
+     * @var string
      */
     public $correspondingAuthor;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\ArticleType")
-     * @Assert\Valid()
+     * @var string
      */
-    public $articleType;
+    public $articleTypeCode;
 
     /**
-     *
+     * @var int
      */
     public $revision;
 
     /**
-     *
+     * @var bool
      */
     public $hadAppeal;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
-     * @Assert\Valid()
+     * @var int
      */
-    public $subjectArea1;
+    public $subjectAreaId1;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
-     * @Assert\Valid()
+     * @var int
      */
-    public $subjectArea2;
+    public $subjectAreaId2;
 
     /**
-     *
+     * @var string
      */
     public $insightDecision;
 
     /**
-     *
+     * @var string
      */
     public $insightComment;
 }

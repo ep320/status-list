@@ -38,7 +38,7 @@ class PaperListController extends Controller
 
 
         $addPaperCommand = new AddPaperManually();
-        $addPaperForm = $this->createForm(AddPaperType::class, $addPaperCommand);
+        $addPaperForm = $this->createForm(AddPaperType::class, $addPaperCommand, ['em' => $this->getDoctrine()->getEntityManager()]);
         $ejpImportForm = $this->createForm(EJPImportType::class);
         $em = $this->getDoctrine()->getManager();
 

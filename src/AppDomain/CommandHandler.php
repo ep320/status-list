@@ -57,6 +57,7 @@ class CommandHandler
      * Validate an AddPaperManually command, and publish PaperAdded on success
      *
      * @param AddPaperManually $command
+     * @throws \Exception
      */
     public function addPaperManually(AddPaperManually $command)
     {
@@ -66,18 +67,18 @@ class CommandHandler
         }
 
 
-        $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2) {
-            $subjectAreas[] = $command->subjectArea2;
+        $subjectAreaIds = [$command->subjectAreaId1];
+        if ($command->subjectAreaId2) {
+            $subjectAreaIds[] = $command->subjectAreaId2;
         }
 
         $event = (new PaperAdded(
             $command->manuscriptNo,
             $command->correspondingAuthor,
-            $command->articleType,
+            $command->articleTypeCode,
             $command->revision,
             $command->hadAppeal,
-            $subjectAreas,
+            $subjectAreaIds,
             'Manual',
             $command->insightDecision,
             $command->insightComment
@@ -98,18 +99,18 @@ class CommandHandler
             return;
         }
 
-        $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2) {
-            $subjectAreas[] = $command->subjectArea2;
+        $subjectAreaIds = [$command->subjectAreaId1];
+        if ($command->subjectAreaId2) {
+            $subjectAreaIds[] = $command->subjectAreaId2;
         }
 
         $event = (new PaperAdded(
             $command->manuscriptNo,
             $command->correspondingAuthor,
-            $command->articleType,
+            $command->articleTypeCode,
             $command->revision,
             $command->hadAppeal,
-            $subjectAreas,
+            $subjectAreaIds,
             'Imported',
             $command->insightDecision,
             $command->insightComment
@@ -170,7 +171,7 @@ class CommandHandler
         $event = (new DigestWriterAssigned(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->writer->getId(),
+            $command->writerId,
             $command->dueDate
         ));
         $this->publish($event);
