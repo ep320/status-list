@@ -6,8 +6,12 @@ use AppDomain\Command\ImportPaperDetails;
 use AppDomain\CommandHandler;
 use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
+use AppDomain\Event\PaperAdded;
+use AppDomain\Event\PaperEvent;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\AddPaperType;
@@ -39,36 +43,20 @@ class PaperListController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $addPaperForm->handleRequest($request);
-        $ejpImportForm->handleRequest($request);
+
 
         if ($addPaperForm->isSubmitted() && $addPaperForm->isValid()) {
             $this->getCommandHandler()->addPaperManually($addPaperCommand);
             $em->flush();
         }
 
-        if ($ejpImportForm->isSubmitted() && $ejpImportForm->isValid()) {
-            $this->addFlash(
-                'notice',
-                'Your changes were saved!'
-            );
+        $this->handleEJPSubmission($ejpImportForm, $em, $request);
 
-            $csvParser = new CSVParser($em);
-            /**
-             * @var $uploadedFile UploadedFile
-             **/
-            $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
-            $importCommands = $csvParser->parseCSV($uploadedFile->openFile());
-            /**
-             * @var $importCommand ImportPaperDetails
-             */
-            foreach ($importCommands as $importCommand) {
-                $this->getCommandHandler()->importPaperDetails($importCommand);
-            }
-            $em->flush();
-        }
+
+        //Flush again to flush any changes picked up by PaperEvent postPersist
+        $em->flush();
 
         $papers = $em->getRepository(Paper::class)->findAll();
-
 
         return $this->render('papers/index.html.twig', [
             'papers' => $papers,
@@ -94,6 +82,22 @@ class PaperListController extends Controller
     }
 
     /**
+     * @Route("/papers/insightsforstatuslist", name="insightsforstatuslist")
+     */
+    public function InsightsForStatusListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['dateAdded' => 'DESC']);
+        $ejpImportForm = $this->createForm(EJPImportType::class);
+        $this->handleEJPSubmission($ejpImportForm, $em, $request);
+
+        return $this->render('papers/insightlistforstatuslist.html.twig', [
+            'papers' => $papers,
+            'ejpImportForm' => $ejpImportForm->createView()
+        ]);
+    }
+
+    /**
      * @return CommandHandler;
      */
     private function getCommandHandler()
@@ -101,5 +105,27 @@ class PaperListController extends Controller
         return $this->get('command_handler');
     }
 
+    private function handleEJPSubmission(FormInterface $ejpImportForm, EntityManager $em, Request $request)
+    {
+        $ejpImportForm->handleRequest($request);
+        if ($ejpImportForm->isSubmitted() && $ejpImportForm->isValid()) {
+            $this->addFlash(
+                'notice',
+                'Your changes were saved!'
+            );
 
-}
+            $csvParser = new CSVParser($em);
+            /**
+             * @var $uploadedFile UploadedFile
+             **/
+            $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
+            $importCommands = $csvParser->parseCSV($uploadedFile->openFile());
+            /**
+             * @var $importCommand ImportPaperDetails
+             */
+            foreach ($importCommands as $importCommand) {
+                $this->getCommandHandler()->importPaperDetails($importCommand);
+            }
+            $em->flush();
+        }
+    }}

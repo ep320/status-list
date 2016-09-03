@@ -6,7 +6,10 @@ use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
 use AppDomain\Command\ImportPaperDetails;
 use AppDomain\Command\MarkAnswersReceived;
+use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
+use AppDomain\Command\UndoAnswersReceived;
+use AppDomain\Command\UndoNoDigestDecided;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestReceived;
@@ -72,8 +75,12 @@ class CommandHandler
             $command->manuscriptNo,
             $command->correspondingAuthor,
             $command->articleType,
+            $command->revision,
+            $command->hadAppeal,
             $subjectAreas,
-            'Manual'
+            'Manual',
+            $command->insightDecision,
+            $command->insightComment
         ));
 
         $this->publish($event);
@@ -100,8 +107,12 @@ class CommandHandler
             $command->manuscriptNo,
             $command->correspondingAuthor,
             $command->articleType,
+            $command->revision,
+            $command->hadAppeal,
             $subjectAreas,
-            'Imported'
+            'Imported',
+            $command->insightDecision,
+            $command->insightComment
         ));
 
         $this->publish($event);
@@ -128,9 +139,9 @@ class CommandHandler
 
     }
 
-    public function undoNoDigestDecided(string $paperId)
+    public function undoNoDigestDecided(UndoNoDigestDecided $command)
     {
-        $event = (new NoDigestDecidedUndone($paperId, $this->getEventCount($paperId) + 1));
+        $event = (new NoDigestDecidedUndone($command->paperId, $this->getEventCount($command->paperId) + 1));
         $this->publish($event);
     }
 
@@ -148,9 +159,9 @@ class CommandHandler
 
     }
 
-    public function undoAnswersReceived(string $paperId)
+    public function undoAnswersReceived(UndoAnswersReceived $command)
     {
-        $event = (new AnswersReceivedUndone($paperId, $this->getEventCount($paperId) + 1));
+        $event = (new AnswersReceivedUndone($command->paperId, $this->getEventCount($command->paperId) + 1));
         $this->publish($event);
     }
 
@@ -165,9 +176,9 @@ class CommandHandler
         $this->publish($event);
     }
 
-    public function markDigestReceived($paperId)
+    public function markDigestReceived(MarkDigestReceived $command)
     {
-        $event = (new DigestReceived($paperId, $this->getEventCount($paperId) + 1, true));
+        $event = (new DigestReceived($command->paperId, $this->getEventCount($command->paperId) + 1, true));
         $this->publish($event);
     }
 

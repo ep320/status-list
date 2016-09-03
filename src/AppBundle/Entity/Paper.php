@@ -32,6 +32,11 @@ class Paper
     private $manuscriptNo;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateAdded;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     private $correspondingAuthor;
@@ -61,6 +66,26 @@ class Paper
     private $subjectArea2;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $revision;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $hadAppeal;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $insightDecision;
+
+    /**
+     * @ORM\Column(type="string", length=1500, nullable=true)
+     */
+    private $insightComment;
+
+    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $noDigestStatus;
@@ -73,13 +98,13 @@ class Paper
 
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $answersInDigestForm;
 
     /**
      * @ORM\ManyToOne(targetEntity="DigestWriter", inversedBy="papersAssigned")
-     * @ORM\JoinColumn(name="digest_written_by", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="digest_written_by", referencedColumnName="id")
      * @Assert\Type(type="AppBundle\Entity\DigestWriter")
      * @Assert\Valid()
      */
@@ -92,12 +117,12 @@ class Paper
     private $digestDueDate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $digestReceived;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $digestSignedOff;
 
@@ -109,19 +134,30 @@ class Paper
     /**
      * @param $paperId
      * @param $manuscriptNo
+     * @param $dateAdded
      * @param $correspondingAuthor
      * @param $articleType
+     * @param $revision
+     * @param $hadAppeal
      * @param $subjectArea1
      * @param $subjectArea2
+     * @param $insightDecision
+     * @param $insightComment
      */
-    public function __construct($paperId, $manuscriptNo, $correspondingAuthor, $articleType, $subjectArea1, $subjectArea2)
+    public function __construct($paperId, $manuscriptNo, \DateTime $dateAdded, $correspondingAuthor, $articleType,
+                                $revision, $hadAppeal, $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
     {
         $this->id = $paperId;
         $this->manuscriptNo = $manuscriptNo;
+        $this->dateAdded = $dateAdded;
         $this->correspondingAuthor = $correspondingAuthor;
         $this->articleType = $articleType;
+        $this->revision = $revision;
+        $this->hadAppeal = $hadAppeal;
         $this->subjectArea1 = $subjectArea1;
         $this->subjectArea2 = $subjectArea2;
+        $this->insightDecision = $insightDecision;
+        $this->insightComment = $insightComment;
         $this->_version = 1;
         $this->answersInDigestForm = false;
 
@@ -144,6 +180,14 @@ class Paper
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getDateAdded()
+    {
+        return $this->dateAdded;
+    }
+
+    /**
      * @return mixed
      */
     public function getCorrespondingAuthor()
@@ -157,6 +201,23 @@ class Paper
     public function getArticleType()
     {
         return $this->articleType;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getRevision()
+    {
+        return $this->revision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHadAppeal()
+    {
+        return $this->hadAppeal;
     }
 
     /**
@@ -174,6 +235,24 @@ class Paper
     {
         return $this->subjectArea2;
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getInsightDecision()
+    {
+        return $this->insightDecision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightComment()
+    {
+        return $this->insightComment;
+    }
+
 
     /**
      * @return mixed

@@ -3,13 +3,8 @@ namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class MarkAnswersReceived {
-
-    /**
-     * @var string
-     */
-    public $paperId;
-
+class MarkAnswersReceived extends AbstractPaperCommand
+{
     /**
      * @var string
      * @Assert\Choice(choices={"Good", "Technical"})
@@ -20,5 +15,4 @@ class MarkAnswersReceived {
      * @var boolean
      */
     public $isInDigestForm;
-
 }

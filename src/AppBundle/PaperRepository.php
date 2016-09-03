@@ -32,10 +32,15 @@ class PaperRepository extends EntityRepository
         $paper = new Paper(
             $paperAdded->getPaperId(),
             $paperAdded->getManuscriptNo(),
+            $paperAdded->getTime(),
             $paperAdded->getCorrespondingAuthor(),
             $articleType,
+            $paperAdded->getRevision(),
+            $paperAdded->getHadAppeal(),
             $subjectArea1,
-            $subjectArea2
+            $subjectArea2,
+            $paperAdded->getInsightDecision(),
+            $paperAdded->getInsightComment()
         );
 
         $this->getEntityManager()->persist($paper);

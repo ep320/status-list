@@ -16,10 +16,10 @@ class DigestWriterAssigned extends PaperEvent
      * DigestWriterAssigned constructor.
      * @param string $paperId
      * @param int $sequence
-     * @param int $writerId
+     * @param string $writerId
      * @param DateTime $digestDueDate
      */
-    public function __construct(string $paperId, int $sequence, int $writerId, \DateTime $digestDueDate)
+    public function __construct(string $paperId, int $sequence, string $writerId, \DateTime $digestDueDate)
     {
         parent::__construct($paperId, $sequence, [
             'writerId' => $writerId,
@@ -34,8 +34,6 @@ class DigestWriterAssigned extends PaperEvent
 
     public function getDigestDueDate()
     {
-        return $this->getFromPayload('digestDueDate');
+        return $this->getDateTimeFromPayload('digestDueDate');
     }
-
-
 }

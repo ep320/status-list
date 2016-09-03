@@ -45,20 +45,25 @@ class CSVParser
         foreach ($reader as $row) {
 
             $matches = [];
-            preg_match('#([A-Z]+)-\w+-([0-9]{5})#', $row['MS Tracking No.'], $matches);
+            preg_match('#(?<articleType>[A-Z]+)-\w+-(?<manuscriptNo>[0-9]{5})(R(?<revision>\d+))?(-(?<hadAppeal>\w))?#',
+                $row['MS Tracking No.'], $matches);
 
             $subjectArea = $em->getRepository(SubjectArea::class)
                 ->findOneBy(['description' => $row['Major Subject Area(s)']]);
 
-            if (array_key_exists(intval($matches[2]), $importCommands)) {
-                $importCommands[intval($matches[2])]->subjectArea2 = $subjectArea;
+            if (array_key_exists(intval($matches['manuscriptNo']), $importCommands)) {
+                $importCommands[intval($matches['manuscriptNo'])]->subjectArea2 = $subjectArea;
                 continue;
             }
             $importCommand = new ImportPaperDetails();
-            $importCommand->manuscriptNo = intval($matches[2]);
-            $importCommand->articleType = $em->getReference(ArticleType::class, $matches[1]);
+            $importCommand->manuscriptNo = intval($matches['manuscriptNo']);
+            $importCommand->articleType = $em->getReference(ArticleType::class, $matches['articleType']);
             $importCommand->correspondingAuthor = html_entity_decode($row['Corresponding Author']);
+            $importCommand->revision = isset($matches['revision']) ? intval($matches['revision']) : 0;
+            $importCommand->hadAppeal = isset($matches['hadAppeal']) && $matches['hadAppeal'] == 'A';
             $importCommand->subjectArea1 = $subjectArea;
+            $importCommand->insightDecision = $row['Insight?'];
+            $importCommand->insightComment = $row['Justification'];
             $importCommands[$importCommand->manuscriptNo] = $importCommand;
         }
         return $importCommands;
