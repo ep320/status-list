@@ -2,10 +2,8 @@
 
 namespace AppBundle\EJPImport;
 
-
-use AppBundle\Entity\ArticleType;
 use AppBundle\Entity\SubjectArea;
-use AppDomain\Command\ImportPaperDetails;
+use AppDomain\Ejp\EjpPaper;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 
@@ -32,9 +30,9 @@ class CSVParser
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);
 
         /**
-         * @var $importCommands ImportPaperDetails[]
+         * @var $ejpPapers EjpPaper[]
          */
-        $importCommands = [];
+        $ejpPapers = [];
 
         /**
          * @var $em EntityManager
@@ -58,22 +56,22 @@ class CSVParser
             $subjectArea = $em->getRepository(SubjectArea::class)
                 ->findOneBy(['description' => $row['Major Subject Area(s)']]);
 
-            if (array_key_exists(intval($matches['manuscriptNo']), $importCommands)) {
-                $importCommands[intval($matches['manuscriptNo'])]->subjectAreaId2 = $subjectArea->getId();
+            if (array_key_exists(intval($matches['manuscriptNo']), $ejpPapers)) {
+                $ejpPapers[intval($matches['manuscriptNo'])]->subjectAreaId2 = $subjectArea->getId();
                 continue;
             }
-            $importCommand = new ImportPaperDetails();
-            $importCommand->manuscriptNo = intval($matches['manuscriptNo']);
-            $importCommand->articleTypeCode = $matches['articleType'];
-            $importCommand->correspondingAuthor = html_entity_decode($row['Corresponding Author']);
-            $importCommand->revision = isset($matches['revision']) ? intval($matches['revision']) : 0;
-            $importCommand->hadAppeal = isset($matches['hadAppeal']) && $matches['hadAppeal'] == 'A';
-            $importCommand->subjectAreaId1 = $subjectArea->getId();
-            $importCommand->insightDecision = $row['Insight?'];
-            $importCommand->insightComment = $row['Justification'];
-            $importCommands[$importCommand->manuscriptNo] = $importCommand;
+            $ejpPaper = new EjpPaper();
+            $ejpPaper->setManuscriptNo(intval($matches['manuscriptNo']));
+            $ejpPaper->setArticleTypeCode($matches['articleType']);
+            $ejpPaper->setCorrespondingAuthor(html_entity_decode($row['Corresponding Author']));
+            $ejpPaper->setRevision(isset($matches['revision']) ? intval($matches['revision']) : 0);
+            $ejpPaper->setHadAppeal(isset($matches['hadAppeal']) && $matches['hadAppeal'] == 'A');
+            $ejpPaper->setSubjectAreaId1($subjectArea->getId());
+            $ejpPaper->setInsightDecision($row['Insight?']);
+            $ejpPaper->setInsightComment($row['Justification']);
+            $ejpPapers[$ejpPaper->manuscriptNo] = $ejpPaper;
         }
-        return $importCommands;
+        return $ejpPapers;
     }
 
 }

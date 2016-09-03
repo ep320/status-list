@@ -12,12 +12,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorMap({
  *     "DigestWriterAssigned" = "DigestWriterAssigned",
  *     "PaperAdded" = "PaperAdded",
+ *     "EjpPaperImported" = "EjpPaperImported",
  *     "NoDigestDecided" = "NoDigestDecided",
- * "NoDigestDecidedUndone" = "NoDigestDecidedUndone",
+ *     "NoDigestDecidedUndone" = "NoDigestDecidedUndone",
  *     "AnswersReceived" = "AnswersReceived",
  *     "AnswersReceivedUndone" = "AnswersReceivedUndone",
  *     "DigestReceived" = "DigestReceived",
- * "DigestSignedOff" = "DigestSignedOff"
+ *     "DigestSignedOff" = "DigestSignedOff"
  * })
  */
 abstract class PaperEvent

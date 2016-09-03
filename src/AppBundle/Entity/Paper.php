@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
+use AppDomain\Event\EjpPaperImported;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestSignedOff;
@@ -294,7 +295,7 @@ class Paper
      */
     public function applyEvent(PaperEvent $event, EntityManager $em)
     {
-        if ($event instanceof PaperAdded) {
+        if ($event instanceof PaperAdded || $event instanceof EjpPaperImported) {
             $articleType = $em->getReference(ArticleType::class, $event->getArticleTypeCode());
             $subjectArea1 = $subjectArea2 = null;
             $subjectAreaIds = $event->getSubjectAreaIds();
