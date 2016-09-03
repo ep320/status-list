@@ -35,6 +35,8 @@ class PaperRepository extends EntityRepository
             $paperAdded->getTime(),
             $paperAdded->getCorrespondingAuthor(),
             $articleType,
+            $paperAdded->getRevision(),
+            $paperAdded->getHadAppeal(),
             $subjectArea1,
             $subjectArea2,
             $paperAdded->getInsightDecision(),

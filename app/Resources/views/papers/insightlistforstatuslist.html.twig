@@ -13,13 +13,20 @@
         <a href="{{ path('papers') }}">
             Main paper list
         </a>
+        <div id="forms">
+            {{ form_start(ejpImportForm) }}
+            {{ form_widget(ejpImportForm) }}
+            {{ form_end(ejpImportForm) }}
+        </div>
     </div>
     <div id="table">
         <table class="table table-condensed table-responsive">
             <tr>
                 <th>Manuscript No.</th>
                 <th>Author</th>
+                <th>Revision</th>
                 <th>Article Type</th>
+                <th>Appeal?</th>
                 <th>Subject Area</th>
                 <th>Subject Area</th>
                 <th>Insight Decision</th>
@@ -35,7 +42,9 @@
                         </a>
                     </td>
                     <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.revision == 0 ? "" : paper.revision }}</td>
                     <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.hadAppeal ? '✔':'' }}</td>
                     <td>{{ paper.subjectArea1 }}</td>
                     <td>{{ paper.subjectArea2 }}</td>
                     <td>{{ paper.insightDecision }}</td>

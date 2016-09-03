@@ -22,6 +22,16 @@ class AddPaperManually
     public $articleType;
 
     /**
+     *
+     */
+    public $revision;
+
+    /**
+     *
+     */
+    public $hadAppeal;
+
+    /**
      * @Assert\Type(type="AppBundle\Entity\SubjectArea")
      * @Assert\Valid()
      */
@@ -32,4 +42,14 @@ class AddPaperManually
      * @Assert\Valid()
      */
     public $subjectArea2;
+
+    /**
+     *
+     */
+    public $insightDecision;
+
+    /**
+     *
+     */
+    public $insightComment;
 }

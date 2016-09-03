@@ -6,6 +6,8 @@ use AppBundle\Entity\SubjectArea;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
@@ -23,6 +25,12 @@ class AddPaperType extends AbstractType
                     return ($val == 'RA');
                 }
             ))
+            ->add('revision', ChoiceType::class, array(
+                'choices' => [1 => '1', 2 => '2', 3 => '3', 4 => '4']
+            ))
+            ->add('hadAppeal', CheckboxType::class, array(
+                'label' => 'Appeal?',
+                'required' => false))
             ->
             add('subjectArea1', EntityType::class, array(
                 'class' => SubjectArea::class,
@@ -32,6 +40,9 @@ class AddPaperType extends AbstractType
                 'class' => SubjectArea::class,
                 'choice_label' => 'description'
             ))
+            ->add('insightDecision', ChoiceType::class, array(
+                'choices' => ['yes' => 'Yes', 'no' => 'No']))
+            ->add('insightComment')
             ->add('save', SubmitType::class);
     }
 }

@@ -66,6 +66,16 @@ class Paper
     private $subjectArea2;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $revision;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $hadAppeal;
+
+    /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $insightDecision;
@@ -127,19 +137,23 @@ class Paper
      * @param $dateAdded
      * @param $correspondingAuthor
      * @param $articleType
+     * @param $revision
+     * @param $hadAppeal
      * @param $subjectArea1
      * @param $subjectArea2
      * @param $insightDecision
      * @param $insightComment
      */
     public function __construct($paperId, $manuscriptNo, \DateTime $dateAdded, $correspondingAuthor, $articleType,
-                                $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
+                                $revision, $hadAppeal, $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
     {
         $this->id = $paperId;
         $this->manuscriptNo = $manuscriptNo;
         $this->dateAdded = $dateAdded;
         $this->correspondingAuthor = $correspondingAuthor;
         $this->articleType = $articleType;
+        $this->revision = $revision;
+        $this->hadAppeal = $hadAppeal;
         $this->subjectArea1 = $subjectArea1;
         $this->subjectArea2 = $subjectArea2;
         $this->insightDecision = $insightDecision;
@@ -189,6 +203,23 @@ class Paper
         return $this->articleType;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getRevision()
+    {
+        return $this->revision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHadAppeal()
+    {
+        return $this->hadAppeal;
+    }
+
     /**
      * @return mixed
      */
@@ -204,6 +235,7 @@ class Paper
     {
         return $this->subjectArea2;
     }
+
 
     /**
      * @return mixed

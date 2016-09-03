@@ -72,8 +72,12 @@ class CommandHandler
             $command->manuscriptNo,
             $command->correspondingAuthor,
             $command->articleType,
+            $command->revision,
+            $command->hadAppeal,
             $subjectAreas,
-            'Manual'
+            'Manual',
+            $command->insightDecision,
+            $command->insightComment
         ));
 
         $this->publish($event);
@@ -100,6 +104,8 @@ class CommandHandler
             $command->manuscriptNo,
             $command->correspondingAuthor,
             $command->articleType,
+            $command->revision,
+            $command->hadAppeal,
             $subjectAreas,
             'Imported',
             $command->insightDecision,

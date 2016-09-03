@@ -22,6 +22,16 @@ class ImportPaperDetails
     public $articleType;
 
     /**
+     *
+     */
+    public $revision;
+
+    /**
+     *
+     */
+    public $hadAppeal;
+
+    /**
      * @Assert\Type(type="AppBundle\Entity\SubjectArea")
      * @Assert\Valid()
      */
