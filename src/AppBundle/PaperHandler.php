@@ -29,14 +29,17 @@ class PaperHandler
      * @param PaperEvent $paperEvent
      */
     public function handle(PaperEvent $paperEvent) {
-        if ($paperEvent instanceof PaperAdded) {
-            $this->paperRepository->handlePaperAdded($paperEvent);
-        } else if ($existingPaper = $this->paperRepository->find($paperEvent->getPaperId())) {
-            /**
-             * @var $existingPaper Paper
-             */
-            $existingPaper->applyEvent($paperEvent, $this->entityManager);
+        /**
+         * @var $paper Paper|null
+         */
+        $paper = $this->paperRepository->find($paperEvent->getPaperId());
+
+        if (!$paper) {
+            $paper = new Paper($paperEvent->getPaperId());
+            $this->entityManager->persist($paper);
         }
+
+        $paper->applyEvent($paperEvent, $this->entityManager);
     }
 
     /**

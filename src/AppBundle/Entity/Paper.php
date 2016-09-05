@@ -2,12 +2,14 @@
 namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
+use AppDomain\Event\EjpPaperImported;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestSignedOff;
 use AppDomain\Event\DigestWriterAssigned;
 use AppDomain\Event\DigestReceived;
 use AppDomain\Event\NoDigestDecidedUndone;
+use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
@@ -100,7 +102,7 @@ class Paper
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $answersInDigestForm;
+    private $answersInDigestForm = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="DigestWriter", inversedBy="papersAssigned")
@@ -131,36 +133,8 @@ class Paper
      */
     private $_version;
 
-    /**
-     * @param $paperId
-     * @param $manuscriptNo
-     * @param $dateAdded
-     * @param $correspondingAuthor
-     * @param $articleType
-     * @param $revision
-     * @param $hadAppeal
-     * @param $subjectArea1
-     * @param $subjectArea2
-     * @param $insightDecision
-     * @param $insightComment
-     */
-    public function __construct($paperId, $manuscriptNo, \DateTime $dateAdded, $correspondingAuthor, $articleType,
-                                $revision, $hadAppeal, $subjectArea1, $subjectArea2, $insightDecision, $insightComment)
-    {
-        $this->id = $paperId;
-        $this->manuscriptNo = $manuscriptNo;
-        $this->dateAdded = $dateAdded;
-        $this->correspondingAuthor = $correspondingAuthor;
-        $this->articleType = $articleType;
-        $this->revision = $revision;
-        $this->hadAppeal = $hadAppeal;
-        $this->subjectArea1 = $subjectArea1;
-        $this->subjectArea2 = $subjectArea2;
-        $this->insightDecision = $insightDecision;
-        $this->insightComment = $insightComment;
-        $this->_version = 1;
-        $this->answersInDigestForm = false;
-
+    public function __construct(string $id) {
+        $this->id = $id;
     }
 
     /**
@@ -321,6 +295,28 @@ class Paper
      */
     public function applyEvent(PaperEvent $event, EntityManager $em)
     {
+        if ($event instanceof PaperAdded || $event instanceof EjpPaperImported) {
+            $articleType = $em->getReference(ArticleType::class, $event->getArticleTypeCode());
+            $subjectArea1 = $subjectArea2 = null;
+            $subjectAreaIds = $event->getSubjectAreaIds();
+            if (isset($subjectAreaIds[0])) {
+                $subjectArea1 = $em->getReference(SubjectArea::class, $subjectAreaIds[0]);
+            }
+            if (isset($subjectAreaIds[1])) {
+                $subjectArea2 = $em->getReference(SubjectArea::class, $subjectAreaIds[1]);
+            }
+
+            $this->manuscriptNo = $event->getManuscriptNo();
+            $this->dateAdded = $event->getTime();
+            $this->correspondingAuthor = $event->getCorrespondingAuthor();
+            $this->articleType = $articleType;
+            $this->revision = $event->getRevision();
+            $this->hadAppeal = $event->getHadAppeal();
+            $this->subjectArea1 = $subjectArea1;
+            $this->subjectArea2 = $subjectArea2;
+            $this->insightDecision = $event->getInsightDecision();
+            $this->insightComment = $event->getInsightComment();
+        }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();
         }

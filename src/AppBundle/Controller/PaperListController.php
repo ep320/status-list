@@ -2,10 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppDomain\Command\ImportPaperDetails;
 use AppDomain\CommandHandler;
 use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
+use AppDomain\Ejp\EjpPaper;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
@@ -38,7 +38,7 @@ class PaperListController extends Controller
 
 
         $addPaperCommand = new AddPaperManually();
-        $addPaperForm = $this->createForm(AddPaperType::class, $addPaperCommand);
+        $addPaperForm = $this->createForm(AddPaperType::class, $addPaperCommand, ['em' => $this->getDoctrine()->getEntityManager()]);
         $ejpImportForm = $this->createForm(EJPImportType::class);
         $em = $this->getDoctrine()->getManager();
 
@@ -119,12 +119,12 @@ class PaperListController extends Controller
              * @var $uploadedFile UploadedFile
              **/
             $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
-            $importCommands = $csvParser->parseCSV($uploadedFile->openFile());
+            $ejpPapers = $csvParser->parseCSV($uploadedFile->openFile());
             /**
-             * @var $importCommand ImportPaperDetails
+             * @var $ejpPaper EjpPaper
              */
-            foreach ($importCommands as $importCommand) {
-                $this->getCommandHandler()->importPaperDetails($importCommand);
+            foreach ($ejpPapers as $ejpPaper) {
+                $this->getCommandHandler()->importFromEjp($ejpPaper);
             }
             $em->flush();
         }

@@ -2,16 +2,14 @@
 
 namespace AppDomain\Command;
 
-
-use AppBundle\Entity\DigestWriter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class AssignDigestWriter extends AbstractPaperCommand
 {
     /**
-     * @var DigestWriter
+     * @var string
      */
-    public $writer;
+    public $writerId;
 
     /**
      * @var \DateTime (nullable=true)

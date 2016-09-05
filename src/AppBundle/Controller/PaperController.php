@@ -134,7 +134,9 @@ class PaperController extends Controller
                 $validFormSubmitted = true;
             }
         } else { //Digest not yet assigned to writer
-            $form = $this->createForm(AssignDigestWriterType::class, new AssignDigestWriter($paper->getId()));
+            $form = $this->createForm(AssignDigestWriterType::class, new AssignDigestWriter($paper->getId()), [
+                'em'=>$this->getDoctrine()->getEntityManager()
+            ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getCommandHandler()->assignDigestWriter($form->getData());

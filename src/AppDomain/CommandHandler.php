@@ -2,25 +2,28 @@
 
 namespace AppDomain;
 
+use AppDomain\Aggregate\Paper;
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
-use AppDomain\Command\ImportPaperDetails;
+use AppDomain\Ejp\EjpPaper;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\Command\UndoAnswersReceived;
 use AppDomain\Command\UndoNoDigestDecided;
+use AppDomain\Ejp\EjpHasher;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestReceived;
 use AppDomain\Event\DigestSignedOff;
 use AppDomain\Event\DigestWriterAssigned;
+use AppDomain\Event\EjpPaperImported;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\NoDigestDecidedUndone;
 use AppDomain\Event\PaperAdded;
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Ramsey\Uuid\Uuid;
 
 class CommandHandler
 {
@@ -35,12 +38,12 @@ class CommandHandler
     }
 
     /**
-     * Check whether manuscript no of imported paper matches a manuscript no already in statusbase
+     * Get the ID of a paper by its manuscript number, or null
      *
      * @param int $manuscriptNo
-     * @return bool
+     * @return string | null
      */
-    private function doesPaperExist(int $manuscriptNo)
+    private function findIdByManuscriptNo(int $manuscriptNo)
     {
         /**
          * @var $result \PDOStatement
@@ -50,34 +53,50 @@ class CommandHandler
             [json_encode(['manuscriptNo' => $manuscriptNo])]
         );
 
-        return $result->fetch() !== false;
+        $event = $result->fetch();
+
+        if (!$event) {
+            return null;
+        }
+
+        return $event['paper_id'];
+    }
+
+    /**
+     * @param string $id
+     * @return Paper
+     */
+    private function loadPaper(string $id) {
+        $events = $this->entityManager->getRepository(PaperEvent::class)->findBy(['paperId' => $id], ['sequence'=>'ASC']);
+        return Paper::load($events);
     }
 
     /**
      * Validate an AddPaperManually command, and publish PaperAdded on success
      *
      * @param AddPaperManually $command
+     * @throws \Exception
      */
     public function addPaperManually(AddPaperManually $command)
     {
 
-        if ($this->doesPaperExist($command->manuscriptNo)) {
+        if ($this->findIdByManuscriptNo($command->manuscriptNo)) {
             throw new \Exception('A paper with this manuscript no. is already in statusbase');
         }
 
 
-        $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2) {
-            $subjectAreas[] = $command->subjectArea2;
+        $subjectAreaIds = [$command->subjectAreaId1];
+        if ($command->subjectAreaId2) {
+            $subjectAreaIds[] = $command->subjectAreaId2;
         }
 
         $event = (new PaperAdded(
             $command->manuscriptNo,
             $command->correspondingAuthor,
-            $command->articleType,
+            $command->articleTypeCode,
             $command->revision,
             $command->hadAppeal,
-            $subjectAreas,
+            $subjectAreaIds,
             'Manual',
             $command->insightDecision,
             $command->insightComment
@@ -88,35 +107,27 @@ class CommandHandler
     }
 
     /**
-     * Validate an ImportPaperDetails command, and publish PaperAdded on success
+     * Validate an EjpPaper blob, and publish EjpPaperImported if anything has changed
      *
-     * @param ImportPaperDetails $command
+     * @param EjpPaper $ejpPaper
      */
-    public function importPaperDetails(ImportPaperDetails $command)
+    public function importFromEjp(EjpPaper $ejpPaper)
     {
-        if ($this->doesPaperExist($command->manuscriptNo)) {
+        if ($paperId = $this->findIdByManuscriptNo($ejpPaper->getManuscriptNo())) {
+            $existingPaper = $this->loadPaper($paperId);
+            //We've seen this paper before. Publish an event only if it's different
+            if ($existingPaper->getEjpHashForComparison() !== EjpHasher::hash($ejpPaper)) {
+                //Update paper
+                $event = (new EjpPaperImported($paperId, $existingPaper->getVersion()+1, $ejpPaper));
+                $this->publish($event);
+            }
             return;
         }
 
-        $subjectAreas = [$command->subjectArea1];
-        if ($command->subjectArea2) {
-            $subjectAreas[] = $command->subjectArea2;
-        }
-
-        $event = (new PaperAdded(
-            $command->manuscriptNo,
-            $command->correspondingAuthor,
-            $command->articleType,
-            $command->revision,
-            $command->hadAppeal,
-            $subjectAreas,
-            'Imported',
-            $command->insightDecision,
-            $command->insightComment
-        ));
+        //We haven't seen this paper before.
+        $event = (new EjpPaperImported(Uuid::uuid4(), 1, $ejpPaper));
 
         $this->publish($event);
-
     }
 
     public function publish(PaperEvent $event)
@@ -170,7 +181,7 @@ class CommandHandler
         $event = (new DigestWriterAssigned(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->writer->getId(),
+            $command->writerId,
             $command->dueDate
         ));
         $this->publish($event);

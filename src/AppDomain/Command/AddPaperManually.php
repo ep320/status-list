@@ -6,50 +6,52 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AddPaperManually
 {
     /**
-     *
+     * @var int
+     * @Assert\NotBlank()
      */
     public $manuscriptNo;
 
     /**
-     *
+     * @var string
+     * @Assert\NotBlank()
      */
     public $correspondingAuthor;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\ArticleType")
+     * @var string
      * @Assert\Valid()
      */
-    public $articleType;
+    public $articleTypeCode;
 
     /**
-     *
+     * @var int
      */
     public $revision;
 
     /**
-     *
+     * @var bool
      */
     public $hadAppeal;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
+     * @var int
      * @Assert\Valid()
      */
-    public $subjectArea1;
+    public $subjectAreaId1;
 
     /**
-     * @Assert\Type(type="AppBundle\Entity\SubjectArea")
+     * @var int
      * @Assert\Valid()
      */
-    public $subjectArea2;
+    public $subjectAreaId2;
 
     /**
-     *
+     * @var string
      */
     public $insightDecision;
 
     /**
-     *
+     * @var string
      */
     public $insightComment;
 }

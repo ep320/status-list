@@ -2,8 +2,6 @@
 
 namespace AppDomain\Event;
 
-use AppBundle\Entity\ArticleType;
-use AppBundle\Entity\SubjectArea;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -17,27 +15,25 @@ class PaperAdded extends PaperEvent
      * PaperAdded constructor.
      * @param $manuscriptNo
      * @param $author
-     * @param ArticleType $articleType
+     * @param string $articleTypeCode
      * @param $revision
      * @param $hadAppeal
-     * @param SubjectArea[] $subjectAreas
+     * @param int[] $subjectAreaIds
      * @param $insightDecision
      * @param $insightComment
      */
-    public function __construct(int $manuscriptNo, string $author, ArticleType $articleType, int $revision, bool $hadAppeal,
-                                array $subjectAreas = [],
+    public function __construct(int $manuscriptNo, string $author, string $articleTypeCode, int $revision, bool $hadAppeal,
+                                array $subjectAreaIds = [],
                                 string $source,
-                                string $insightDecision, string $insightComment)
+                                string $insightDecision, $insightComment)
     {
         parent::__construct(Uuid::uuid4(), 1, [
             'manuscriptNo' => $manuscriptNo,
             'author' => $author,
-            'articleTypeCode' => $articleType->getCode(),
+            'articleTypeCode' => $articleTypeCode,
             'revision' => $revision,
             'hadAppeal' => $hadAppeal,
-            'subjectAreaIds' => array_map(function (SubjectArea $subjectArea) {
-                return $subjectArea->getId();
-            }, $subjectAreas),
+            'subjectAreaIds' => $subjectAreaIds,
             'source' => $source,
             'insightDecision' => $insightDecision,
             'insightComment' => $insightComment
