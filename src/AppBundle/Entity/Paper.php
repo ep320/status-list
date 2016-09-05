@@ -133,7 +133,8 @@ class Paper
      */
     private $_version;
 
-    public function __construct(string $id) {
+    public function __construct(string $id)
+    {
         $this->id = $id;
     }
 
@@ -295,6 +296,9 @@ class Paper
      */
     public function applyEvent(PaperEvent $event, EntityManager $em)
     {
+        if ($event->getSequence() === 1) {
+            $this->dateAdded = $event->getTime();
+        }
         if ($event instanceof PaperAdded || $event instanceof EjpPaperImported) {
             $articleType = $em->getReference(ArticleType::class, $event->getArticleTypeCode());
             $subjectArea1 = $subjectArea2 = null;
@@ -307,7 +311,6 @@ class Paper
             }
 
             $this->manuscriptNo = $event->getManuscriptNo();
-            $this->dateAdded = $event->getTime();
             $this->correspondingAuthor = $event->getCorrespondingAuthor();
             $this->articleType = $articleType;
             $this->revision = $event->getRevision();
