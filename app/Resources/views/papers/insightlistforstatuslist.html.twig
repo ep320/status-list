@@ -60,6 +60,8 @@
         {% for paper in papers %}
         {% if paper.dateAdded|date("m/d/Y") == "now"|date("m/d/Y") %}
             <tr style="color:red">
+            {% elseif paper.dateAdded|date("m/d/Y") == "now"|date("m/d/Y") and not paper.revision == 0 %}
+            <tr style="color:blue">
         {% else %}
             <tr>
         {% endif %}

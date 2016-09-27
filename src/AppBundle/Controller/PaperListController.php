@@ -48,6 +48,8 @@ class PaperListController extends Controller
         if ($addPaperForm->isSubmitted() && $addPaperForm->isValid()) {
             $this->getCommandHandler()->addPaperManually($addPaperCommand);
             $em->flush();
+
+            return $this->redirectToRoute('papers/index.html.twig');
         }
 
         $this->handleEJPSubmission($ejpImportForm, $em, $request);
