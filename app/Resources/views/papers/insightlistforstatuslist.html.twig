@@ -6,56 +6,83 @@
             {{ flash_message }}
         </div>
     {% endfor %}
-    <div id="title">
-        <h1>Statusbase</h1>
-    </div>
-    <div id="links">
-        <a href="{{ path('papers') }}">
-            Main paper list
-        </a>
-        <div id="forms">
-            {{ form_start(ejpImportForm) }}
-            {{ form_widget(ejpImportForm) }}
-            {{ form_end(ejpImportForm) }}
+<div id="title">
+    <h1>Statusbase</h1>
+</div>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Statusbase</a>
         </div>
-    </div>
-    <div id="table">
-        <table class="table table-condensed table-responsive">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ path('papers') }}">Main list</a></li>
+                <li class="active"><a href="{{ path('digestlist') }}">Digests<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div id="forms">
+    {{ form_start(ejpImportForm) }}
+    {{ form_widget(ejpImportForm) }}
+    {{ form_end(ejpImportForm) }}
+
+</div>
+<div id="table">
+    <table class="table table-condensed table-responsive">
+        <tr>
+            <th>Manuscript No.</th>
+            <th>Author</th>
+            <th>Revision</th>
+            <th>Article Type</th>
+            <th>Appeal?</th>
+            <th>Subject Area</th>
+            <th>Subject Area</th>
+            <th>Insight Decision</th>
+            <th>Justification</th>
+            <th>Date uploaded</th>
+
+        </tr>
+        {% for paper in papers %}
+        {% if paper.dateAdded|date("m/d/Y") == "now"|date("m/d/Y") %}
+            <tr style="color:red">
+        {% else %}
             <tr>
-                <th>Manuscript No.</th>
-                <th>Author</th>
-                <th>Revision</th>
-                <th>Article Type</th>
-                <th>Appeal?</th>
-                <th>Subject Area</th>
-                <th>Subject Area</th>
-                <th>Insight Decision</th>
-                <th>Justification</th>
-                <th>Date uploaded</th>
+        {% endif %}
+            <td>
+                <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                    {{ paper.manuscriptNo }}
+                </a>
+            </td>
+            <td>{{ paper.correspondingAuthor }}</td>
+            <td>{{ paper.revision == 0 ? "" : paper.revision }}</td>
+            <td>{{ paper.articleType }}</td>
+            <td>{{ paper.hadAppeal ? '✔':'' }}</td>
+            <td>{{ paper.subjectArea1 }}</td>
+            <td>{{ paper.subjectArea2 }}</td>
+            <td>{{ paper.insightDecision }}</td>
+            <td>{{ paper.insightComment }}</td>
+            <td>{{ paper.dateAdded is empty ? "" : paper.dateAdded|date("m/d/Y") }}</td>
 
-            </tr>
-            {% for paper in papers %}
-                <tr>
-                    <td>
-                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
-                            {{ paper.manuscriptNo }}
-                        </a>
-                    </td>
-                    <td>{{ paper.correspondingAuthor }}</td>
-                    <td>{{ paper.revision == 0 ? "" : paper.revision }}</td>
-                    <td>{{ paper.articleType }}</td>
-                    <td>{{ paper.hadAppeal ? '✔':'' }}</td>
-                    <td>{{ paper.subjectArea1 }}</td>
-                    <td>{{ paper.subjectArea2 }}</td>
-                    <td>{{ paper.insightDecision }}</td>
-                    <td>{{ paper.insightComment }}</td>
-                    <td>{{ paper.dateAdded is empty ? "" : paper.dateAdded|date("m/d/Y") }}</td>
+        </tr>
+        {% endfor %}
 
-                </tr>
-            {% endfor %}
-
-        </table>
-    </div>
+    </table>
+</div>
 
 {% endblock %}
 
