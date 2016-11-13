@@ -88,6 +88,11 @@ class Paper
     private $insightComment;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    private $insightUpdatedDate;
+
+    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $noDigestStatus;
@@ -228,6 +233,14 @@ class Paper
         return $this->insightComment;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInsightUpdatedDate()
+    {
+        return $this->insightUpdatedDate;
+    }
+
 
     /**
      * @return mixed
@@ -298,6 +311,7 @@ class Paper
     {
         if ($event->getSequence() === 1) {
             $this->dateAdded = $event->getTime();
+            $this->insightUpdatedDate = $event->getTime();
         }
         if ($event instanceof PaperAdded || $event instanceof EjpPaperImported) {
             $articleType = $em->getReference(ArticleType::class, $event->getArticleTypeCode());
@@ -317,6 +331,13 @@ class Paper
             $this->hadAppeal = $event->getHadAppeal();
             $this->subjectArea1 = $subjectArea1;
             $this->subjectArea2 = $subjectArea2;
+            if ($event instanceof EjpPaperImported) {
+                if ($this->insightDecision !== $event->getInsightDecision() ||
+                    $this->insightComment !== $event->getInsightComment()
+                ) {
+                    $this->insightUpdatedDate = $event->getTime();
+                }
+            }
             $this->insightDecision = $event->getInsightDecision();
             $this->insightComment = $event->getInsightComment();
         }
