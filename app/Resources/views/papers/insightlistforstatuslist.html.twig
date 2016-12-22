@@ -58,10 +58,10 @@
 
         </tr>
         {% for paper in papers %}
-        {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
-            <tr style="color:red">
-            {% elseif paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") and not paper.revision == 0 %}
+        {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") and not paper.revision == 0 %}
             <tr style="color:blue">
+            {% elseif paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
+            <tr style="color:red">
         {% else %}
             <tr>
         {% endif %}
@@ -78,7 +78,7 @@
             <td>{{ paper.subjectArea2 }}</td>
             <td>{{ paper.insightDecision }}</td>
             <td>{{ paper.insightComment }}</td>
-            <td>{{ paper.dateAdded is empty ? "" : paper.dateAdded|date("m/d/Y") }}</td>
+            <td>{{ paper.insightUpdatedDate is empty ? "" : paper.insightUpdatedDate|date("m/d/Y") }}</td>
 
         </tr>
         {% endfor %}
