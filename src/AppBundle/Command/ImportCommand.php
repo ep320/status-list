@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Command;
 
-use AppBundle\EJPImport\CSVParser;
+use AppBundle\EJPImport\CSVParserForInsights;
 use AppBundle\Entity\Paper;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -25,13 +25,13 @@ class ImportCommand extends ContainerAwareCommand
          * @var $em EntityManager
          */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
-        $csvParser = new CSVParser($em);
+        $csvParser = new CSVParserForInsights($em);
         $filename = $input->getArgument('filename');
         if (!file_exists($filename)) {
             throw new \Exception('File not found');
         }
         $file = new \SplFileObject($filename);
-        $papersFromCSV = $csvParser->parseCSV($file);
+        $papersFromCSV = $csvParser->parseCSVForInsights($file);
         $output->writeln(sprintf('There are <info>%d</info> papers', count($papersFromCSV)));
 
         /**

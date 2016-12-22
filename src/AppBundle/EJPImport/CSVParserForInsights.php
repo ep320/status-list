@@ -7,7 +7,7 @@ use AppDomain\Ejp\EjpPaper;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 
-class CSVParser
+class CSVParserForInsights
 {
 
     private $em;
@@ -22,7 +22,7 @@ class CSVParser
 
     }
 
-    public function parseCSV(\SplFileObject $file)
+    public function parseCSVForInsights(\SplFileObject $file)
     {
 
         $reader = new CsvReader($file);
