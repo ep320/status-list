@@ -3,13 +3,13 @@
 namespace AppDomain\Ejp;
 
 interface EjpComparable {
-    public function getManuscriptNo(): int;
+    public function getManuscriptNo();
 
-    public function getCorrespondingAuthor(): string;
+    public function getCorrespondingAuthor();
 
-    public function getArticleTypeCode(): string;
+    public function getArticleTypeCode();
 
-    public function getSubjectAreaIds(): array;
+    public function getSubjectAreaIds();
 
     public function getRevision();
 
@@ -18,4 +18,14 @@ interface EjpComparable {
     public function getInsightDecision();
 
     public function getInsightComment();
+
+    public function getDigestAnswers();
+
+    public function getImpactStatement();
+
+    public function getAbstract();
+
+    public function getTitle();
+
+    public function getAcceptedDate();
 };

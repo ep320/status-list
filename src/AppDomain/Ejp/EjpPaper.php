@@ -73,7 +73,7 @@ class EjpPaper implements EjpComparable
 
 
     /**
-     * @var \DateTime;
+     * @var \DateTime
      */
     public $acceptedDate;
 
@@ -153,7 +153,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return int
      */
-    public function getManuscriptNo(): int
+    public function getManuscriptNo()
     {
         return $this->manuscriptNo;
     }
@@ -161,7 +161,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getCorrespondingAuthor(): string
+    public function getCorrespondingAuthor()
     {
         return $this->correspondingAuthor;
     }
@@ -169,7 +169,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getArticleTypeCode(): string
+    public function getArticleTypeCode()
     {
         return $this->articleTypeCode;
     }
@@ -177,7 +177,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return int
      */
-    public function getRevision(): int
+    public function getRevision()
     {
         return $this->revision;
     }
@@ -185,7 +185,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return boolean
      */
-    public function hasHadAppeal(): bool
+    public function hasHadAppeal()
     {
         return $this->hadAppeal;
     }
@@ -193,7 +193,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return int
      */
-    public function getSubjectAreaId1(): int
+    public function getSubjectAreaId1()
     {
         return $this->subjectAreaId1;
     }
@@ -201,7 +201,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return int
      */
-    public function getSubjectAreaId2(): int
+    public function getSubjectAreaId2()
     {
         return $this->subjectAreaId2;
     }
@@ -209,7 +209,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return int[]
      */
-    public function getSubjectAreaIds(): array
+    public function getSubjectAreaIds()
     {
         return array_filter([$this->subjectAreaId1, $this->subjectAreaId2], function($var){return !is_null($var);} );
     }
@@ -217,7 +217,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getInsightDecision(): string
+    public function getInsightDecision()
     {
         return $this->insightDecision;
     }
@@ -225,7 +225,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getInsightComment(): string
+    public function getInsightComment()
     {
         return $this->insightComment;
     }
@@ -233,7 +233,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle()
     {
         return $this->title;
     }
@@ -249,7 +249,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getDigestAnswers(): string
+    public function getDigestAnswers()
     {
         return $this->digestAnswers;
     }
@@ -265,7 +265,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getAbstract(): string
+    public function getAbstract()
     {
         return $this->abstract;
     }
@@ -281,7 +281,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getImpactStatement(): string
+    public function getImpactStatement()
     {
         return $this->impactStatement;
     }
@@ -297,7 +297,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return \DateTime
      */
-    public function getAcceptedDate(): \DateTime
+    public function getAcceptedDate()
     {
         return $this->acceptedDate;
     }

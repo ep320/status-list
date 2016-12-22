@@ -15,7 +15,12 @@ class EjpHasher
                 $ejp->hasHadAppeal() ? '1' : '0',
                 join(',', $ejp->getSubjectAreaIds()),
                 $ejp->getInsightDecision(),
-                $ejp->getInsightComment()
+                $ejp->getInsightComment(),
+                $ejp->getDigestAnswers(),
+                $ejp->getImpactStatement(),
+                $ejp->getAbstract(),
+                $ejp->getTitle(),
+                $ejp->getAcceptedDate()
             ])
         );
     }

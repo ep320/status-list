@@ -78,7 +78,7 @@
             <td>{{ paper.subjectArea2 }}</td>
             <td>{{ paper.insightDecision }}</td>
             <td>{{ paper.insightComment }}</td>
-            <td>{{ paper.insightUpdatedDate is empty ? "" : paper.insightUpdatedDate|date("m/d/Y") }}</td>
+            <td>{{ paper.insightUpdatedDate is empty ? "" : paper.insightUpdatedDate|date("d/m/Y") }}</td>
 
         </tr>
         {% endfor %}
