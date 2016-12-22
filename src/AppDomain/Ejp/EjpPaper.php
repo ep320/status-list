@@ -18,6 +18,12 @@ class EjpPaper implements EjpComparable
     /**
      * @var string
      */
+    public $title;
+
+
+    /**
+     * @var string
+     */
     public $articleTypeCode;
 
     /**
@@ -49,6 +55,28 @@ class EjpPaper implements EjpComparable
      * @var string
      */
     public $insightComment;
+
+    /**
+     * @var string
+     */
+    public $digestAnswers;
+
+    /**
+     * @var string
+     */
+    public $abstract;
+
+    /**
+     * @var string
+     */
+    public $impactStatement;
+
+
+    /**
+     * @var \DateTime;
+     */
+    public $acceptedDate;
+
 
     /**
      * @param int $manuscriptNo
@@ -201,4 +229,86 @@ class EjpPaper implements EjpComparable
     {
         return $this->insightComment;
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDigestAnswers(): string
+    {
+        return $this->digestAnswers;
+    }
+
+    /**
+     * @param string $digestAnswers
+     */
+    public function setDigestAnswers(string $digestAnswers)
+    {
+        $this->digestAnswers = $digestAnswers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbstract(): string
+    {
+        return $this->abstract;
+    }
+
+    /**
+     * @param string $abstract
+     */
+    public function setAbstract(string $abstract)
+    {
+        $this->abstract = $abstract;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImpactStatement(): string
+    {
+        return $this->impactStatement;
+    }
+
+    /**
+     * @param string $impactStatement
+     */
+    public function setImpactStatement(string $impactStatement)
+    {
+        $this->impactStatement = $impactStatement;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAcceptedDate(): \DateTime
+    {
+        return $this->acceptedDate;
+    }
+
+    /**
+     * @param \DateTime $acceptedDate
+     */
+    public function setAcceptedDate(\DateTime $acceptedDate)
+    {
+        $this->acceptedDate = $acceptedDate;
+    }
+
+
 }

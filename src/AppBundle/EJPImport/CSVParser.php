@@ -7,7 +7,7 @@ use AppDomain\Ejp\EjpPaper;
 use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 
-class CSVParserForInsights
+class CSVParser
 {
 
     private $em;
@@ -22,13 +22,22 @@ class CSVParserForInsights
 
     }
 
-    public function parseCSVForInsights(\SplFileObject $file)
+    public function parseCSV(\SplFileObject $file)
     {
 
         $reader = new CsvReader($file);
         $reader->setStrict(false);
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);
+        $headers = $reader->getColumnHeaders();
+        if (count($headers) === 10) {
+            return $this->parseAcceptedPaperCSV($reader);
+        }
 
+        return $this->parseRevisedPaperCSV($reader);
+    }
+
+    private function parseRevisedPaperCSV(CSVReader $reader)
+    {
         /**
          * @var $ejpPapers EjpPaper[]
          */
@@ -73,5 +82,43 @@ class CSVParserForInsights
         }
         return $ejpPapers;
     }
+
+    private function parseAcceptedPaperCSV(CSVReader $reader)
+    {
+        /**
+         * @var $ejpPapers EjpPaper[]
+         */
+        $ejpPapers = [];
+
+        /**
+         * @var $em EntityManager
+         */
+        $em = $this->em;
+
+        if (!in_array('MS number', $reader->getColumnHeaders())) {
+            throw new \Exception('Please upload a correctly formatted .csv file (column headers in 4th row');
+
+        }
+
+        foreach ($reader as $row) {
+
+            $matches = [];
+
+            $ejpPaper = new EjpPaper();
+            $ejpPaper->setManuscriptNo($matches['manuscriptNo']);
+            $ejpPaper->setArticleTypeCode($matches['Type']);
+            $ejpPaper->setCorrespondingAuthor($matches['Corresponding Author']);
+            $ejpPaper->setSubjectAreaId1($matches['First subject area']);
+            $ejpPaper->setSubjectAreaId2($matches['Second subject area']);
+            $ejpPaper->setTitle($matches['Title']);
+            $ejpPaper->setAbstract($matches['Abstract']);
+            $ejpPaper->setImpactStatement($matches['Impact statement']);
+            $ejpPaper->setInsightDecision($row['Insight?']);
+            $ejpPaper->setDigestAnswers($row['Digest answers']);
+            $ejpPapers[$ejpPaper->manuscriptNo] = $ejpPaper;
+        }
+        return $ejpPapers;
+    }
+
 
 }
