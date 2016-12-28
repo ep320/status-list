@@ -3,7 +3,7 @@ namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\EjpPaperImported;
-use AppDomain\Event\PaperAccepted;
+use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestSignedOff;
@@ -370,7 +370,7 @@ class Paper
             $this->insightComment = $event->getInsightComment();
         }
 
-        if ($event instanceof PaperAccepted) {
+        if ($event instanceof PaperAcceptedEvent) {
             $this->acceptedDate = $event->getAcceptedDate();
             $this->digestAnswersGiven = $event->getDigestAnswersGiven();
         }

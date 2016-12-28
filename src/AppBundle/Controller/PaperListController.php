@@ -100,7 +100,7 @@ class PaperListController extends Controller
     }
 
     /**
-     * @Route("/papers/insightsforstatuslist", name="insightsforstatuslist")
+     * @Route("/papers/acceptedbutnotsignedoffpaperslist", name="acceptedpaperslist")
      */
     public function AcceptedPapersListAction(Request $request)
     {

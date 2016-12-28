@@ -71,6 +71,11 @@ class EjpPaper implements EjpComparable
      */
     public $impactStatement;
 
+    /**
+     * @var bool
+     */
+    public $accepted;
+
 
     /**
      * @var \DateTime
@@ -293,6 +298,24 @@ class EjpPaper implements EjpComparable
     {
         $this->impactStatement = $impactStatement;
     }
+
+    /**
+     * @return bool
+     */
+    public function isAccepted(): bool
+    {
+        return $this->accepted;
+    }
+
+    /**
+     * @param bool $accepted
+     */
+    public function setAccepted(bool $accepted)
+    {
+        $this->accepted = $accepted;
+    }
+
+
 
     /**
      * @return \DateTime

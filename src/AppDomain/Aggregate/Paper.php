@@ -2,12 +2,14 @@
 namespace AppDomain\Aggregate;
 
 use AppDomain\Event\EjpPaperImported;
+use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\PaperEvent;
 
 class Paper {
     private $ejpHashForComparison;
 
     private $version = 0;
+    private $accepted;
 
     /**
      * @return mixed
@@ -26,6 +28,24 @@ class Paper {
     }
 
     /**
+     * @return mixed
+     */
+    public function isAccepted()
+    {
+        return $this->accepted;
+    }
+
+    /**
+     * @param mixed $accepted
+     */
+    public function setAccepted($accepted)
+    {
+        $this->accepted = $accepted;
+    }
+
+
+
+    /**
      * @param PaperEvent[] $events
      * @return Paper
      */
@@ -41,6 +61,9 @@ class Paper {
         if ($event instanceof EjpPaperImported) {
             /** @var $event PaperEvent */
             $this->ejpHashForComparison = $event->getEjpHash();
+        }
+        if ($event instanceof PaperAcceptedEvent){
+            $this->accepted=true;
         }
         $this->version = $event->getSequence();
     }

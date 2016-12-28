@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class PaperAccepted extends PaperEvent
+class PaperAcceptedEvent extends PaperEvent
 {
 
     public function __construct(string $paperId, int $sequence, EjpPaper $ejpPaper)

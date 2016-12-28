@@ -22,6 +22,7 @@ class EjpPaperImported extends PaperEvent
             'subjectAreaIds' => $ejpPaper->getSubjectAreaIds(),
             'insightDecision' => $ejpPaper->getInsightDecision(),
             'insightComment' => $ejpPaper->getInsightComment(),
+            'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
             'ejpHash' => EjpHasher::hash($ejpPaper)
         ]);
     }
@@ -64,6 +65,11 @@ class EjpPaperImported extends PaperEvent
     public function getInsightComment()
     {
         return $this->getFromPayload('insightComment');
+    }
+
+    public function getDigestAnswersGiven()
+    {
+        return $this->getFromPayload('digestAnswersGiven');
     }
 
     public function getEjpHash()

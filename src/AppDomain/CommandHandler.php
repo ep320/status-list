@@ -6,14 +6,13 @@ use AppDomain\Aggregate\Paper;
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
 use AppDomain\Ejp\EjpPaper;
-use Appdomain\Command\MarkPaperAccepted;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\Command\UndoAnswersReceived;
 use AppDomain\Command\UndoNoDigestDecided;
 use AppDomain\Ejp\EjpHasher;
-use AppDomain\Event\PaperAccepted;
+use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestReceived;
@@ -119,6 +118,11 @@ class CommandHandler
             $existingPaper = $this->loadPaper($paperId);
             //We've seen this paper before. Publish an event only if it's different
             if ($existingPaper->getEjpHashForComparison() !== EjpHasher::hash($ejpPaper)) {
+                //Check to see if paper's been accepted
+                if ($ejpPaper->isAccepted() === true && $existingPaper->isAccepted()===false){
+                    $this->publish(new PaperAcceptedEvent($paperId, $existingPaper->getVersion()+1, $ejpPaper));
+                }
+
                 //Update paper
                 $event = (new EjpPaperImported($paperId, $existingPaper->getVersion()+1, $ejpPaper));
                 $this->publish($event);
@@ -128,8 +132,11 @@ class CommandHandler
 
         //We haven't seen this paper before.
         $event = (new EjpPaperImported(Uuid::uuid4(), 1, $ejpPaper));
-
         $this->publish($event);
+        //if new paper has also been accepted
+        if ($ejpPaper->isAccepted()=== true){
+            $this->publish(new PaperAcceptedEvent($paperId, 2, $ejpPaper));
+        }
     }
 
     public function publish(PaperEvent $event)
