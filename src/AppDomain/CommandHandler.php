@@ -6,12 +6,14 @@ use AppDomain\Aggregate\Paper;
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
 use AppDomain\Ejp\EjpPaper;
+use Appdomain\Command\MarkPaperAccepted;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\Command\UndoAnswersReceived;
 use AppDomain\Command\UndoNoDigestDecided;
 use AppDomain\Ejp\EjpHasher;
+use AppDomain\Event\PaperAccepted;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestReceived;
@@ -135,6 +137,16 @@ class CommandHandler
         $this->entityManager->persist($event);
         $this->entityManager->flush($event);
         return;
+    }
+
+    public function markPaperAccepted(markPaperAccepted $command)
+    {
+        $event = (new PaperAccepted(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->paperAccepted,
+            $command->acceptedDate
+        ));
     }
 
     public function markNoDigestDecided(MarkNoDigestDecided $command)
