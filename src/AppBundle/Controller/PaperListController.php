@@ -100,6 +100,23 @@ class PaperListController extends Controller
     }
 
     /**
+     * @Route("/papers/insightsforstatuslist", name="insightsforstatuslist")
+     */
+    public function AcceptedPapersListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $papers = $em->getRepository(Paper::class)->findBy(['digestAnswersGiven' => ['no', 'yes']], ['acceptedDate' => 'DESC']);
+        $ejpImportForm = $this->createForm(EJPImportType::class);
+        $this->handleEJPSubmission($ejpImportForm, $em, $request);
+
+        return $this->render('papers/acceptedbutnotsignedoffpaperlist.html.twig', [
+            'papers' => $papers,
+            'ejpImportForm' => $ejpImportForm->createView()
+        ]);
+    }
+
+
+    /**
      * @return CommandHandler;
      */
     private function getCommandHandler()

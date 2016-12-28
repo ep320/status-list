@@ -99,6 +99,11 @@ class Paper
     private $acceptedDate;
 
     /**
+     * @ORM\Column(type"string", length=10, nullable=true)
+     */
+    private $digestAnswersGiven;
+
+    /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
     private $noDigestStatus;
@@ -255,6 +260,14 @@ class Paper
         return $this->acceptedDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDigestAnswersGiven()
+    {
+        return $this->digestAnswersGiven;
+    }
+
 
 
     /**
@@ -359,6 +372,7 @@ class Paper
 
         if ($event instanceof PaperAccepted) {
             $this->acceptedDate = $event->getAcceptedDate();
+            $this->digestAnswersGiven = $event->getDigestAnswersGiven();
         }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();

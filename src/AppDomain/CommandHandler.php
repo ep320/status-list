@@ -139,15 +139,6 @@ class CommandHandler
         return;
     }
 
-    public function markPaperAccepted(markPaperAccepted $command)
-    {
-        $event = (new PaperAccepted(
-            $command->paperId,
-            $this->getEventCount($command->paperId) + 1,
-            $command->acceptedDate,
-            $command->getDigestAnswersGiven
-        ));
-    }
 
     public function markNoDigestDecided(MarkNoDigestDecided $command)
     {
