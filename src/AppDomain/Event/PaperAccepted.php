@@ -2,36 +2,31 @@
 
 namespace AppDomain\Event;
 
+use AppDomain\Ejp\EjpPaper;
+use AppDomain\Ejp\EjpHasher;
 use Doctrine\ORM\Mapping as ORM;
 
-
-/**
- * @ORM\Entity
- */
 class PaperAccepted extends PaperEvent
 {
     /**
-     * DigestWriterAssigned constructor.
-     * @param string $paperId
-     * @param int $sequence
-     * @param bool $paperAccepted
-     * @param /dateTime $acceptedDate
+     * @ORM\Entity
      */
-    public function __construct(string $paperId, int $sequence, bool $paperAccepted)
+    public function __construct(string $paperId, int $sequence, EjpPaper $ejpPaper)
     {
         parent::__construct($paperId, $sequence, [
-            'paperAccepted' => $paperAccepted,
-            'acceptedDate' => $acceptedDate
+            'acceptedDate' => $ejpPaper->getAcceptedDate(),
+            'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
+            'ejpHash' => EjpHasher::hash($ejpPaper)
         ]);
-    }
-
-    public function getPaperAccepted()
-    {
-        return $this->getFromPayload('paperAccepted');
     }
 
     public function getAcceptedDate()
     {
         return $this->getFromPayload('acceptedDate');
+    }
+
+    public function getDigestAnswersGiven()
+    {
+        return $this->getFromPayload('digestAnswersGiven');
     }
 }

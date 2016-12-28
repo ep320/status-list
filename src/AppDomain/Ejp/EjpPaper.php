@@ -59,7 +59,7 @@ class EjpPaper implements EjpComparable
     /**
      * @var string
      */
-    public $digestAnswers;
+    public $digestAnswersGiven;
 
     /**
      * @var string
@@ -249,17 +249,17 @@ class EjpPaper implements EjpComparable
     /**
      * @return string
      */
-    public function getDigestAnswers()
+    public function getDigestAnswersGiven()
     {
-        return $this->digestAnswers;
+        return $this->digestAnswersGiven;
     }
 
     /**
-     * @param string $digestAnswers
+     * @param string $digestAnswersGiven
      */
-    public function setDigestAnswers(string $digestAnswers)
+    public function setDigestAnswersGiven(string $digestAnswersGiven)
     {
-        $this->digestAnswers = $digestAnswers;
+        $this->digestAnswersGiven = $digestAnswersGiven;
     }
 
     /**

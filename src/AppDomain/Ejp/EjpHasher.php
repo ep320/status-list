@@ -16,7 +16,7 @@ class EjpHasher
                 join(',', $ejp->getSubjectAreaIds()),
                 $ejp->getInsightDecision(),
                 $ejp->getInsightComment(),
-                $ejp->getDigestAnswers(),
+                $ejp->getDigestAnswersGiven(),
                 $ejp->getImpactStatement(),
                 $ejp->getAbstract(),
                 $ejp->getTitle(),

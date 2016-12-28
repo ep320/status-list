@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\EjpPaperImported;
+use AppDomain\Event\PaperAccepted;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
 use AppDomain\Event\DigestSignedOff;
@@ -91,6 +92,11 @@ class Paper
      * @ORM\Column(type="datetime")
      */
     private $insightUpdatedDate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $acceptedDate;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
@@ -241,6 +247,15 @@ class Paper
         return $this->insightUpdatedDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAcceptedDate()
+    {
+        return $this->acceptedDate;
+    }
+
+
 
     /**
      * @return mixed
@@ -340,6 +355,10 @@ class Paper
             }
             $this->insightDecision = $event->getInsightDecision();
             $this->insightComment = $event->getInsightComment();
+        }
+
+        if ($event instanceof PaperAccepted) {
+            $this->acceptedDate = $event->getAcceptedDate();
         }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();

@@ -144,8 +144,8 @@ class CommandHandler
         $event = (new PaperAccepted(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->paperAccepted,
-            $command->acceptedDate
+            $command->acceptedDate,
+            $command->getDigestAnswersGiven
         ));
     }
 

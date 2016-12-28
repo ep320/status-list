@@ -114,7 +114,7 @@ class CSVParser
             $ejpPaper->setAbstract($matches['Abstract']);
             $ejpPaper->setImpactStatement($matches['Impact statement']);
             $ejpPaper->setInsightDecision($row['Insight?']);
-            $ejpPaper->setDigestAnswers($row['Digest answers']);
+            $ejpPaper->setDigestAnswersGiven($row['Digest answers']);
             $ejpPapers[$ejpPaper->manuscriptNo] = $ejpPaper;
         }
         return $ejpPapers;

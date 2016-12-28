@@ -19,7 +19,7 @@ interface EjpComparable {
 
     public function getInsightComment();
 
-    public function getDigestAnswers();
+    public function getDigestAnswersGiven();
 
     public function getImpactStatement();
 
