@@ -50,6 +50,7 @@
                 <th>Article Type</th>
                 <th>Subject Area</th>
                 <th>Subject Area</th>
+                <th>Digest Answers?</th>
                 <th>Insight Decision</th>
                 <th>Justification</th>
                 <th>Date accepted</th>
@@ -72,6 +73,7 @@
                 <td>{{ paper.articleType }}</td>
                 <td>{{ paper.subjectArea1 }}</td>
                 <td>{{ paper.subjectArea2 }}</td>
+                <td>{{ paper.digestAnswersGiven }}</td>
                 <td>{{ paper.insightDecision }}</td>
                 <td>{{ paper.insightComment }}</td>
                 <td>{{ paper.acceptedDate is empty ? "" : paper.acceptedDate|date("d/m/Y") }}</td>

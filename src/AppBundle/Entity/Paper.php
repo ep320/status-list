@@ -94,12 +94,18 @@ class Paper
     private $insightUpdatedDate;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $accepted;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $acceptedDate;
 
+
     /**
-     * @ORM\Column(type"string", length=10, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $digestAnswersGiven;
 
@@ -255,6 +261,16 @@ class Paper
     /**
      * @return mixed
      */
+    public function getAccepted()
+    {
+        return $this->accepted;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
     public function getAcceptedDate()
     {
         return $this->acceptedDate;
@@ -267,7 +283,6 @@ class Paper
     {
         return $this->digestAnswersGiven;
     }
-
 
 
     /**
@@ -371,6 +386,7 @@ class Paper
         }
 
         if ($event instanceof PaperAcceptedEvent) {
+            $this->accepted = true;
             $this->acceptedDate = $event->getAcceptedDate();
             $this->digestAnswersGiven = $event->getDigestAnswersGiven();
         }

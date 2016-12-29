@@ -302,7 +302,7 @@ class EjpPaper implements EjpComparable
     /**
      * @return bool
      */
-    public function isAccepted(): bool
+    public function isAccepted()
     {
         return $this->accepted;
     }

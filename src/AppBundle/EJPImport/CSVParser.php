@@ -82,7 +82,7 @@ class CSVParser
         }
         return $ejpPapers;
     }
-
+// the following currently only handles accepted papers that have already been imported on a previous occasion
     private function parseAcceptedPaperCSV(CSVReader $reader)
     {
         /**
@@ -102,19 +102,15 @@ class CSVParser
 
         foreach ($reader as $row) {
 
-            $matches = [];
 
             $ejpPaper = new EjpPaper();
-            $ejpPaper->setManuscriptNo($matches['manuscriptNo']);
-            $ejpPaper->setArticleTypeCode($matches['Type']);
-            $ejpPaper->setCorrespondingAuthor($matches['Corresponding Author']);
-            $ejpPaper->setSubjectAreaId1($matches['First subject area']);
-            $ejpPaper->setSubjectAreaId2($matches['Second subject area']);
-            $ejpPaper->setTitle($matches['Title']);
-            $ejpPaper->setAbstract($matches['Abstract']);
-            $ejpPaper->setImpactStatement($matches['Impact statement']);
+            $ejpPaper->setManuscriptNo(intval($row['MS number']));
+            $ejpPaper->setArticleTypeCode($row['Type']);
+            $ejpPaper->setTitle($row['Title']);
+            $ejpPaper->setAbstract($row['Abstract']);
+            $ejpPaper->setImpactStatement($row['Impact statement']);
             $ejpPaper->setInsightDecision($row['Insight?']);
-            $ejpPaper->setDigestAnswersGiven($row['Digest answers']);
+            $ejpPaper->setDigestAnswersGiven($row['Digest answers?']);
             $ejpPapers[$ejpPaper->manuscriptNo] = $ejpPaper;
         }
         return $ejpPapers;
