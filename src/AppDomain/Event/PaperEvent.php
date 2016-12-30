@@ -19,10 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "AnswersReceivedUndone" = "AnswersReceivedUndone",
  *     "DigestReceived" = "DigestReceived",
  *     "DigestSignedOff" = "DigestSignedOff",
- *     "PaperAcceptedEvent" = "PaperAcceptedEvent",
- *      "Title" = "Title",
- *     "ImpactStatement" = "ImpactStatement",
- *     "Abstract" = "Abstract"
+ *     "PaperAcceptedEvent" = "PaperAcceptedEvent"
  * })
  */
 abstract class PaperEvent

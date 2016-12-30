@@ -67,8 +67,9 @@ class CommandHandler
      * @param string $id
      * @return Paper
      */
-    private function loadPaper(string $id) {
-        $events = $this->entityManager->getRepository(PaperEvent::class)->findBy(['paperId' => $id], ['sequence'=>'ASC']);
+    private function loadPaper(string $id)
+    {
+        $events = $this->entityManager->getRepository(PaperEvent::class)->findBy(['paperId' => $id], ['sequence' => 'ASC']);
         return Paper::load($events);
     }
 
@@ -119,27 +120,29 @@ class CommandHandler
             //We've seen this paper before. Publish an event only if it's different
             if ($existingPaper->getEjpHashForComparison() !== EjpHasher::hash($ejpPaper)) {
                 //Check to see if paper's been accepted
-                if ($ejpPaper->isAccepted() === true && $existingPaper->isAccepted()===false){
-                    $this->publish(new PaperAcceptedEvent($paperId, $existingPaper->getVersion()+1, $ejpPaper));
+                if ($ejpPaper->isAccepted() === true && $existingPaper->isAccepted() === false) {
+                    $this->publish(new PaperAcceptedEvent($paperId, $existingPaper->getVersion() + 1, $ejpPaper));
                 }
 
                 //Update paper
-                $event = (new EjpPaperImported($paperId, $existingPaper->getVersion()+1, $ejpPaper));
+                $event = (new EjpPaperImported($paperId, $existingPaper->getVersion() + 1, $ejpPaper));
                 $this->publish($event);
             }
             return;
         }
 
         //We haven't seen this paper before.
-        $event = (new EjpPaperImported(Uuid::uuid4(), 1, $ejpPaper));
+        $newPaperId = Uuid::uuid4();
+        $event = (new EjpPaperImported($newPaperId, 1, $ejpPaper));
         $this->publish($event);
         //if new paper has also been accepted
-        if ($ejpPaper->isAccepted()=== true){
-            $this->publish(new PaperAcceptedEvent($paperId, 2, $ejpPaper));
+        if ($ejpPaper->isAccepted() === true) {
+            $this->publish(new PaperAcceptedEvent($newPaperId, 2, $ejpPaper));
         }
     }
 
-    public function publish(PaperEvent $event)
+    public
+    function publish(PaperEvent $event)
     {
         $this->entityManager->persist($event);
         $this->entityManager->flush($event);
@@ -147,7 +150,8 @@ class CommandHandler
     }
 
 
-    public function markNoDigestDecided(MarkNoDigestDecided $command)
+    public
+    function markNoDigestDecided(MarkNoDigestDecided $command)
     {
 
         $event = (new NoDigestDecided(
@@ -160,13 +164,15 @@ class CommandHandler
 
     }
 
-    public function undoNoDigestDecided(UndoNoDigestDecided $command)
+    public
+    function undoNoDigestDecided(UndoNoDigestDecided $command)
     {
         $event = (new NoDigestDecidedUndone($command->paperId, $this->getEventCount($command->paperId) + 1));
         $this->publish($event);
     }
 
-    public function markAnswersReceived(MarkAnswersReceived $command)
+    public
+    function markAnswersReceived(MarkAnswersReceived $command)
     {
 
         $event = (new AnswersReceived(
@@ -180,13 +186,15 @@ class CommandHandler
 
     }
 
-    public function undoAnswersReceived(UndoAnswersReceived $command)
+    public
+    function undoAnswersReceived(UndoAnswersReceived $command)
     {
         $event = (new AnswersReceivedUndone($command->paperId, $this->getEventCount($command->paperId) + 1));
         $this->publish($event);
     }
 
-    public function assignDigestWriter(AssignDigestWriter $command)
+    public
+    function assignDigestWriter(AssignDigestWriter $command)
     {
         $event = (new DigestWriterAssigned(
             $command->paperId,
@@ -197,19 +205,22 @@ class CommandHandler
         $this->publish($event);
     }
 
-    public function markDigestReceived(MarkDigestReceived $command)
+    public
+    function markDigestReceived(MarkDigestReceived $command)
     {
         $event = (new DigestReceived($command->paperId, $this->getEventCount($command->paperId) + 1, true));
         $this->publish($event);
     }
 
-    public function markDigestSignedOff($paperId)
+    public
+    function markDigestSignedOff($paperId)
     {
         $event = (new DigestSignedOff($paperId, $this->getEventCount($paperId) + 1, true));
         $this->publish($event);
     }
 
-    private function getEventCount(string $paperId)
+    private
+    function getEventCount(string $paperId)
     {
         $result = $this->entityManager->createQuery(
             'SELECT COUNT(e.sequence) FROM AppDomain:PaperEvent e WHERE e.paperId = :paperId'

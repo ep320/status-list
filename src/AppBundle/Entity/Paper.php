@@ -96,7 +96,7 @@ class Paper
     /**
      * @ORM\Column(type="boolean")
      */
-    private $accepted;
+    private $accepted = false;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
