@@ -33,7 +33,7 @@ class RebuildCommand extends ContainerAwareCommand
         $output->writeln('');
         $papersEm->createQuery('DELETE FROM AppBundle:Paper')->execute();
 
-        $q = $eventsEm->createQuery('SELECT e FROM AppDomain:PaperEvent e');
+        $q = $eventsEm->createQuery('SELECT e FROM AppDomain:PaperEvent e ORDER BY e.sequence ASC');
         $iterableResult = $q->iterate();
         $batchSize = 100;
         $i = 0;
