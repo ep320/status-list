@@ -16,6 +16,7 @@ class PaperAcceptedEvent extends PaperEvent
     public function __construct(string $paperId, int $sequence, EjpPaper $ejpPaper)
     {
         parent::__construct($paperId, $sequence, [
+            'accepted' => $ejpPaper->isAccepted(),
             'acceptedDate' => $ejpPaper->getAcceptedDate(),
             'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
             'ejpHash' => EjpHasher::hash($ejpPaper)
