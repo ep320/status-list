@@ -82,6 +82,7 @@ class CSVParser
         }
         return $ejpPapers;
     }
+
 // the following currently only handles accepted papers that have already been imported on a previous occasion
     private function parseAcceptedPaperCSV(CSVReader $reader)
     {
@@ -107,6 +108,23 @@ class CSVParser
             $ejpPaper->setManuscriptNo(intval($row['MS number']));
             $ejpPaper->setArticleTypeCode($row['Type']);
             $ejpPaper->setTitle($row['Title']);
+
+            if ($row['First subject area'] !== ' ') {
+                $subjectArea1 = $em->getRepository(SubjectArea::class)
+                    ->findOneBy(['description' => $row['First subject area']]);
+
+                $ejpPaper->setSubjectAreaId1($subjectArea1->getId());
+            }
+
+            if ($row['Second subject area'] !== ' ') {
+                var_dump($row['Second subject area']);
+                $subjectArea = $em->getRepository(SubjectArea::class)
+                    ->findOneBy(['description' => $row['Second subject area']]);
+
+                $ejpPaper->setSubjectAreaId2($subjectArea->getId());
+            }
+
+            $ejpPaper->setCorrespondingAuthor($row['Corresponding author']);
             $ejpPaper->setAbstract($row['Abstract']);
             $ejpPaper->setImpactStatement($row['Impact statement']);
             $ejpPaper->setInsightDecision($row['Insight?']);
