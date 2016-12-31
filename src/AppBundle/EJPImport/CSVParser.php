@@ -117,7 +117,6 @@ class CSVParser
             }
 
             if ($row['Second subject area'] !== ' ') {
-                var_dump($row['Second subject area']);
                 $subjectArea = $em->getRepository(SubjectArea::class)
                     ->findOneBy(['description' => $row['Second subject area']]);
 
@@ -129,6 +128,7 @@ class CSVParser
             $ejpPaper->setImpactStatement($row['Impact statement']);
             $ejpPaper->setInsightDecision($row['Insight?']);
             $ejpPaper->setDigestAnswersGiven($row['Digest answers?']);
+            $ejpPaper->setAccepted(True);
             $ejpPapers[$ejpPaper->manuscriptNo] = $ejpPaper;
         }
         return $ejpPapers;
