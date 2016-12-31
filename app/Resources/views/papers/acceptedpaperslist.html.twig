@@ -57,9 +57,7 @@
 
             </tr>
             {% for paper in papers %}
-                {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") and not paper.revision == 0 %}
-                    <tr style="color:blue">
-                {% elseif paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
+                {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
                     <tr style="color:red">
                 {% else %}
                     <tr>
