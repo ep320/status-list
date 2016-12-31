@@ -91,7 +91,9 @@ class PaperListController extends Controller
         $em = $this->getDoctrine()->getManager();
         $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['insightUpdatedDate' => 'DESC']);
         $ejpImportForm = $this->createForm(EJPImportType::class);
-        $this->handleEJPSubmission($ejpImportForm, $em, $request);
+        if ($this->handleEJPSubmission($ejpImportForm, $em, $request)){
+            return $this->redirectToRoute('insightsforstatuslist');
+        }
 
         return $this->render('papers/insightlistforstatuslist.html.twig', [
             'papers' => $papers,
@@ -105,14 +107,17 @@ class PaperListController extends Controller
     public function AcceptedPapersListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $papers = $em->getRepository(Paper::class)->findBy(['digestAnswersGiven' => ['no', 'yes']]);
+        $papers = $em->getRepository(Paper::class)->findBy(['accepted' => True]);
         $ejpImportForm = $this->createForm(EJPImportType::class);
-        $this->handleEJPSubmission($ejpImportForm, $em, $request);
 
+        if ($this->handleEJPSubmission($ejpImportForm, $em, $request)) {
+            return $this->redirectToRoute('acceptedpaperslist');
+        }
         return $this->render('papers/acceptedpaperslist.html.twig', [
             'papers' => $papers,
             'ejpImportForm' => $ejpImportForm->createView()
         ]);
+
     }
 
 
@@ -146,5 +151,8 @@ class PaperListController extends Controller
                 $this->getCommandHandler()->importFromEjp($ejpPaper);
             }
             $em->flush();
+            return true;
         }
-    }}
+        return false;
+    }
+}
