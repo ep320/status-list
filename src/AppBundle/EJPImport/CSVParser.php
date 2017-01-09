@@ -107,6 +107,8 @@ class CSVParser
             preg_match('#(?<articleType>[A-Z]+)-\w+-(?<manuscriptNo>[0-9]{5})(R(?<revision>\d+))?(-(?<hadAppeal>\w))?#',
                 $row['MS No.'], $matches);
 
+            var_dump($matches);
+
             /**
              * @var $subjectArea SubjectArea
              */
