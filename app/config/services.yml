@@ -8,6 +8,11 @@ services:
         class: AppDomain\CommandHandler
         arguments:
             - "@doctrine.orm.events_entity_manager"
+    ejp_parser:
+        class: AppBundle\EJPImport\XLSParser
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@phpexcel"
     paper_repository:
         class: Doctrine\ORM\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]

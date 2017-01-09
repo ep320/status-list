@@ -37,7 +37,9 @@
     "incenteev/composer-parameter-handler": "^2.0",
     "ddeboer/data-import-bundle": "~0.1",
     "ramsey/uuid": "^3.4",
-    "doctrine/doctrine-migrations-bundle": "^1.0"
+    "doctrine/doctrine-migrations-bundle": "^1.0",
+    "phpoffice/phpexcel": "^1.8",
+    "liuggio/excelbundle": "^2.1"
   },
   "require-dev": {
     "sensio/generator-bundle": "^3.0",

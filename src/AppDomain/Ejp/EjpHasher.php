@@ -20,7 +20,7 @@ class EjpHasher
                 $ejp->getImpactStatement(),
                 $ejp->getAbstract(),
                 $ejp->getTitle(),
-                $ejp->getAcceptedDate()
+                $ejp->getAcceptedDate() ? $ejp->getAcceptedDate()->getTimestamp() : null
             ])
         );
     }

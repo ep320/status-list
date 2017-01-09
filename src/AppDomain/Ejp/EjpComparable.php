@@ -27,5 +27,8 @@ interface EjpComparable {
 
     public function getTitle();
 
+    /**
+     * @return \DateTime | null
+     */
     public function getAcceptedDate();
 };

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\EJPImport\XLSParser;
 use AppDomain\CommandHandler;
 use AppBundle\EJPImport\CSVParser;
 use AppBundle\Form\EJPImportType;
@@ -138,12 +139,16 @@ class PaperListController extends Controller
                 'Your changes were saved!'
             );
 
-            $csvParser = new CSVParser($em);
+            /**
+             * @var $csvParser XLSParser
+             */
+            $csvParser = $this->get('ejp_parser');
+
             /**
              * @var $uploadedFile UploadedFile
              **/
             $uploadedFile = $ejpImportForm->get('ejpImport')->getData();
-            $ejpPapers = $csvParser->parseCSV($uploadedFile->openFile());
+            $ejpPapers = $csvParser->parse($uploadedFile->getRealPath());
             /**
              * @var $ejpPaper EjpPaper
              */
