@@ -19,7 +19,7 @@ class PaperAcceptedEvent extends PaperEvent
             'impactStatement' => $ejpPaper->getImpactStatement(),
             'acceptedDate' => $ejpPaper->getAcceptedDate(),
             'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
-            'ejpHash' => EjpHasher::hash($ejpPaper)
+            'ejpAcceptedPaperHash' => EjpHasher::AcceptedPaperHash($ejpPaper)
         ]);
     }
 
@@ -36,5 +36,10 @@ class PaperAcceptedEvent extends PaperEvent
     public function getDigestAnswersGiven()
     {
         return $this->getFromPayload('digestAnswersGiven');
+    }
+
+    public function getEjpAcceptedPaperHash()
+    {
+        return $this->getFromPayload('ejpAcceptedPaperHash');
     }
 }

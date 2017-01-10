@@ -60,13 +60,12 @@ class Paper {
     public function applyEvent(PaperEvent $event) {
         if ($event instanceof EjpPaperImported) {
             /** @var $event PaperEvent */
-            $this->ejpHashForComparison = $event->getEjpHash();
+            $this->ejpHashForComparison = $event->getEjpRevisedPaperHash();
         }
         if ($event instanceof PaperAcceptedEvent){
             $this->accepted=true;
             /** @var $event PaperEvent */
-            $this->ejpHashForComparison = $event->getEjpHash();
-            var_dump($this->ejpHashForComparison);
+            $this->ejpHashForComparison = $event->getEjpAcceptedPaperHash();
         }
         $this->version = $event->getSequence();
     }

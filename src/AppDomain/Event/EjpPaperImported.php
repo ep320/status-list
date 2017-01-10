@@ -22,8 +22,7 @@ class EjpPaperImported extends PaperEvent
             'subjectAreaIds' => $ejpPaper->getSubjectAreaIds(),
             'insightDecision' => $ejpPaper->getInsightDecision(),
             'insightComment' => $ejpPaper->getInsightComment(),
-            'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
-            'ejpHash' => EjpHasher::hash($ejpPaper)
+            'ejpRevisedPaperHash' => EjpHasher::RevisedPaperHash($ejpPaper)
         ]);
     }
 
@@ -67,13 +66,8 @@ class EjpPaperImported extends PaperEvent
         return $this->getFromPayload('insightComment');
     }
 
-    public function getDigestAnswersGiven()
+    public function getEjpRevisedPaperHash()
     {
-        return $this->getFromPayload('digestAnswersGiven');
-    }
-
-    public function getEjpHash()
-    {
-        return $this->getFromPayload('ejpHash');
+        return $this->getFromPayload('ejpRevisedPaperHash');
     }
 }

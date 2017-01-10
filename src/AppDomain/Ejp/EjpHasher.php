@@ -4,7 +4,7 @@ namespace AppDomain\Ejp;
 
 class EjpHasher
 {
-    static function revisedPaperHash(EjpComparable $ejp)
+    static function RevisedPaperHash(EjpComparable $ejp)
     {
         return md5(
             join('#', [
