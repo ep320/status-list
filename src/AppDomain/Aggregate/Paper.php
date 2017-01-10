@@ -64,6 +64,9 @@ class Paper {
         }
         if ($event instanceof PaperAcceptedEvent){
             $this->accepted=true;
+            /** @var $event PaperEvent */
+            $this->ejpHashForComparison = $event->getEjpHash();
+            var_dump($this->ejpHashForComparison);
         }
         $this->version = $event->getSequence();
     }
