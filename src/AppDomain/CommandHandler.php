@@ -118,17 +118,18 @@ class CommandHandler
         if ($paperId = $this->findIdByManuscriptNo($ejpPaper->getManuscriptNo())) {
             $existingPaper = $this->loadPaper($paperId);
             //We've seen this paper before. Publish an event only if it's different
-            if ($existingPaper->getEjpHashForComparison() !== EjpHasher::RevisedPaperHash($ejpPaper) || EjpHasher::AcceptedPaperHash($ejpPaper)) {
+            if ($existingPaper->getEjpHashForComparison() !== EjpHasher::RevisedPaperHash($ejpPaper)|| EjpHasher::AcceptedPaperHash($ejpPaper)) {
 
                 //Update paper
                 $nextVersion = $existingPaper->getVersion() + 1;
 
                 $event = (new EjpPaperImported($paperId, $nextVersion, $ejpPaper));
                 $this->publish($event);
+                $nextVersion++;
                 //Check to see if paper's been accepted
-                if ($ejpPaper->isAccepted() === true && $existingPaper->isAccepted() === false) {
+                if ($ejpPaper->isAccepted() === true && $existingPaper->isAccepted() === null) {
                     $this->publish(new PaperAcceptedEvent($paperId, $nextVersion, $ejpPaper));
-                    $nextVersion++;
+
                 }
 
 

@@ -108,7 +108,7 @@ class PaperListController extends Controller
     public function AcceptedPapersListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $papers = $em->getRepository(Paper::class)->findBy(['accepted' => True]);
+        $papers = $em->getRepository(Paper::class)->findBy(['accepted' => True], ['acceptedDate' => 'DESC']);
         $ejpImportForm = $this->createForm(EJPImportType::class);
 
         if ($this->handleEJPSubmission($ejpImportForm, $em, $request)) {

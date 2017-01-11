@@ -96,7 +96,7 @@ class CSVParser
          */
         $em = $this->em;
 
-        if (!in_array('MS No.', $reader->getColumnHeaders())) {
+        if (!in_array('MS Tracking No.', $reader->getColumnHeaders())) {
             throw new \Exception('Please upload a correctly formatted .csv file (column headers in 4th row');
 
         }

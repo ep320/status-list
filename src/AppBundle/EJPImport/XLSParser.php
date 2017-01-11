@@ -52,7 +52,7 @@ class XLSParser
                     $assocRow[$headers[$index]] = $cell->getValue();
                 }
             }
-            if (trim($assocRow['MS No.'])) {
+            if (trim($assocRow['MS Tracking No.'])) {
                 $rows[] = $assocRow;
             }
         }
@@ -127,7 +127,7 @@ class XLSParser
 
             $matches = [];
             preg_match('#(?<articleType>[A-Z]+)-\w+-(?<manuscriptNo>[0-9]{5})(R(?<revision>\d+))?(-(?<hadAppeal>\w))?#',
-                $row['MS No.'], $matches);
+                $row['MS Tracking No.'], $matches);
 
             /**
              * @var $subjectArea SubjectArea
