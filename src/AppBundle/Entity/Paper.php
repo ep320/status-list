@@ -79,9 +79,14 @@ class Paper
     private $hadAppeal;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $impactStatement;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $abstract;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
@@ -230,6 +235,13 @@ class Paper
         return $this->impactStatement;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAbstract()
+    {
+        return $this->abstract;
+    }
 
     /**
      * @return mixed
@@ -279,7 +291,6 @@ class Paper
     {
         return $this->accepted;
     }
-
 
 
     /**
@@ -404,6 +415,7 @@ class Paper
             $this->acceptedDate = $event->getAcceptedDate();
             $this->digestAnswersGiven = $event->getDigestAnswersGiven();
             $this->impactStatement = $event->getImpactStatement();
+            $this->abstract = $event->getAbstract();
         }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();

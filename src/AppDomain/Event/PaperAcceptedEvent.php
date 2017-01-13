@@ -17,6 +17,7 @@ class PaperAcceptedEvent extends PaperEvent
     {
         parent::__construct($paperId, $sequence, [
             'impactStatement' => $ejpPaper->getImpactStatement(),
+            'abstract' => $ejpPaper->getAbstract(),
             'acceptedDate' => $ejpPaper->getAcceptedDate(),
             'digestAnswersGiven' => $ejpPaper->getDigestAnswersGiven(),
             'ejpAcceptedPaperHash' => EjpHasher::AcceptedPaperHash($ejpPaper)
@@ -27,6 +28,12 @@ class PaperAcceptedEvent extends PaperEvent
     {
         return $this->getFromPayload('impactStatement');
     }
+
+    public function getAbstract()
+    {
+        return $this->getFromPayload('abstract');
+    }
+
 
     public function getAcceptedDate()
     {
