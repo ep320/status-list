@@ -59,7 +59,7 @@ class XLSParser
 
 
 
-        if (count($headers) === 13) {
+        if (count($headers) === 14) {
             return $this->parseAcceptedPaperXLS($rows);
         }
 
@@ -151,6 +151,7 @@ class XLSParser
             $ejpPaper->setInsightComment($row['Justification']);
             $ejpPaper->setAbstract($row['Abstract']);
             $ejpPaper->setImpactStatement($row['Impact statement']);
+            $ejpPaper->setDigestQuestionsAsked($row['Digest question?']);
             $ejpPaper->setDigestAnswersGiven($row['Digest answers?']);
             $ejpPaper->setAccepted(True);
 

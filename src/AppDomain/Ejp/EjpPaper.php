@@ -59,6 +59,11 @@ class EjpPaper implements EjpComparable
     /**
      * @var string
      */
+    public $digestQuestionsAsked;
+
+    /**
+     * @var string
+     */
     public $digestAnswersGiven;
 
     /**
@@ -315,6 +320,21 @@ class EjpPaper implements EjpComparable
         $this->accepted = $accepted;
     }
 
+    /**
+     * @return string
+     */
+    public function getDigestQuestionsAsked()
+    {
+        return $this->digestQuestionsAsked;
+    }
+
+    /**
+     * @param string $digestQuestionsAsked
+     */
+    public function setDigestQuestionsAsked(string $digestQuestionsAsked)
+    {
+        $this->digestQuestionsAsked = $digestQuestionsAsked;
+    }
 
 
     /**

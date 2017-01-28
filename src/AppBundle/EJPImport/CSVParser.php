@@ -29,7 +29,7 @@ class CSVParser
         $reader->setStrict(false);
         $reader->setHeaderRowNumber(3, CsvReader::DUPLICATE_HEADERS_INCREMENT);
         $headers = $reader->getColumnHeaders();
-        if (count($headers) === 13) {
+        if (count($headers) === 14) {
             return $this->parseAcceptedPaperCSV($reader);
         }
 
@@ -131,6 +131,7 @@ class CSVParser
             $ejpPaper->setInsightComment($row['Justification']);
             $ejpPaper->setAbstract($row['Abstract']);
             $ejpPaper->setImpactStatement($row['Impact statement']);
+            $ejpPaper->setDigestQuestionsAsked($row['Digest question?']);
             $ejpPaper->setDigestAnswersGiven($row['Digest answers?']);
             $ejpPaper->setAccepted(True);
 

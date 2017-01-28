@@ -33,6 +33,7 @@ class EjpHasher
                 join(',', $ejp->getSubjectAreaIds()),
                 $ejp->getInsightDecision(),
                 $ejp->getInsightComment(),
+                $ejp->getDigestQuestionsAsked(),
                 $ejp->getDigestAnswersGiven(),
                 $ejp->getImpactStatement(),
                 $ejp->getAbstract(),

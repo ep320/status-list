@@ -84,7 +84,7 @@ class Paper
     private $impactStatement;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=1500, nullable=true)
      */
     private $abstract;
 
@@ -113,6 +113,10 @@ class Paper
      */
     private $acceptedDate;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $digestQuestionsAsked;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -304,6 +308,16 @@ class Paper
     /**
      * @return mixed
      */
+    public function getDigestQuestionsAsked()
+    {
+        return $this->digestQuestionsAsked;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
     public function getDigestAnswersGiven()
     {
         return $this->digestAnswersGiven;
@@ -413,6 +427,7 @@ class Paper
         if ($event instanceof PaperAcceptedEvent) {
             $this->accepted = true;
             $this->acceptedDate = $event->getAcceptedDate();
+            $this->digestQuestionsAsked = $event->getDigestQuestionsAsked();
             $this->digestAnswersGiven = $event->getDigestAnswersGiven();
             $this->impactStatement = $event->getImpactStatement();
             $this->abstract = $event->getAbstract();

@@ -19,6 +19,8 @@ interface EjpComparable {
 
     public function getInsightComment();
 
+    public function getDigestQuestionsAsked();
+
     public function getDigestAnswersGiven();
 
     public function getImpactStatement();
