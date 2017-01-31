@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class InsightEditorAssigned extends PaperEvent
 {
     /**
-     * DigestWriterAssigned constructor.
      * @param string $paperId
      * @param int $sequence
      * @param string $insightEditor

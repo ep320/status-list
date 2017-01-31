@@ -5,6 +5,15 @@ namespace AppDomain;
 use AppDomain\Aggregate\Paper;
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
+use AppDomain\Command\MarkInsightAcknowledged;
+use AppDomain\Command\MarkInsightAuthorAsked;
+use AppDomain\Command\MarkInsightAuthorChecking;
+use AppDomain\Command\MarkInsightAuthorRefused;
+use AppDomain\Command\MarkInsightAuthorReminded;
+use AppDomain\Command\MarkInsightCommissioned;
+use AppDomain\Command\MarkInsightEditorAssigned;
+use AppDomain\Command\MarkInsightNotCommissioned;
+use AppDomain\Command\MarkInsightSignedOff;
 use AppDomain\Ejp\EjpPaper;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
@@ -12,6 +21,15 @@ use AppDomain\Command\MarkNoDigestDecided;
 use AppDomain\Command\UndoAnswersReceived;
 use AppDomain\Command\UndoNoDigestDecided;
 use AppDomain\Ejp\EjpHasher;
+use AppDomain\Event\InsightAcknowledged;
+use AppDomain\Event\InsightAuthorAsked;
+use AppDomain\Event\InsightAuthorRefused;
+use AppDomain\Event\InsightAuthorReminded;
+use AppDomain\Event\InsightCommissioned;
+use AppDomain\Event\InsightEditorAssigned;
+use AppDomain\Event\InsightSignedOff;
+use AppDomain\Event\InsightToAuthorSent;
+use AppDomain\Event\NoInsightDecided;
 use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\AnswersReceivedUndone;
@@ -223,6 +241,126 @@ class CommandHandler
         $event = (new DigestSignedOff($paperId, $this->getEventCount($paperId) + 1, true));
         $this->publish($event);
     }
+
+    public
+    function markInsightNotCommissioned(MarkInsightNotCommissioned $command)
+    {
+
+        $event = (new NoInsightDecided(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightNotCommissionedReason
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public
+    function markInsightAuthorAsked(MarkInsightAuthorAsked $command)
+    {
+
+        $event = (new InsightAuthorAsked(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightAuthor,
+            $command->insightDueDate
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public
+    function markInsightAuthorRefused(MarkInsightAuthorRefused $command)
+    {
+
+        $event = (new InsightAuthorRefused(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightAuthorRefusalReason
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public
+    function markInsightCommissioned(MarkInsightCommissioned $command)
+    {
+
+        $event = (new InsightCommissioned(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightManuscriptNo,
+            $command->insightDueDate,
+            $command->insightCommissionedComment
+
+        ));
+
+        $this->publish($event);
+
+    }
+
+    public function markInsightAuthorReminded(MarkInsightAuthorReminded $command)
+    {
+        $event = (new InsightAuthorReminded(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightAuthorReminded
+        ));
+
+        $this->publish($event);
+    }
+
+
+    public function markInsightAcknowledged(MarkInsightAcknowledged $command)
+    {
+        $event = (new InsightAcknowledged(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightAcknowledged
+        ));
+
+        $this->publish($event);
+    }
+
+    public
+    function markInsightEditorAssigned(MarkInsightEditorAssigned $command)
+    {
+        $event = (new InsightEditorAssigned(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightEditor
+        ));
+        $this->publish($event);
+    }
+
+    public function markInsightAuthorChecking(MarkInsightAuthorChecking $command)
+    {
+        $event = (new InsightToAuthorSent(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightAuthorChecking,
+            $command->insightEditsDueDate
+        ));
+
+        $this->publish($event);
+    }
+
+    public function markInsightSignedOff(MarkInsightSignedOff $command)
+    {
+        $event = (new InsightSignedOff(
+            $command->paperId,
+            $this->getEventCount($command->paperId) + 1,
+            $command->insightSignedOff
+        ));
+
+        $this->publish($event);
+    }
+
+
+
 
     private
     function getEventCount(string $paperId)

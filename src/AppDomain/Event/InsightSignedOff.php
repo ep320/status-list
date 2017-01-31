@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class DigestSignedOff extends PaperEvent
+class InsightSignedOff extends PaperEvent
 {
     /**
      * @param string $paperId

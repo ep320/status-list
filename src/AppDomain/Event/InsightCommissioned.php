@@ -10,30 +10,23 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * @ORM\Entity
  */
-class DigestWriterAssigned extends PaperEvent
+class InsightCommissioned extends PaperEvent
 {
     /**
      * DigestWriterAssigned constructor.
      * @param string $paperId
      * @param int $sequence
-     * @param string $insightAuthor
      * @param int $insightManuscriptNo
      * @param DateTime $insightDueDate
      * @param string $insightCommissionedComment
      */
-    public function __construct(string $paperId, int $sequence, string $insightAuthor, string $insightManuscriptNo, \DateTime $insightDueDate, string $insightCommissionedComment)
+    public function __construct(string $paperId, int $sequence, string $insightManuscriptNo, \DateTime $insightDueDate, string $insightCommissionedComment)
     {
         parent::__construct($paperId, $sequence, [
-            'insightAuthor' => $insightAuthor,
-            'insightManuscriptNo' =>$insightManuscriptNo,
+            'insightManuscriptNo' => $insightManuscriptNo,
             'insightDueDate' => $insightDueDate,
             'insightCommissionedComment' => $insightCommissionedComment
         ]);
-    }
-
-    public function getInsightAuthor()
-    {
-        return $this->getFromPayload('insightAuthor');
     }
 
     public function getInsightManuscriptNo()

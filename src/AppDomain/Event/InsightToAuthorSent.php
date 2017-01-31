@@ -10,18 +10,20 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * @ORM\Entity
  */
-class DigestWriterAssigned extends PaperEvent
+class InsightToAuthorSent extends PaperEvent
 {
     /**
      * DigestWriterAssigned constructor.
      * @param string $paperId
      * @param int $sequence
+     * @param bool $insightAuthorChecking
      * @param DateTime $insightEditsDueDate
      */
-    public function __construct(string $paperId, int $sequence, \DateTime $insightEditsDueDate)
+    public function __construct(string $paperId, int $sequence, bool $insightAuthorChecking, \DateTime $insightEditsDueDate)
     {
         parent::__construct($paperId, $sequence, [
-            'insightEditsDueDate' => $insightEditsDueDate,
+            'insightAuthorChecking' => $insightAuthorChecking,
+            'insightEditsDueDate' => $insightEditsDueDate
         ]);
     }
 
