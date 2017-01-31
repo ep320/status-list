@@ -307,7 +307,7 @@ class CommandHandler
         $event = (new InsightAuthorReminded(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->insightAuthorReminded
+            true
         ));
 
         $this->publish($event);
@@ -319,7 +319,7 @@ class CommandHandler
         $event = (new InsightAcknowledged(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->insightAcknowledged
+            true
         ));
 
         $this->publish($event);
@@ -341,7 +341,7 @@ class CommandHandler
         $event = (new InsightToAuthorSent(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->insightAuthorChecking,
+            true,
             $command->insightEditsDueDate
         ));
 
@@ -353,7 +353,7 @@ class CommandHandler
         $event = (new InsightSignedOff(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->insightSignedOff
+            true
         ));
 
         $this->publish($event);
