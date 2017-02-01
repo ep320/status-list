@@ -20,7 +20,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "DigestReceived" = "DigestReceived",
  *     "DigestSignedOff" = "DigestSignedOff",
  *     "PaperAcceptedEvent" = "PaperAcceptedEvent",
- *     "NoInsightDecided" = "NoInsightDecided'
+ *     "InsightAcknowledged" = "InsightAcknowledged",
+ *     "InsightAuthorAsked" = "InsightAuthorAsked",
+ *     "InsightAuthorRefused" = "InsightAuthorRefused",
+ *     "InsightAuthorReminded" = "InsightAuthorRminded",
+ *     "InsightCommissioned" = "InsightCommissioned",
+ *     "InsightEditorAssigned" = "InsightEditorAssigned",
+ *     "InsightSignedOff" = "InsightSignedOff",
+ *     "InsightToAuthorSent" = "InsightToAuthorSent",
+ *     "NoInsightDecided" = "NoInsightDecided"
  * })
  */
 abstract class PaperEvent

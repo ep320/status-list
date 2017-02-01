@@ -3,7 +3,7 @@ namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class MarkInsightCommissioned extends AbstractPaperCommand
+class CommissionInsight extends AbstractPaperCommand
 {
     /**
      * @var \DateTime

@@ -5,14 +5,13 @@ namespace AppDomain;
 use AppDomain\Aggregate\Paper;
 use AppDomain\Command\AddPaperManually;
 use AppDomain\Command\AssignDigestWriter;
-use AppDomain\Command\MarkInsightAcknowledged;
-use AppDomain\Command\MarkInsightAuthorAsked;
-use AppDomain\Command\MarkInsightAuthorChecking;
-use AppDomain\Command\MarkInsightAuthorRefused;
+use AppDomain\Command\AskInsightAuthor;
+use AppDomain\Command\InsightAuthorChecking;
+use AppDomain\Command\InsightAuthorRefuses;
 use AppDomain\Command\MarkInsightAuthorReminded;
-use AppDomain\Command\MarkInsightCommissioned;
-use AppDomain\Command\MarkInsightEditorAssigned;
-use AppDomain\Command\MarkInsightNotCommissioned;
+use AppDomain\Command\CommissionInsight;
+use AppDomain\Command\AssignInsightEditor;
+use AppDomain\Command\DecideToNotCommissionInsight;
 use AppDomain\Command\MarkInsightSignedOff;
 use AppDomain\Ejp\EjpPaper;
 use AppDomain\Command\MarkAnswersReceived;
@@ -243,7 +242,7 @@ class CommandHandler
     }
 
     public
-    function markInsightNotCommissioned(MarkInsightNotCommissioned $command)
+    function markInsightNotCommissioned(DecideToNotCommissionInsight $command)
     {
 
         $event = (new NoInsightDecided(
@@ -257,7 +256,7 @@ class CommandHandler
     }
 
     public
-    function markInsightAuthorAsked(MarkInsightAuthorAsked $command)
+    function markInsightAuthorAsked(AskInsightAuthor $command)
     {
 
         $event = (new InsightAuthorAsked(
@@ -272,7 +271,7 @@ class CommandHandler
     }
 
     public
-    function markInsightAuthorRefused(MarkInsightAuthorRefused $command)
+    function markInsightAuthorRefused(InsightAuthorRefuses $command)
     {
 
         $event = (new InsightAuthorRefused(
@@ -286,7 +285,7 @@ class CommandHandler
     }
 
     public
-    function markInsightCommissioned(MarkInsightCommissioned $command)
+    function markInsightCommissioned(CommissionInsight $command)
     {
 
         $event = (new InsightCommissioned(
@@ -302,31 +301,29 @@ class CommandHandler
 
     }
 
-    public function markInsightAuthorReminded(MarkInsightAuthorReminded $command)
+    public function remindInsightAuthor($paperId)
     {
         $event = (new InsightAuthorReminded(
-            $command->paperId,
-            $this->getEventCount($command->paperId) + 1,
-            true
+            $paperId,
+            $this->getEventCount($paperId) + 1
         ));
 
         $this->publish($event);
     }
 
 
-    public function markInsightAcknowledged(MarkInsightAcknowledged $command)
+    public function acknowledgeInsight($paperId)
     {
         $event = (new InsightAcknowledged(
-            $command->paperId,
-            $this->getEventCount($command->paperId) + 1,
-            true
+            $paperId,
+            $this->getEventCount($paperId) + 1
         ));
 
         $this->publish($event);
     }
 
     public
-    function markInsightEditorAssigned(MarkInsightEditorAssigned $command)
+    function markInsightEditorAssigned(AssignInsightEditor $command)
     {
         $event = (new InsightEditorAssigned(
             $command->paperId,
@@ -336,24 +333,22 @@ class CommandHandler
         $this->publish($event);
     }
 
-    public function markInsightAuthorChecking(MarkInsightAuthorChecking $command)
+    public function markInsightAuthorChecking(InsightAuthorChecking $command)
     {
         $event = (new InsightToAuthorSent(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            true,
             $command->insightEditsDueDate
         ));
 
         $this->publish($event);
     }
 
-    public function markInsightSignedOff(MarkInsightSignedOff $command)
+    public function SignOffInsight($paperId)
     {
         $event = (new InsightSignedOff(
-            $command->paperId,
-            $this->getEventCount($command->paperId) + 1,
-            true
+            $paperId,
+            $this->getEventCount($paperId) + 1
         ));
 
         $this->publish($event);

@@ -3,7 +3,7 @@ namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class MarkInsightAuthorAsked extends AbstractPaperCommand
+class AskInsightAuthor extends AbstractPaperCommand
 {
     /**
      * @var string

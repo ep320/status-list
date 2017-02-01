@@ -13,18 +13,9 @@ class InsightAcknowledged extends PaperEvent
     /**
      * @param string $paperId
      * @param int $sequence
-     * @param bool $insightAcknowledged
      */
-    public function __construct(string $paperId, int $sequence, bool $insightAcknowledged)
+    public function __construct(string $paperId, int $sequence)
     {
-        parent::__construct($paperId, $sequence, [
-            'insightAcknowledged' => $insightAcknowledged
-        ]);
+        parent::__construct($paperId, $sequence);
     }
-
-    public function getInsightAcknowledged()
-    {
-        return $this->getFromPayload('insightAcknowledged');
-    }
-
 }

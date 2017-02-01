@@ -3,7 +3,7 @@ namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class MarkInsightNotCommissioned extends AbstractPaperCommand
+class DecideToNotCommissionInsight extends AbstractPaperCommand
 {
     /**
      * @var string, nullable=true

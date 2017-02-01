@@ -16,13 +16,11 @@ class InsightToAuthorSent extends PaperEvent
      * DigestWriterAssigned constructor.
      * @param string $paperId
      * @param int $sequence
-     * @param bool $insightAuthorChecking
      * @param DateTime $insightEditsDueDate
      */
-    public function __construct(string $paperId, int $sequence, bool $insightAuthorChecking, \DateTime $insightEditsDueDate)
+    public function __construct(string $paperId, int $sequence, \DateTime $insightEditsDueDate)
     {
         parent::__construct($paperId, $sequence, [
-            'insightAuthorChecking' => $insightAuthorChecking,
             'insightEditsDueDate' => $insightEditsDueDate
         ]);
     }

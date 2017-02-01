@@ -3,6 +3,8 @@ namespace AppBundle\Entity;
 
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\EjpPaperImported;
+use AppDomain\Event\InsightCommissioned;
+use AppDomain\Event\NoInsightDecided;
 use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\NoDigestDecided;
 use AppDomain\Event\AnswersReceivedUndone;
@@ -163,6 +165,13 @@ class Paper
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $digestSignedOff;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $insightCommissioned;
+
+
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -455,6 +464,12 @@ class Paper
         }
         if ($event instanceof DigestSignedOff) {
             $this->digestSignedOff = $event->getDigestSignedOff();
+        }
+        if ($event instanceof InsightCommissioned){
+            $this->insightCommissioned = true;
+        }
+        if ($event instanceof NoInsightDecided){
+            $this->insightCommissioned = false;
         }
         $this->_version = $event->getSequence();
     }
