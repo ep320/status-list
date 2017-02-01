@@ -242,7 +242,7 @@ class CommandHandler
     }
 
     public
-    function markInsightNotCommissioned(DecideToNotCommissionInsight $command)
+    function decideNotToCommissionInsight(DecideToNotCommissionInsight $command)
     {
 
         $event = (new NoInsightDecided(
@@ -256,7 +256,7 @@ class CommandHandler
     }
 
     public
-    function markInsightAuthorAsked(AskInsightAuthor $command)
+    function askInsightAuthor(AskInsightAuthor $command)
     {
 
         $event = (new InsightAuthorAsked(
@@ -271,7 +271,7 @@ class CommandHandler
     }
 
     public
-    function markInsightAuthorRefused(InsightAuthorRefuses $command)
+    function insightAuthorRefuses(InsightAuthorRefuses $command)
     {
 
         $event = (new InsightAuthorRefused(
@@ -285,7 +285,7 @@ class CommandHandler
     }
 
     public
-    function markInsightCommissioned(CommissionInsight $command)
+    function commissionInsight(CommissionInsight $command)
     {
 
         $event = (new InsightCommissioned(
@@ -323,7 +323,7 @@ class CommandHandler
     }
 
     public
-    function markInsightEditorAssigned(AssignInsightEditor $command)
+    function assignInsightEditor(AssignInsightEditor $command)
     {
         $event = (new InsightEditorAssigned(
             $command->paperId,
@@ -333,7 +333,7 @@ class CommandHandler
         $this->publish($event);
     }
 
-    public function markInsightAuthorChecking(InsightAuthorChecking $command)
+    public function insightAuthorChecking(InsightAuthorChecking $command)
     {
         $event = (new InsightToAuthorSent(
             $command->paperId,
@@ -344,7 +344,7 @@ class CommandHandler
         $this->publish($event);
     }
 
-    public function SignOffInsight($paperId)
+    public function signOffInsight($paperId)
     {
         $event = (new InsightSignedOff(
             $paperId,

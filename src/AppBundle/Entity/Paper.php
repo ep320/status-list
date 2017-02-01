@@ -1,9 +1,16 @@
 <?php
 namespace AppBundle\Entity;
 
+use AppDomain\Command\InsightAuthorChecking;
 use AppDomain\Event\AnswersReceived;
 use AppDomain\Event\EjpPaperImported;
+use AppDomain\Event\InsightAcknowledged;
+use AppDomain\Event\InsightAuthorAsked;
+use AppDomain\Event\InsightAuthorRefused;
 use AppDomain\Event\InsightCommissioned;
+use AppDomain\Event\InsightEditorAssigned;
+use AppDomain\Event\InsightSignedOff;
+use AppDomain\Event\InsightToAuthorSent;
 use AppDomain\Event\NoInsightDecided;
 use AppDomain\Event\PaperAcceptedEvent;
 use AppDomain\Event\NoDigestDecided;
@@ -172,6 +179,55 @@ class Paper
     private $insightCommissioned;
 
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $insightAuthor;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $insightCommissioningDecisionComment;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $insightRefusalComment;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $insightAcknowledged = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $insightAuthorChecking = false;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $editor;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $insightManuscriptNo;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $insightDueDate;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $insightEditsDueDate;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $insightSignedOff = false;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -390,6 +446,71 @@ class Paper
         return $this->digestSignedOff;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInsightCommissioned()
+    {
+        return $this->insightCommissioned;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightAuthor()
+    {
+        return $this->insightAuthor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightCommissioningDecisionComment()
+    {
+        return $this->insightCommissioningDecisionComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightRefusalComment()
+    {
+        return $this->insightRefusalComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEditor()
+    {
+        return $this->editor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightManuscriptNo()
+    {
+        return $this->insightManuscriptNo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightDueDate()
+    {
+        return $this->insightDueDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightEditsDueDate()
+    {
+        return $this->insightEditsDueDate;
+    }
+
+
 
     /**
      * Set the appropriate fields in response to an event. Eg, if the event is an instanceof 'InsightDecisionMade',
@@ -467,10 +588,32 @@ class Paper
         }
         if ($event instanceof InsightCommissioned){
             $this->insightCommissioned = true;
+            $this->insightDueDate = $event->getInsightDueDate();
         }
         if ($event instanceof NoInsightDecided){
             $this->insightCommissioned = false;
         }
+        if ($event instanceof InsightAuthorAsked){
+            $this->insightAuthor = $event->getInsightAuthor();
+        }
+        if ($event instanceof InsightAuthorRefused){
+            $this->insightRefusalComment = $event->getinsightAuthorRefusalReason();
+        }
+        if ($event instanceof InsightAcknowledged){
+            $this->insightAcknowledged = true;
+        }
+        if ($event instanceof InsightEditorAssigned){
+            $this->editor = $event->getInsightEditorAssigned();
+        }
+        if ($event instanceof InsightToAuthorSent){
+            $this->insightAuthorChecking = true;
+            $this->insightEditsDueDate = $event->getInsightEditsDueDate();
+        }
+        if ($event instanceof InsightSignedOff){
+            $this->insightSignedOff = true;
+        }
+
+
         $this->_version = $event->getSequence();
     }
 }
