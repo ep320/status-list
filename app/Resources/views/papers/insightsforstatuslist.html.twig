@@ -26,32 +26,28 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="{{ path('digestlist') }}">Digests<span class="sr-only">(current)</span></a>
+                    <li><a href="{{ path('papers') }}">Main list</a></li>
+                    <li><a href="{{ path('digestlist') }}">Digests</a>
                     </li>
                     <li><a href="{{ path('acceptedpaperslist') }}">Accepted papers</a></li>
-                    <li class="dropdown">
+                    <li class="dropdown, active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Insights<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ path('outforrevisioninsightslist') }}">Out for revision</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{ path('insightsforstatuslist') }}">Accepted papers</a></li>
+                            <li class="active"><a href="{{ path('insightsforstatuslist') }}">Accepted papers<span
+                                            class="sr-only">(current)</span></a></li>
                         </ul>
                     </li>
                 </ul>
+
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
 
-    <div id="forms">
-        {{ form_start(addPaperForm) }}
-        {{ form_widget(addPaperForm) }}
-        {{ form_end(addPaperForm) }}
 
-        {{ form_start(ejpImportForm) }}
-        {{ form_widget(ejpImportForm) }}
-        {{ form_end(ejpImportForm) }}
-    </div>
+    <h2>Recently accepted papers, insight decision = yes</h2>
     <div id="table">
         <table class="table table-condensed table-responsive">
             <tr>
@@ -60,30 +56,30 @@
                 <th>Article Type</th>
                 <th>Subject Area</th>
                 <th>Subject Area</th>
-                <th>Insight Decision</th>
-                <th>Author Answers</th>
-                <th>Author wrote digest?</th>
-                <th>Digest writer</th>
-                <th>Digest due</th>
-                <th>Digest received?</th>
+                <th>Impact Statement</th>
+                <th>Justification</th>
+                <th>Date accepted</th>
+
             </tr>
             {% for paper in papers %}
-                <tr>
-                    <td>
-                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
-                            {{ paper.manuscriptNo }}
-                        </a>
-                    </td>
-                    <td>{{ paper.correspondingAuthor }}</td>
-                    <td>{{ paper.articleType }}</td>
-                    <td>{{ paper.subjectArea1 }}</td>
-                    <td>{{ paper.subjectArea2 }}</td>
-                    <td>{{ paper.insightDecision }}</td>
-                    <td>{{ paper.answersStatus }}</td>
-                    <td>{{ paper.answersInDigestForm ? '✔':'' }}</td>
-                    <td>{{ paper.digestWrittenBy }}</td>
-                    <td>{{ paper.digestDueDate is empty ? "" : paper.digestDueDate|date("m/d/Y") }}</td>
-                    <td>{{ paper.digestReceived ? '✔':'' }}</td>
+                {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
+                    <tr style="color:red">
+                {% else %}
+                    <tr>
+                {% endif %}
+                <td>
+                    <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                        {{ paper.manuscriptNo }}
+                    </a>
+                </td>
+                <td>{{ paper.correspondingAuthor }}</td>
+                <td>{{ paper.articleType }}</td>
+                <td>{{ paper.subjectArea1 }}</td>
+                <td>{{ paper.subjectArea2 }}</td>
+                <td>{{ paper.impactStatement }}</td>
+                <td>{{ paper.insightComment }}</td>
+                <td>{{ paper.acceptedDate is empty ? "" : paper.acceptedDate|date("d/m/Y") }}</td>
+
                 </tr>
             {% endfor %}
 

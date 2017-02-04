@@ -85,22 +85,41 @@ class PaperListController extends Controller
     }
 
     /**
-     * @Route("/papers/insightsforstatuslist", name="insightsforstatuslist")
+     * @Route("/papers/outforrevisioninsightslist", name="outforrevisioninsightslist")
      */
-    public function InsightsForStatusListAction(Request $request)
+    public function papersOutForRevisionInsightDecisionsListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['insightUpdatedDate' => 'DESC']);
         $ejpImportForm = $this->createForm(EJPImportType::class);
         if ($this->handleEJPSubmission($ejpImportForm, $em, $request)){
-            return $this->redirectToRoute('insightsforstatuslist');
+            return $this->redirectToRoute('outforrevisioninsightslist');
         }
 
-        return $this->render('papers/insightlistforstatuslist.html.twig', [
+        return $this->render('papers/outforrevisioninsightslist.html.twig', [
             'papers' => $papers,
             'ejpImportForm' => $ejpImportForm->createView()
         ]);
     }
+
+    /**
+     * @Route("papers/insightsforstatuslist", name="insightsforstatuslist")
+     */
+    public function insightsForStatusListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $papers = $em->getRepository(Paper::class)->findBy(['accepted' => true, 'insightDecision' => 'yes'], ['acceptedDate' => 'DESC']);
+        $ejpImportForm = $this->createForm(EJPImportType::class);
+        if ($this->handleEJPSubmission($ejpImportForm, $em, $request)){
+            return $this->redirectToRoute('insightsforstatuslist');
+        }
+
+        return $this->render('papers/insightsforstatuslist.html.twig', [
+            'papers' => $papers,
+            'ejpImportForm' => $ejpImportForm->createView()
+        ]);
+    }
+
 
     /**
      * @Route("/papers/acceptedpaperslist", name="acceptedpaperslist")

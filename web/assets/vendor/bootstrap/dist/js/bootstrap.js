@@ -14,7 +14,7 @@ if (typeof jQuery === 'undefined') {
   if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1) || (version[0] > 2)) {
     throw new Error('Bootstrap\'s JavaScript requires jQuery version 1.9.1 or higher, but lower than version 3')
   }
-}(jQuery);
+}(jQuery);ƒ
 
 /* ========================================================================
  * Bootstrap: transition.js v3.3.6

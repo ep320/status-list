@@ -27,9 +27,18 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ path('papers') }}">Main list</a></li>
-                    <li class="active"><a href="{{ path('digestlist') }}">Digests<span class="sr-only">(current)</span></a>
+                    <li><a href="{{ path('digestlist') }}">Digests</a></li>
+                    <li class="active"><a href="{{ path('acceptedpaperslist') }}">Accepted papers<span
+                                class="sr-only">(current)</span></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Insights<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('outforrevisioninsightslist') }}">Out for revision</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ path('insightsforstatuslist') }}">Accepted papers</a></li>
+                        </ul>
                     </li>
-                    <li><a href="{{ path('insightsforstatuslist') }}">Latest insight decisions</a></li>
                 </ul>
 
             </div><!-- /.navbar-collapse -->
