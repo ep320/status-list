@@ -3,12 +3,14 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\AssignDigestWriterType;
+use AppBundle\Form\DecideNoInsightType;
 use AppBundle\Form\MarkAnswersReceivedType;
 use AppBundle\Form\MarkDigestReceivedType;
 use AppBundle\Form\MarkNoDigestDecidedType;
 use AppBundle\Form\UndoAnswersReceivedType;
 use AppBundle\Form\UndoNoDigestDecidedType;
 use AppDomain\Command\AssignDigestWriter;
+use AppDomain\Command\DecideToNotCommissionInsight;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
@@ -55,6 +57,7 @@ class PaperController extends Controller
         $answersForm = $this->buildAndHandleAnswersForm($paper, $request, $validFormSubmitted);
         $noDigestForm = $this->buildAndHandleNoDigestForm($paper, $request, $validFormSubmitted);
         $digestWriterForm = $this->buildAndHandleDigestActionForm($paper, $request, $validFormSubmitted);
+        $noInsightForm = $this->buildAndHandleNoInsightForm($paper, $request, $validFormSubmitted);
 
         //Sign off digest
         $builder = $this->createFormBuilder();
@@ -78,7 +81,8 @@ class PaperController extends Controller
             'noDigestForm' => $noDigestForm->createView(),
             'answersForm' => $answersForm->createView(),
             'digestWriterForm' => $digestWriterForm->createView(),
-            'signOffDigestForm' => $signOffDigestForm->createView()
+            'signOffDigestForm' => $signOffDigestForm->createView(),
+            'noInsightForm' => $noInsightForm->createView()
         ]);
     }
 
@@ -142,6 +146,19 @@ class PaperController extends Controller
                 $this->getCommandHandler()->assignDigestWriter($form->getData());
                 $validFormSubmitted = true;
             }
+        }
+
+        return $form;
+    }
+
+    private function buildAndHandleNoInsightForm(Paper $paper, Request $request, &$validFormSubmitted) {
+
+
+            $form = $this->createForm(DecideNoInsightType::class,new DecideToNotCommissionInsight($paper->getId()));
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getCommandHandler()->decideNotToCommissionInsight($form->getData());
+                $validFormSubmitted = true;
         }
 
         return $form;

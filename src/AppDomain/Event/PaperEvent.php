@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "InsightAcknowledged" = "InsightAcknowledged",
  *     "InsightAuthorAsked" = "InsightAuthorAsked",
  *     "InsightAuthorRefused" = "InsightAuthorRefused",
- *     "InsightAuthorReminded" = "InsightAuthorRminded",
+ *     "InsightAuthorReminded" = "InsightAuthorReminded",
  *     "InsightCommissioned" = "InsightCommissioned",
  *     "InsightEditorAssigned" = "InsightEditorAssigned",
  *     "InsightSignedOff" = "InsightSignedOff",
