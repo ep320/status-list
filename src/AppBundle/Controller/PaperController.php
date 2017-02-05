@@ -4,13 +4,19 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\AssignDigestWriterType;
 use AppBundle\Form\DecideNoInsightType;
+use AppBundle\Form\InsightAuthorAskedType;
+use AppBundle\Form\InsightAuthorRefusedType;
+use AppBundle\Form\InsightCommissionedType;
 use AppBundle\Form\MarkAnswersReceivedType;
 use AppBundle\Form\MarkDigestReceivedType;
 use AppBundle\Form\MarkNoDigestDecidedType;
 use AppBundle\Form\UndoAnswersReceivedType;
 use AppBundle\Form\UndoNoDigestDecidedType;
+use AppDomain\Command\AskInsightAuthor;
 use AppDomain\Command\AssignDigestWriter;
+use AppDomain\Command\CommissionInsight;
 use AppDomain\Command\DecideToNotCommissionInsight;
+use AppDomain\Command\InsightAuthorRefuses;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
 use AppDomain\Command\MarkNoDigestDecided;
@@ -58,6 +64,9 @@ class PaperController extends Controller
         $noDigestForm = $this->buildAndHandleNoDigestForm($paper, $request, $validFormSubmitted);
         $digestWriterForm = $this->buildAndHandleDigestActionForm($paper, $request, $validFormSubmitted);
         $noInsightForm = $this->buildAndHandleNoInsightForm($paper, $request, $validFormSubmitted);
+        $insightAuthorAskedForm = $this->buildAndHandleInsightAuthorAskedForm($paper, $request, $validFormSubmitted);
+        $insightAuthorRefusedForm = $this->buildAndHandleInsightAuthorRefusedForm($paper, $request, $validFormSubmitted);
+        $insightCommissionedForm = $this->buildAndHandleInsightCommissionedForm($paper, $request, $validFormSubmitted);
 
         //Sign off digest
         $builder = $this->createFormBuilder();
@@ -82,11 +91,15 @@ class PaperController extends Controller
             'answersForm' => $answersForm->createView(),
             'digestWriterForm' => $digestWriterForm->createView(),
             'signOffDigestForm' => $signOffDigestForm->createView(),
-            'noInsightForm' => $noInsightForm->createView()
+            'noInsightForm' => $noInsightForm->createView(),
+            'insightAuthorAskedForm' => $insightAuthorAskedForm->createView(),
+            'insightAuthorRefusedForm' => $insightAuthorRefusedForm->createView(),
+            'insightCommissionedForm' => $insightCommissionedForm->createView()
         ]);
     }
 
-    private function buildAndHandleAnswersForm(Paper $paper, Request $request, &$validFormSubmitted) {
+    private function buildAndHandleAnswersForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
 
         if ($paper->getAnswersStatus()) { //Answers already submitted. Show/handle undo requests
             $form = $this->createForm(UndoAnswersReceivedType::class, new UndoAnswersReceived($paper->getId()));
@@ -107,7 +120,8 @@ class PaperController extends Controller
         return $form;
     }
 
-    private function buildAndHandleNoDigestForm(Paper $paper, Request $request, &$validFormSubmitted) {
+    private function buildAndHandleNoDigestForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
 
         if ($paper->getNoDigestStatus()) { //No digest decision already submitted. Show/handle undo requests
             $form = $this->createForm(UndoNoDigestDecidedType::class, new UndoNoDigestDecided($paper->getId()));
@@ -117,7 +131,7 @@ class PaperController extends Controller
                 $validFormSubmitted = true;
             }
         } else { //No digest decision not submitted, show full no digest form
-            $form = $this->createForm(MarkNoDigestDecidedType::class,new MarkNoDigestDecided($paper->getId()));
+            $form = $this->createForm(MarkNoDigestDecidedType::class, new MarkNoDigestDecided($paper->getId()));
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getCommandHandler()->markNoDigestDecided($form->getData());
@@ -128,7 +142,8 @@ class PaperController extends Controller
         return $form;
     }
 
-    private function buildAndHandleDigestActionForm(Paper $paper, Request $request, &$validFormSubmitted) {
+    private function buildAndHandleDigestActionForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
         //TODO: need to add functionality to skip to editing form if writer = features team
         if ($paper->getDigestWrittenBy()) { //Digest has been assigned to a writer. Show button to mark digest received
             $form = $this->createForm(MarkDigestReceivedType::class, new MarkDigestReceived($paper->getId()));
@@ -139,7 +154,7 @@ class PaperController extends Controller
             }
         } else { //Digest not yet assigned to writer
             $form = $this->createForm(AssignDigestWriterType::class, new AssignDigestWriter($paper->getId()), [
-                'em'=>$this->getDoctrine()->getEntityManager()
+                'em' => $this->getDoctrine()->getEntityManager()
             ]);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -151,16 +166,61 @@ class PaperController extends Controller
         return $form;
     }
 
-    private function buildAndHandleNoInsightForm(Paper $paper, Request $request, &$validFormSubmitted) {
+    private function buildAndHandleNoInsightForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
 
 
-            $form = $this->createForm(DecideNoInsightType::class,new DecideToNotCommissionInsight($paper->getId()));
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->getCommandHandler()->decideNotToCommissionInsight($form->getData());
-                $validFormSubmitted = true;
+        $form = $this->createForm(DecideNoInsightType::class, new DecideToNotCommissionInsight($paper->getId()));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->decideNotToCommissionInsight($form->getData());
+            $validFormSubmitted = true;
         }
 
         return $form;
     }
+
+    private function buildAndHandleInsightAuthorAskedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+
+        $form = $this->createForm(InsightAuthorAskedType::class, new AskInsightAuthor($paper->getId()));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->askInsightAuthor($form->getData());
+            $validFormSubmitted = true;
+        }
+
+        return $form;
+    }
+
+    private function buildAndHandleInsightAuthorRefusedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+
+        $form = $this->createForm(InsightAuthorRefusedType::class, new InsightAuthorRefuses($paper->getId()));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->insightAuthorRefuses($form->getData());
+            $validFormSubmitted = true;
+        }
+
+        return $form;
+    }
+
+    private function buildAndHandleInsightCommissionedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+
+        $form = $this->createForm(InsightCommissionedType::class, new CommissionInsight($paper->getId()));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->commissionInsight($form->getData());
+            $validFormSubmitted = true;
+        }
+
+        return $form;
+    }
+
+
 }

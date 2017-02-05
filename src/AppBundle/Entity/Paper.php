@@ -192,7 +192,7 @@ class Paper
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $insightRefusalComment;
+    private $insightAuthorRefusalReason;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -207,7 +207,7 @@ class Paper
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $editor;
+    private $insightEditor;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -473,17 +473,17 @@ class Paper
     /**
      * @return mixed
      */
-    public function getInsightRefusalComment()
+    public function getInsightAuthorRefusalReason()
     {
-        return $this->insightRefusalComment;
+        return $this->insightAuthorRefusalReason;
     }
 
     /**
      * @return mixed
      */
-    public function getEditor()
+    public function getInsightEditor()
     {
-        return $this->editor;
+        return $this->insightEditor;
     }
 
     /**
@@ -561,6 +561,9 @@ class Paper
             $this->digestAnswersGiven = $event->getDigestAnswersGiven();
             $this->impactStatement = $event->getImpactStatement();
             $this->abstract = $event->getAbstract();
+            if ($this->insightDecision == 'No'){
+                $this->insightCommissioned = false;
+            }
         }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();
@@ -598,13 +601,13 @@ class Paper
             $this->insightAuthor = $event->getInsightAuthor();
         }
         if ($event instanceof InsightAuthorRefused){
-            $this->insightRefusalComment = $event->getinsightAuthorRefusalReason();
+            $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();
         }
         if ($event instanceof InsightAcknowledged){
             $this->insightAcknowledged = true;
         }
         if ($event instanceof InsightEditorAssigned){
-            $this->editor = $event->getInsightEditorAssigned();
+            $this->insightEditor = $event->getInsightEditorAssigned();
         }
         if ($event instanceof InsightToAuthorSent){
             $this->insightAuthorChecking = true;

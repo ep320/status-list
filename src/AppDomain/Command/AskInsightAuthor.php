@@ -1,4 +1,5 @@
 <?php
+
 namespace AppDomain\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,4 +15,5 @@ class AskInsightAuthor extends AbstractPaperCommand
      * @var \DateTime
      */
     public $insightDueDate;
+
 }

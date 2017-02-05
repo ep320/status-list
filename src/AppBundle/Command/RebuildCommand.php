@@ -1,8 +1,10 @@
 <?php
+
 namespace AppBundle\Command;
 
 use AppDomain\Event\PaperEvent;
 use Doctrine\ORM\EntityManager;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +21,7 @@ class RebuildCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        return;
         /**
          * @var $doctrine RegistryInterface
          */
