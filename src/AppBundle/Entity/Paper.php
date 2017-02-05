@@ -88,7 +88,7 @@ class Paper
     private $hadAppeal;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", length=500, nullable=true)
      */
     private $impactStatement;
 
@@ -592,6 +592,7 @@ class Paper
         }
         if ($event instanceof NoInsightDecided){
             $this->insightCommissioned = false;
+            $this->insightCommissioningDecisionComment = $event->getinsightNotCommissionedReason();
         }
         if ($event instanceof InsightAuthorAsked){
             $this->insightAuthor = $event->getInsightAuthor();

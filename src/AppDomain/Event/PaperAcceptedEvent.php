@@ -38,7 +38,7 @@ class PaperAcceptedEvent extends PaperEvent
 
     public function getAcceptedDate()
     {
-        return $this->getFromPayload('acceptedDate');
+        return $this->getDateTimeFromPayload('acceptedDate');
     }
 
     public function getDigestQuestionsAsked()
