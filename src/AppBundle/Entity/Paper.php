@@ -595,6 +595,7 @@ class Paper
         if ($event instanceof InsightCommissioned){
             $this->insightCommissioned = true;
             $this->insightDueDate = $event->getInsightDueDate();
+            $this->insightManuscriptNo = $event->getInsightManuscriptNo();
         }
         if ($event instanceof NoInsightDecided){
             $this->insightCommissioned = false;
@@ -605,6 +606,7 @@ class Paper
         }
         if ($event instanceof InsightAuthorRefused){
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();
+            $this->insightAuthor = null;
         }
         if ($event instanceof InsightAcknowledged){
             $this->insightAcknowledged = true;

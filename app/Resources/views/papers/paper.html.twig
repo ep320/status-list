@@ -152,62 +152,65 @@
                 </div>
             </div>
 
-            <!-- Button trigger for no insight modal -->
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#noInsightModal">
-                No Insight
+            <!-- Button trigger for insight commissioned modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#insightCommissionedModal">
+                Insight Commissioned
             </button>
 
-            <!-- No insight modal -->
-            <div class="modal fade" id="noInsightModal" tabindex="-1" role="dialog"
-                 aria-labelledby="noInsightModalLabel">
+            <!-- Insight commissioned modal -->
+            <div class="modal fade" id="insightCommissionedModal" tabindex="-1" role="dialog"
+                 aria-labelledby="insightCommissionedModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="noInsightModalLabel">Insight will not be commmissioned</h4>
+                            <h4 class="modal-title" id="insightCommissionedModalLabel">Insight commmissioned</h4>
                         </div>
-                        {{ form_start(noInsightForm) }}
+                        {{ form_start(insightCommissionedForm) }}
                         <div class="modal-body">
 
-                            {{ form_row(noInsightForm.insightNotCommissionedReason) }}
+                            {{ form_row(insightCommissionedForm.insightManuscriptNo) }}
+                            {{ form_row(insightCommissionedForm.insightDueDate) }}
+                            {{ form_row(insightCommissionedForm.insightCommissionedComment, {'attr': {'novalidate': 'novalidate'}}) }}
+
 
 
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            {{ form_widget(noInsightForm.insightNotCommissioned, {'attr': {'class': 'btn-primary'}}) }}
+                            {{ form_widget(insightCommissionedForm.submitCommissioned, {'attr': {'class': 'btn-primary'}}) }}
                         </div>
-                        {{ form_end(noInsightForm) }}
+                        {{ form_end(insightCommissionedForm) }}
                     </div>
                 </div>
             </div>
 
 
             <!-- Button trigger for author refused modal -->
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#askAuthorModal">
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#authorRefusedModal">
                 Author refused
             </button>
 
             <!-- Author refused modal -->
-            <div class="modal fade" id="askAuthorModal" tabindex="-1" role="dialog"
-                 aria-labelledby="askAuthorModalLabel">
+            <div class="modal fade" id="authorRefusedModal" tabindex="-1" role="dialog"
+                 aria-labelledby="authorRefusedModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="askAuthorModalLabel">Pursue Insight</h4>
+                            <h4 class="modal-title" id="authorRefusedModalLabel">Author refused</h4>
                         </div>
-                        {{ form_start(insightAuthorAskedForm) }}
+                        {{ form_start(insightAuthorRefusedForm) }}
                         <div class="modal-body">
-                            {{ form_row(insightAuthorAskedForm.insightAuthor) }}
+                            {{ form_row(insightAuthorRefusedForm.insightAuthorRefusalReason) }}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            {{ form_widget(insightAuthorAskedForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+                            {{ form_widget(insightAuthorRefusedForm.submit, {'attr': {'class': 'btn-primary'}}) }}
                         </div>
-                        {{ form_end(insightAuthorAskedForm) }}
+                        {{ form_end(insightAuthorRefusedForm) }}
                     </div>
                 </div>
             </div>

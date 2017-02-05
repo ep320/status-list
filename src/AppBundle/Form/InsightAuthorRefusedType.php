@@ -12,7 +12,7 @@ class InsightAuthorRefusedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('insightAuthorRefusalReason', TextType::class)
+            ->add('insightAuthorRefusalReason', TextType::class, array('label' => 'Refusal reason'))
             ->add('submit', SubmitType::class);
     }
 }

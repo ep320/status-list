@@ -20,7 +20,7 @@ class InsightCommissioned extends PaperEvent
      * @param DateTime $insightDueDate
      * @param string $insightCommissionedComment
      */
-    public function __construct(string $paperId, int $sequence, string $insightManuscriptNo, \DateTime $insightDueDate, string $insightCommissionedComment)
+    public function __construct(string $paperId, int $sequence, int $insightManuscriptNo, \DateTime $insightDueDate, string $insightCommissionedComment)
     {
         parent::__construct($paperId, $sequence, [
             'insightManuscriptNo' => $insightManuscriptNo,
