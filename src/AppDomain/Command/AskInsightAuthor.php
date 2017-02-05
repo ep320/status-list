@@ -11,9 +11,5 @@ class AskInsightAuthor extends AbstractPaperCommand
      */
     public $insightAuthor;
 
-    /**
-     * @var \DateTime
-     */
-    public $insightDueDate;
 
 }

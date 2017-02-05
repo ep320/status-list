@@ -12,7 +12,7 @@ class InsightAuthorAskedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('insightAuthor', TextType::class)
+            ->add('insightAuthor', TextType::class, array('label' => 'Author to be asked'))
             ->add('submit', SubmitType::class);
     }
 }

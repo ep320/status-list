@@ -16,13 +16,11 @@ class InsightAuthorAsked extends PaperEvent
      * @param string $paperId
      * @param int $sequence
      * @param string $insightAuthor
-     * @param DateTime $insightDueDate
      */
-    public function __construct(string $paperId, int $sequence, string $insightAuthor, \DateTime $insightDueDate)
+    public function __construct(string $paperId, int $sequence, string $insightAuthor)
     {
         parent::__construct($paperId, $sequence, [
             'insightAuthor' => $insightAuthor,
-            'insightDueDate' => $insightDueDate,
         ]);
     }
 
@@ -31,8 +29,4 @@ class InsightAuthorAsked extends PaperEvent
         return $this->getFromPayload('insightAuthor');
     }
 
-    public function getInsightDueDate()
-    {
-        return $this->getDateTimeFromPayload('insightDueDate');
-    }
 }

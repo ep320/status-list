@@ -12,7 +12,7 @@ class DecideNoInsightType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('insightNotCommissionedReason', TextType::class)
+            ->add('insightNotCommissionedReason', TextType::class, array('label' => 'Reason'))
             ->add('insightNotCommissioned', SubmitType::class);
     }
 }

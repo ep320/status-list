@@ -564,6 +564,9 @@ class Paper
             if ($this->insightDecision == 'No'){
                 $this->insightCommissioned = false;
             }
+            else{
+                $this->insightCommissioned = null;
+            }
         }
         if ($event instanceof NoDigestDecided) {
             $this->noDigestStatus = $event->getNoDigestReason();

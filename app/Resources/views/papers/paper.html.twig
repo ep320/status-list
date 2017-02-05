@@ -4,6 +4,40 @@
     <div id="title">
         <h1>Statusbase: Paper {{ paper.manuscriptNo }}</h1>
     </div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Statusbase</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ path('digestlist') }}">Digests<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li><a href="{{ path('acceptedpaperslist') }}">Accepted papers</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Insights<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('outforrevisioninsightslist') }}">Out for revision</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{{ path('insightsforstatuslist') }}">Accepted papers</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
     <div id="paper-details-list">
         <div class="dl-horizontal">
 
@@ -40,15 +74,151 @@
     <div class="dl-horizontal">
     <dt>BRE Recommendation</dt>
     <dd>{{ paper.insightDecision }}</dd>
-    {% if paper.insightDecision == 'Yes' %}
+
+    {% if paper.insightDecision == 'Yes' or paper.insightDecision == 'Not Asked' %}
         <dt>Insight Justification</dt>
         <dd>{{ paper.insightComment }}</dd>
-        <dt>Insight Not Commissioned Reason</dt>
-        <dd>{{ paper.insightCommissioningDecisionComment }}</dd>
+
         </div>
-        {{ form_start(noInsightForm) }}
-        {{ form_widget(noInsightForm) }}
-        {{ form_end(noInsightForm) }}
+
+
+        {% if not paper.insightCommissioned == true and paper.insightAuthor == null %}
+            <!-- Button trigger for no insight modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#noInsightModal">
+                No Insight
+            </button>
+
+            <!-- No insight modal -->
+            <div class="modal fade" id="noInsightModal" tabindex="-1" role="dialog"
+                 aria-labelledby="noInsightModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="noInsightModalLabel">Insight will not be commmissioned</h4>
+                        </div>
+                        {{ form_start(noInsightForm) }}
+                        <div class="modal-body">
+
+                            {{ form_row(noInsightForm.insightNotCommissionedReason) }}
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{ form_widget(noInsightForm.insightNotCommissioned, {'attr': {'class': 'btn-primary'}}) }}
+                        </div>
+                        {{ form_end(noInsightForm) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button trigger for ask author modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#askAuthorModal">
+                Pursue Insight
+            </button>
+
+            <!-- Ask author modal -->
+            <div class="modal fade" id="askAuthorModal" tabindex="-1" role="dialog"
+                 aria-labelledby="askAuthorModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="askAuthorModalLabel">Pursue Insight</h4>
+                        </div>
+                        {{ form_start(insightAuthorAskedForm) }}
+                        <div class="modal-body">
+                            {{ form_row(insightAuthorAskedForm.insightAuthor) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{ form_widget(insightAuthorAskedForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+                        </div>
+                        {{ form_end(insightAuthorAskedForm) }}
+                    </div>
+                </div>
+            </div>
+
+
+
+        {% elseif not paper.insightCommissioned == true and paper.insightAuthor %}
+            <div id=insightAuthor>
+                <div class=dl-horizontal>
+                    <dt>Insight author</dt>
+                    <dd>{{ paper.insightAuthor }}</dd>
+                </div>
+            </div>
+
+            <!-- Button trigger for no insight modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#noInsightModal">
+                No Insight
+            </button>
+
+            <!-- No insight modal -->
+            <div class="modal fade" id="noInsightModal" tabindex="-1" role="dialog"
+                 aria-labelledby="noInsightModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="noInsightModalLabel">Insight will not be commmissioned</h4>
+                        </div>
+                        {{ form_start(noInsightForm) }}
+                        <div class="modal-body">
+
+                            {{ form_row(noInsightForm.insightNotCommissionedReason) }}
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{ form_widget(noInsightForm.insightNotCommissioned, {'attr': {'class': 'btn-primary'}}) }}
+                        </div>
+                        {{ form_end(noInsightForm) }}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Button trigger for author refused modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#askAuthorModal">
+                Author refused
+            </button>
+
+            <!-- Author refused modal -->
+            <div class="modal fade" id="askAuthorModal" tabindex="-1" role="dialog"
+                 aria-labelledby="askAuthorModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="askAuthorModalLabel">Pursue Insight</h4>
+                        </div>
+                        {{ form_start(insightAuthorAskedForm) }}
+                        <div class="modal-body">
+                            {{ form_row(insightAuthorAskedForm.insightAuthor) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{ form_widget(insightAuthorAskedForm.submit, {'attr': {'class': 'btn-primary'}}) }}
+                        </div>
+                        {{ form_end(insightAuthorAskedForm) }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div id='insightCommissioningDecisionComment'>
+                <div class="dl-horizontal">
+                    {{ paper.insightCommissioningDecisionComment }}
+                </div>
+            </div>
+
+        {% endif %}
     {% else %}
         </div>
     {% endif %}
