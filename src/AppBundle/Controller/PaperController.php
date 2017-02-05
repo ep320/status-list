@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\AssignDigestWriterType;
+use AppBundle\Form\AssignInsightEditorType;
 use AppBundle\Form\DecideNoInsightType;
 use AppBundle\Form\InsightAuthorAskedType;
 use AppBundle\Form\InsightAuthorRefusedType;
@@ -14,6 +15,7 @@ use AppBundle\Form\UndoAnswersReceivedType;
 use AppBundle\Form\UndoNoDigestDecidedType;
 use AppDomain\Command\AskInsightAuthor;
 use AppDomain\Command\AssignDigestWriter;
+use AppDomain\Command\AssignInsightEditor;
 use AppDomain\Command\CommissionInsight;
 use AppDomain\Command\DecideToNotCommissionInsight;
 use AppDomain\Command\InsightAuthorRefuses;
@@ -67,6 +69,11 @@ class PaperController extends Controller
         $insightAuthorAskedForm = $this->buildAndHandleInsightAuthorAskedForm($paper, $request, $validFormSubmitted);
         $insightAuthorRefusedForm = $this->buildAndHandleInsightAuthorRefusedForm($paper, $request, $validFormSubmitted);
         $insightCommissionedForm = $this->buildAndHandleInsightCommissionedForm($paper, $request, $validFormSubmitted);
+        $insightAuthorRemindedForm = $this->buildAndHandleInsightAuthorRemindedForm($paper, $request, $validFormSubmitted);
+        $insightAcknowledgedForm = $this->buildAndHandleInsightAcknowledgedForm($paper, $request, $validFormSubmitted);
+        $assignInsightEditorForm = $this->buildAndHandleAssignInsightEditorForm($paper, $request, $validFormSubmitted);
+        $insightAuthorCheckingForm = $this->buildAndHandleInsightAuthorCheckingForm($paper, $request, $validFormSubmitted);
+        $signOffInsightForm = $this->buildAndHandleSignOffInsightForm($paper, $request, $validFormSubmitted);
 
         //Sign off digest
         $builder = $this->createFormBuilder();
@@ -94,7 +101,12 @@ class PaperController extends Controller
             'noInsightForm' => $noInsightForm->createView(),
             'insightAuthorAskedForm' => $insightAuthorAskedForm->createView(),
             'insightAuthorRefusedForm' => $insightAuthorRefusedForm->createView(),
-            'insightCommissionedForm' => $insightCommissionedForm->createView()
+            'insightCommissionedForm' => $insightCommissionedForm->createView(),
+            'insightAuthorRemindedForm' => $insightAuthorRemindedForm->createView(),
+            'insightAcknowledgedForm' => $insightAcknowledgedForm->createView(),
+            'assignInsightEditorForm' => $assignInsightEditorForm->createView(),
+            'insightAuthorCheckingForm' => $insightAuthorCheckingForm->createView(),
+            'signOffInsightForm' => $signOffInsightForm->createView()
         ]);
     }
 
@@ -220,6 +232,86 @@ class PaperController extends Controller
         }
 
         return $form;
+    }
+
+    private function buildAndHandleInsightAuthorRemindedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+        $builder = $this->createFormBuilder();
+        $builder->add('AuthorReminded', SubmitType::class);
+        $insightAuthorRemindedForm = $builder->getForm();
+        $insightAuthorRemindedForm->handleRequest($request);
+        if ($insightAuthorRemindedForm->isSubmitted()) {
+            $this->getCommandHandler()->remindInsightAuthor($paper->getId());
+            $validFormSubmitted = true;
+        }
+
+        return $insightAuthorRemindedForm;
+
+    }
+
+    private function buildAndHandleInsightAcknowledgedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+        $builder = $this->createFormBuilder();
+        $builder->add('AuthorAcknowledged', SubmitType::class);
+        $insightAcknowledgedForm = $builder->getForm();
+        $insightAcknowledgedForm->handleRequest($request);
+        if ($insightAcknowledgedForm->isSubmitted()) {
+            $this->getCommandHandler()->acknowledgeInsight($paper->getId());
+            $validFormSubmitted = true;
+        }
+
+        return $insightAcknowledgedForm;
+
+    }
+
+    private function buildAndHandleAssignInsightEditorForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+
+        $form = $this->createForm(AssignInsightEditorType::class, new AssignInsightEditor($paper->getId()), [
+            'em' => $this->getDoctrine()->getEntityManager()
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->assignInsightEditor($form->getData());
+            $validFormSubmitted = true;
+        }
+
+        return $form;
+    }
+
+    private function buildAndHandleInsightAuthorCheckingForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+        $builder = $this->createFormBuilder();
+        $builder->add('AuthorAcknowledged', SubmitType::class);
+        $insightAuthorCheckingForm = $builder->getForm();
+        $insightAuthorCheckingForm->handleRequest($request);
+        if ($insightAuthorCheckingForm->isSubmitted()) {
+            $this->getCommandHandler()->insightAuthorChecking($paper->getId());
+            $validFormSubmitted = true;
+        }
+
+        return $insightAuthorCheckingForm;
+
+    }
+
+    private function buildAndHandleSignOffInsightForm(Paper $paper, Request $request, &$validFormSubmitted)
+    {
+
+        $builder = $this->createFormBuilder();
+        $builder->add('AuthorAcknowledged', SubmitType::class);
+        $signOffInsightForm = $builder->getForm();
+        $signOffInsightForm->handleRequest($request);
+        if ($signOffInsightForm->isSubmitted()) {
+            $this->getCommandHandler()->signOffInsight($paper->getId());
+            $validFormSubmitted = true;
+        }
+
+        return $signOffInsightForm;
+
     }
 
 

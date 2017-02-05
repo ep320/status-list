@@ -7,7 +7,11 @@ class AssignInsightEditor extends AbstractPaperCommand
 {
     /**
      * @var string
-     * @Assert\Choice(choices={"Emma", "Helga", "Peter", "Sarah", "Stuart"})
+     */
+    public $editorId;
+
+    /**
+     * @var string
      */
     public $insightEditor;
 }
