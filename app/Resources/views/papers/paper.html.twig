@@ -153,7 +153,8 @@
             </div>
 
             <!-- Button trigger for insight commissioned modal -->
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#insightCommissionedModal">
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                    data-target="#insightCommissionedModal">
                 Insight Commissioned
             </button>
 
@@ -173,7 +174,6 @@
                             {{ form_row(insightCommissionedForm.insightManuscriptNo) }}
                             {{ form_row(insightCommissionedForm.insightDueDate) }}
                             {{ form_row(insightCommissionedForm.insightCommissionedComment, {'attr': {'novalidate': 'novalidate'}}) }}
-
 
 
                         </div>
@@ -223,9 +223,23 @@
 
         {% endif %}
     {% else %}
+
         </div>
     {% endif %}
+
+    {% if paper.insightCommissioned %}
+<div id = 'insightCommisioning'>
+    <div class ="dl-horizontal">
+        <dt>Insight commissioned</dt>
+        <dd>{{ paper.insightCommissioned ? '✔':'No'}}</dd>
+        <dt>Insight Author</dt>
+        <dd>{{ paper.insightAuthor }}</dd>
+        <dt>Due Date</dt>
+        <dd>{{ paper.insightDueDate|date("d/m/Y") }}</dd>
     </div>
+</div>
+{% endif %}
+
     <h3>Digest</h3>
 
     <div id="digest-list">

@@ -21,7 +21,6 @@ class RebuildCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return;
         /**
          * @var $doctrine RegistryInterface
          */

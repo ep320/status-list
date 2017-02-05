@@ -596,6 +596,7 @@ class Paper
             $this->insightCommissioned = true;
             $this->insightDueDate = $event->getInsightDueDate();
             $this->insightManuscriptNo = $event->getInsightManuscriptNo();
+            $this->insightCommissioningDecisionComment = $event->getInsightCommissionedComment();
         }
         if ($event instanceof NoInsightDecided){
             $this->insightCommissioned = false;

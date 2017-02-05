@@ -5,15 +5,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CommissionInsight extends AbstractPaperCommand
 {
-    /**
-     * @var \DateTime
-     */
-    public $insightDueDate;
 
     /**
      * @var integer
      */
     public $insightManuscriptNo;
+
+    /**
+     * @var \DateTime
+     */
+    public $insightDueDate;
 
     /**
      * @var string, nullable=true
