@@ -70,7 +70,7 @@ class PaperController extends Controller
         $insightAuthorRefusedForm = $this->buildAndHandleInsightAuthorRefusedForm($paper, $request, $validFormSubmitted);
         $insightCommissionedForm = $this->buildAndHandleInsightCommissionedForm($paper, $request, $validFormSubmitted);
         $insightAuthorRemindedForm = $this->buildAndHandleInsightAuthorRemindedForm($paper, $request, $validFormSubmitted);
-        $insightAcknowledgedForm = $this->buildAndHandleInsightAcknowledgedForm($paper, $request, $validFormSubmitted);
+        $insightAuthorAcknowledgedForm = $this->buildAndHandleInsightAuthorAcknowledgedForm($paper, $request, $validFormSubmitted);
         $assignInsightEditorForm = $this->buildAndHandleAssignInsightEditorForm($paper, $request, $validFormSubmitted);
         $insightAuthorCheckingForm = $this->buildAndHandleInsightAuthorCheckingForm($paper, $request, $validFormSubmitted);
         $signOffInsightForm = $this->buildAndHandleSignOffInsightForm($paper, $request, $validFormSubmitted);
@@ -103,7 +103,7 @@ class PaperController extends Controller
             'insightAuthorRefusedForm' => $insightAuthorRefusedForm->createView(),
             'insightCommissionedForm' => $insightCommissionedForm->createView(),
             'insightAuthorRemindedForm' => $insightAuthorRemindedForm->createView(),
-            'insightAcknowledgedForm' => $insightAcknowledgedForm->createView(),
+            'insightAuthorAcknowledgedForm' => $insightAuthorAcknowledgedForm->createView(),
             'assignInsightEditorForm' => $assignInsightEditorForm->createView(),
             'insightAuthorCheckingForm' => $insightAuthorCheckingForm->createView(),
             'signOffInsightForm' => $signOffInsightForm->createView()
@@ -237,8 +237,8 @@ class PaperController extends Controller
     private function buildAndHandleInsightAuthorRemindedForm(Paper $paper, Request $request, &$validFormSubmitted)
     {
 
-        $builder = $this->createFormBuilder();
-        $builder->add('AuthorReminded', SubmitType::class);
+        $builder = $this->getFormFactory()->createNamedBuilder('insight_author_reminded');
+        $builder->add('InsightAuthorReminded', SubmitType::class);
         $insightAuthorRemindedForm = $builder->getForm();
         $insightAuthorRemindedForm->handleRequest($request);
         if ($insightAuthorRemindedForm->isSubmitted()) {
@@ -250,19 +250,19 @@ class PaperController extends Controller
 
     }
 
-    private function buildAndHandleInsightAcknowledgedForm(Paper $paper, Request $request, &$validFormSubmitted)
+    private function buildAndHandleInsightAuthorAcknowledgedForm(Paper $paper, Request $request, &$validFormSubmitted)
     {
 
-        $builder = $this->createFormBuilder();
-        $builder->add('AuthorAcknowledged', SubmitType::class);
-        $insightAcknowledgedForm = $builder->getForm();
-        $insightAcknowledgedForm->handleRequest($request);
-        if ($insightAcknowledgedForm->isSubmitted()) {
+        $builder = $this->getFormFactory()->createNamedBuilder('insight_author_acknowledged');
+        $builder->add('InsightAuthorAcknowledged', SubmitType::class);
+        $insightAuthorAcknowledgedForm = $builder->getForm();
+        $insightAuthorAcknowledgedForm->handleRequest($request);
+        if ($insightAuthorAcknowledgedForm->isSubmitted()) {
             $this->getCommandHandler()->acknowledgeInsight($paper->getId());
             $validFormSubmitted = true;
         }
 
-        return $insightAcknowledgedForm;
+        return $insightAuthorAcknowledgedForm;
 
     }
 
@@ -282,11 +282,18 @@ class PaperController extends Controller
         return $form;
     }
 
+    /**
+     * @return \Symfony\Component\Form\FormFactory
+     */
+    private function getFormFactory()
+    {
+        return $this->get('form.factory');
+    }
+
     private function buildAndHandleInsightAuthorCheckingForm(Paper $paper, Request $request, &$validFormSubmitted)
     {
-
-        $builder = $this->createFormBuilder();
-        $builder->add('AuthorAcknowledged', SubmitType::class);
+        $builder = $this->getFormFactory()->createNamedBuilder('insight_author_checking');
+        $builder->add('InsightAuthorChecking', SubmitType::class);
         $insightAuthorCheckingForm = $builder->getForm();
         $insightAuthorCheckingForm->handleRequest($request);
         if ($insightAuthorCheckingForm->isSubmitted()) {
@@ -301,8 +308,8 @@ class PaperController extends Controller
     private function buildAndHandleSignOffInsightForm(Paper $paper, Request $request, &$validFormSubmitted)
     {
 
-        $builder = $this->createFormBuilder();
-        $builder->add('AuthorAcknowledged', SubmitType::class);
+        $builder = $this->getFormFactory()->createNamedBuilder('sign_off_insight');
+        $builder->add('SignOffInsight', SubmitType::class);
         $signOffInsightForm = $builder->getForm();
         $signOffInsightForm->handleRequest($request);
         if ($signOffInsightForm->isSubmitted()) {

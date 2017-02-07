@@ -7,6 +7,7 @@ use AppDomain\Event\EjpPaperImported;
 use AppDomain\Event\InsightAcknowledged;
 use AppDomain\Event\InsightAuthorAsked;
 use AppDomain\Event\InsightAuthorRefused;
+use AppDomain\Event\InsightAuthorReminded;
 use AppDomain\Event\InsightCommissioned;
 use AppDomain\Event\InsightEditorAssigned;
 use AppDomain\Event\InsightSignedOff;
@@ -194,10 +195,16 @@ class Paper
      */
     private $insightAuthorRefusalReason;
 
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $insightAcknowledged = false;
+    private $insightAuthorReminded = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $insightAuthorAcknowledged = false;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -481,6 +488,40 @@ class Paper
     /**
      * @return mixed
      */
+    public function getInsightAuthorReminded()
+    {
+        return $this->insightAuthorReminded;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightAuthorAcknowledged()
+    {
+        return $this->insightAuthorAcknowledged;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightAuthorChecking()
+    {
+        return $this->insightAuthorChecking;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInsightSignedOff()
+    {
+        return $this->insightSignedOff;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
     public function getInsightEditor()
     {
         return $this->insightEditor;
@@ -609,8 +650,11 @@ class Paper
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();
             $this->insightAuthor = null;
         }
+        if ($event instanceof InsightAuthorReminded){
+            $this->insightAuthorReminded = true;
+        }
         if ($event instanceof InsightAcknowledged){
-            $this->insightAcknowledged = true;
+            $this->insightAuthorAcknowledged = true;
         }
         if ($event instanceof InsightEditorAssigned){
             $this->insightEditor = $event->getInsightEditorAssigned();

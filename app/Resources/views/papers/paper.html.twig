@@ -228,17 +228,61 @@
     {% endif %}
 
     {% if paper.insightCommissioned %}
-<div id = 'insightCommisioning'>
-    <div class ="dl-horizontal">
-        <dt>Insight commissioned</dt>
-        <dd>{{ paper.insightCommissioned ? '✔':'No'}}</dd>
-        <dt>Insight Author</dt>
-        <dd>{{ paper.insightAuthor }}</dd>
-        <dt>Due Date</dt>
-        <dd>{{ paper.insightDueDate|date("d/m/Y") }}</dd>
-    </div>
-</div>
-{% endif %}
+        <div id='insightCommisioning'>
+            <div class="dl-horizontal">
+                <dt>Insight commissioned</dt>
+                <dd>{{ paper.insightCommissioned ? '✔':'No' }}</dd>
+                <dt>Insight Author</dt>
+                <dd>{{ paper.insightAuthor }}</dd>
+                <dt>Due Date</dt>
+                <dd>{{ paper.insightDueDate|date("d/m/Y") }}</dd>
+            </div>
+        </div>
+        {% if not paper.insightAuthorReminded %}
+            {{ form_start(insightAuthorRemindedForm) }}
+            {{ form_widget(insightAuthorRemindedForm) }}
+            {{ form_end(insightAuthorRemindedForm) }}
+        {% endif %}
+        {% if paper.insightAuthorReminded and not paper.insightAuthorAcknowledged %}
+            <div id ='authorAcknowledged'>
+                <div class="dl-horizontal">
+                    <dt>Author Reminded</dt>
+                    <dd>{{ paper.insightAuthorReminded ? '✔':'' }}</dd>
+                </div>
+            </div>
+            {{ form_start(insightAuthorAcknowledgedForm) }}
+            {{ form_widget(insightAuthorAcknowledgedForm) }}
+            {{ form_end(insightAuthorAcknowledgedForm) }}
+
+            <!-- Button trigger for assign editor modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#assignEditorModal">
+                Assign editor
+            </button>
+
+            <!-- Assign editor modal -->
+            <div class="modal fade" id="assignEditorModal" tabindex="-1" role="dialog"
+                 aria-labelledby="assignEditorModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="assignEditorModalLabel">Author refused</h4>
+                        </div>
+                        {{ form_start(assignInsightEditorForm) }}
+                        <div class="modal-body">
+                            {{ form_row(assignInsightEditorForm.editorId) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{ form_widget(assignInsightEditorForm.assignEditor, {'attr': {'class': 'btn-primary'}}) }}
+                        </div>
+                        {{ form_end(assignInsightEditorForm) }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+    {% endif %}
 
     <h3>Digest</h3>
 
