@@ -82,7 +82,7 @@
         </div>
 
 
-        {% if not paper.insightCommissioned == true and paper.insightAuthor == null %}
+        {% if not paper.insightCommissioned == true and paper.activeInsightAuthor == null %}
             <!-- Button trigger for no insight modal -->
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#noInsightModal">
                 No Insight
@@ -144,11 +144,11 @@
 
 
 
-        {% elseif not paper.insightCommissioned == true and paper.insightAuthor %}
+        {% elseif not paper.insightCommissioned == true and paper.activeInsightAuthor %}
             <div id=insightAuthor>
                 <div class=dl-horizontal>
                     <dt>Insight author</dt>
-                    <dd>{{ paper.insightAuthor }}</dd>
+                    <dd>{{ paper.activeInsightAuthor }}</dd>
                 </div>
             </div>
 
@@ -204,6 +204,9 @@
                         </div>
                         {{ form_start(insightAuthorRefusedForm) }}
                         <div class="modal-body">
+
+                                {{ paper.activeInsightauthor }}
+
                             {{ form_row(insightAuthorRefusedForm.insightAuthorRefusalReason) }}
                         </div>
                         <div class="modal-footer">
@@ -217,7 +220,8 @@
         {% else %}
             <div id='insightCommissioningDecisionComment'>
                 <div class="dl-horizontal">
-                    {{ paper.insightCommissioningDecisionComment }}
+                    <dt>Commissioning reason</dt>
+                    <dd>{{ paper.insightCommissioningDecisionComment }}</dd>
                 </div>
             </div>
 
@@ -233,7 +237,7 @@
                 <dt>Insight commissioned</dt>
                 <dd>{{ paper.insightCommissioned ? '✔':'No' }}</dd>
                 <dt>Insight Author</dt>
-                <dd>{{ paper.insightAuthor }}</dd>
+                <dd>{{ paper.activeInsightAuthor }}</dd>
                 <dt>Due Date</dt>
                 <dd>{{ paper.insightDueDate|date("d/m/Y") }}</dd>
             </div>
@@ -244,7 +248,7 @@
             {{ form_end(insightAuthorRemindedForm) }}
         {% endif %}
         {% if paper.insightAuthorReminded and not paper.insightAuthorAcknowledged %}
-            <div id ='authorAcknowledged'>
+            <div id='authorAcknowledged'>
                 <div class="dl-horizontal">
                     <dt>Author Reminded</dt>
                     <dd>{{ paper.insightAuthorReminded ? '✔':'' }}</dd>
@@ -281,7 +285,7 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
+        {% endif %}
     {% endif %}
 
     <h3>Digest</h3>

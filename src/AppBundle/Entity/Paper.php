@@ -183,7 +183,13 @@ class Paper
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private $insightAuthor;
+    private $activeInsightAuthor;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @var mixed
+     */
+    private $askedInsightAuthors;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -464,10 +470,19 @@ class Paper
     /**
      * @return mixed
      */
-    public function getInsightAuthor()
+    public function getActiveInsightAuthor()
     {
-        return $this->insightAuthor;
+        return $this->activeInsightAuthor;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAskedInsightAuthors()
+    {
+        return $this->askedInsightAuthors;
+    }
+
 
     /**
      * @return mixed
@@ -644,11 +659,12 @@ class Paper
             $this->insightCommissioningDecisionComment = $event->getinsightNotCommissionedReason();
         }
         if ($event instanceof InsightAuthorAsked){
-            $this->insightAuthor = $event->getInsightAuthor();
+            $this->activeInsightAuthor = $event->getActiveInsightAuthor();
+            $this->askedInsightAuthors = $event->getAskedInsightAuthors();
         }
         if ($event instanceof InsightAuthorRefused){
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();
-            $this->insightAuthor = null;
+            $this->activeInsightAuthor = null;
         }
         if ($event instanceof InsightAuthorReminded){
             $this->insightAuthorReminded = true;

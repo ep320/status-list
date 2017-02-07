@@ -20,7 +20,7 @@ class InsightAuthorAsked extends PaperEvent
     public function __construct(string $paperId, int $sequence, string $insightAuthor)
     {
         parent::__construct($paperId, $sequence, [
-            'insightAuthor' => $insightAuthor,
+            'activeInsightAuthor' => $insightAuthor,
         ]);
     }
 

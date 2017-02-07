@@ -15,18 +15,18 @@ class InsightEditorAssigned extends PaperEvent
     /**
      * @param string $paperId
      * @param int $sequence
-     * @param string $insightEditor
+     * @param string $editorId
      */
-    public function __construct(string $paperId, int $sequence, string $insightEditor)
+    public function __construct(string $paperId, int $sequence, string $editorId)
     {
         parent::__construct($paperId, $sequence, [
-            'insightEditor' => $insightEditor
+            'editorId' => $editorId
         ]);
     }
 
     public function getInsightEditorAssigned()
     {
-        return $this->getFromPayload('insightEditor');
+        return $this->getFromPayload('editorId');
     }
 
 
