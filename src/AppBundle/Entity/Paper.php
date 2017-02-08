@@ -189,7 +189,7 @@ class Paper
      * @ORM\Column(type="json_array", nullable=true)
      * @var mixed
      */
-    private $askedInsightAuthors;
+    private $askedInsightAuthors = array();
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -660,7 +660,7 @@ class Paper
         }
         if ($event instanceof InsightAuthorAsked){
             $this->activeInsightAuthor = $event->getActiveInsightAuthor();
-            $this->askedInsightAuthors = $event->getAskedInsightAuthors();
+            $askedInsightAuthors[] = $event->getActiveInsightAuthor();
         }
         if ($event instanceof InsightAuthorRefused){
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();

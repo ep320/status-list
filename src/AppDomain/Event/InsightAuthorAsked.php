@@ -24,9 +24,9 @@ class InsightAuthorAsked extends PaperEvent
         ]);
     }
 
-    public function getInsightAuthor()
+    public function getActiveInsightAuthor()
     {
-        return $this->getFromPayload('insightAuthor');
+        return $this->getFromPayload('activeInsightAuthor');
     }
 
 }
