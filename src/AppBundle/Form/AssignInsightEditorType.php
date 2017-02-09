@@ -18,14 +18,14 @@ class AssignInsightEditorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('editorId', EntityType::class, array(
+            ->add('insightEditor', EntityType::class, array(
                 'class' => Editor::class,
                 'choice_label' => 'name'
             ))
 
             ->add('assignEditor', SubmitType::class);
 
-        $builder->get('editorId')->addModelTransformer(new IdToEntityTransformer($options['em'], Editor::class));
+        $builder->get('insightEditor')->addModelTransformer(new IdToEntityTransformer($options['em'], Editor::class));
     }
 
     public function configureOptions(OptionsResolver $resolver)

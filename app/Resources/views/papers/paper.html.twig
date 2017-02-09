@@ -205,9 +205,9 @@
                         {{ form_start(insightAuthorRefusedForm) }}
                         <div class="modal-body">
                             {% for askedInsightAuthor in paper.askedInsightAuthors %}
-                                {{ paper.askedInsightAuthors[author] }}
+                                {{ askedInsightAuthor }}
                             {% endfor %}
-                            {{ paper.askedInsightAuthors }}
+
 
                             {{ form_row(insightAuthorRefusedForm.insightAuthorRefusalReason) }}
                         </div>
@@ -277,7 +277,7 @@
                         </div>
                         {{ form_start(assignInsightEditorForm) }}
                         <div class="modal-body">
-                            {{ form_row(assignInsightEditorForm.editorId) }}
+                            {{ form_row(assignInsightEditorForm.insightEditor) }}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -289,6 +289,8 @@
             </div>
         {% endif %}
     {% endif %}
+
+    {{ paper.insightEditor }}
 
     <h3>Digest</h3>
 

@@ -186,7 +186,7 @@ class Paper
     private $activeInsightAuthor;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json_array")
      * @var mixed
      */
     private $askedInsightAuthors = array();
@@ -660,7 +660,7 @@ class Paper
         }
         if ($event instanceof InsightAuthorAsked){
             $this->activeInsightAuthor = $event->getActiveInsightAuthor();
-            $askedInsightAuthors[] = $event->getActiveInsightAuthor();
+            $this->askedInsightAuthors[] = $event->getActiveInsightAuthor();
         }
         if ($event instanceof InsightAuthorRefused){
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();
@@ -673,7 +673,7 @@ class Paper
             $this->insightAuthorAcknowledged = true;
         }
         if ($event instanceof InsightEditorAssigned){
-            $this->insightEditor = $event->getInsightEditorAssigned();
+            $this->insightEditor = $em->getReference(Editor::class, $event->getInsightEditorAssigned());
         }
         if ($event instanceof InsightToAuthorSent){
             $this->insightAuthorChecking = true;
