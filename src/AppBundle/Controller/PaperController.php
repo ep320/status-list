@@ -6,6 +6,7 @@ use AppBundle\Form\AssignDigestWriterType;
 use AppBundle\Form\AssignInsightEditorType;
 use AppBundle\Form\DecideNoInsightType;
 use AppBundle\Form\InsightAuthorAskedType;
+use AppBundle\Form\InsightAuthorCheckingType;
 use AppBundle\Form\InsightAuthorRefusedType;
 use AppBundle\Form\InsightCommissionedType;
 use AppBundle\Form\MarkAnswersReceivedType;
@@ -18,6 +19,7 @@ use AppDomain\Command\AssignDigestWriter;
 use AppDomain\Command\AssignInsightEditor;
 use AppDomain\Command\CommissionInsight;
 use AppDomain\Command\DecideToNotCommissionInsight;
+use AppDomain\Command\InsightAuthorChecking;
 use AppDomain\Command\InsightAuthorRefuses;
 use AppDomain\Command\MarkAnswersReceived;
 use AppDomain\Command\MarkDigestReceived;
@@ -292,17 +294,14 @@ class PaperController extends Controller
 
     private function buildAndHandleInsightAuthorCheckingForm(Paper $paper, Request $request, &$validFormSubmitted)
     {
-        $builder = $this->getFormFactory()->createNamedBuilder('insight_author_checking');
-        $builder->add('InsightAuthorChecking', SubmitType::class);
-        $insightAuthorCheckingForm = $builder->getForm();
-        $insightAuthorCheckingForm->handleRequest($request);
-        if ($insightAuthorCheckingForm->isSubmitted()) {
-            $this->getCommandHandler()->insightAuthorChecking($paper->getId());
+        $form = $this->createForm(InsightAuthorCheckingType::class, new InsightAuthorChecking($paper->getId()));
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getCommandHandler()->insightAuthorChecking($form->getData());
             $validFormSubmitted = true;
         }
 
-        return $insightAuthorCheckingForm;
-
+        return $form;
     }
 
     private function buildAndHandleSignOffInsightForm(Paper $paper, Request $request, &$validFormSubmitted)
