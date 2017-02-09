@@ -90,7 +90,7 @@ class PaperListController extends Controller
     public function papersOutForRevisionInsightDecisionsListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $papers = $em->getRepository(Paper::class)->findBy(['insightDecision' => ['no', 'yes']], ['insightUpdatedDate' => 'DESC']);
+        $papers = $em->getRepository(Paper::class)->findBy(['accepted' => false, 'insightDecision' => ['no', 'yes']], ['insightUpdatedDate' => 'DESC']);
         $ejpImportForm = $this->createForm(EJPImportType::class);
         if ($this->handleEJPSubmission($ejpImportForm, $em, $request)){
             return $this->redirectToRoute('outforrevisioninsightslist');

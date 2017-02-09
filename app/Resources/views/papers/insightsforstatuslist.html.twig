@@ -47,7 +47,8 @@
     </nav>
 
 
-    <h2>Recently accepted papers, insight decision = yes or not asked</h2>
+    <h3>Recently accepted papers, insight decision = yes or not asked, commissioning decision not made</h3>
+
     <div id="table">
         <table class="table table-condensed table-responsive">
             <tr>
@@ -62,29 +63,143 @@
 
             </tr>
             {% for paper in papers %}
-                {% if paper.insightUpdatedDate|date("m/d/Y") == "now"|date("m/d/Y") %}
-                    <tr style="color:red">
-                {% else %}
-                    <tr>
-                {% endif %}
-                <td>
-                    <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
-                        {{ paper.manuscriptNo }}
-                    </a>
-                </td>
-                <td>{{ paper.correspondingAuthor }}</td>
-                <td>{{ paper.articleType }}</td>
-                <td>{{ paper.subjectArea1 }}</td>
-                <td>{{ paper.subjectArea2 }}</td>
-                <td>{{ paper.impactStatement }}</td>
-                <td>{{ paper.insightComment }}</td>
-                <td>{{ paper.acceptedDate is empty ? "" : paper.acceptedDate|date("d/m/Y") }}</td>
+                {% if paper.insightCommissioned == null %}
 
-                </tr>
+                    <td>
+                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                            {{ paper.manuscriptNo }}
+                        </a>
+                    </td>
+                    <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.subjectArea1 }}</td>
+                    <td>{{ paper.subjectArea2 }}</td>
+                    <td>{{ paper.impactStatement }}</td>
+                    <td>{{ paper.insightComment }}</td>
+                    <td>{{ paper.acceptedDate is empty ? "" : paper.acceptedDate|date("d/m/Y") }}</td>
+
+                    </tr>
+                {% endif %}
             {% endfor %}
 
         </table>
     </div>
+
+    <h3>Commissioned Insights, author writing</h3>
+
+    <div id="table">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <th>Manuscript No.</th>
+                <th>Author</th>
+                <th>Article Type</th>
+                <th>Subject Area</th>
+                <th>Subject Area</th>
+                <th>Insight Author</th>
+                <th>Insight MS no</th>
+                <th>Insight Due Date</th>
+
+            </tr>
+            {% for paper in papers %}
+                {% if paper.insightCommissioned == true and not paper.insightAuthorAcknowledged %}
+
+                    <td>
+                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                            {{ paper.manuscriptNo }}
+                        </a>
+                    </td>
+                    <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.subjectArea1 }}</td>
+                    <td>{{ paper.subjectArea2 }}</td>
+                    <td>{{ paper.activeInsightAuthor }}</td>
+                    <td>{{ paper.insightManuscriptNo }}</td>
+                    <td>{{ paper.insightDueDate is empty ? "" : paper.insightDueDate|date("d/m/Y") }}</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>
+    </div>
+
+    <h3>Insights received from author</h3>
+    <div id="table">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <th>Manuscript No.</th>
+                <th>Author</th>
+                <th>Article Type</th>
+                <th>Subject Area</th>
+                <th>Subject Area</th>
+                <th>Insight Author</th>
+                <th>Insight MS no</th>
+                <th>Insight Editor</th>
+
+            </tr>
+            {% for paper in papers %}
+                {% if paper.insightAuthorAcknowledged == true and not paper.insightSignedOff %}
+
+                    <td>
+                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                            {{ paper.manuscriptNo }}
+                        </a>
+                    </td>
+                    <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.subjectArea1 }}</td>
+                    <td>{{ paper.subjectArea2 }}</td>
+                    <td>{{ paper.activeInsightAuthor }}</td>
+                    <td>{{ paper.insightManuscriptNo }}</td>
+                    <td>{{ paper.insightEditor }}</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>
+    </div>
+
+    <h3>Recently signed off Insights</h3>
+
+    <div id="table">
+        <table class="table table-condensed table-responsive">
+            <tr>
+                <th>Manuscript No.</th>
+                <th>Author</th>
+                <th>Article Type</th>
+                <th>Subject Area</th>
+                <th>Subject Area</th>
+                <th>Insight Author</th>
+                <th>Insight MS no</th>
+                <th>Insight Editor</th>
+
+            </tr>
+            {% for paper in papers %}
+                {% if paper.insightSignedOff == true %}
+
+                    <td>
+                        <a href="{{ path('paperdetails', {'manuscriptNo': paper.manuscriptNo}) }}">
+                            {{ paper.manuscriptNo }}
+                        </a>
+                    </td>
+                    <td>{{ paper.correspondingAuthor }}</td>
+                    <td>{{ paper.articleType }}</td>
+                    <td>{{ paper.subjectArea1 }}</td>
+                    <td>{{ paper.subjectArea2 }}</td>
+                    <td>{{ paper.activeInsightAuthor }}</td>
+                    <td>{{ paper.insightManuscriptNo }}</td>
+                    <td>{{ paper.insightEditor }}</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>
+    </div>
+
+
+
 
 {% endblock %}
 
