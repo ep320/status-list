@@ -104,7 +104,7 @@ class Paper
     private $insightDecision;
 
     /**
-     * @ORM\Column(type="string", length=1500, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $insightComment;
 
@@ -241,6 +241,12 @@ class Paper
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $insightSignedOff = false;
+
+    /**
+     * @ORM\Column(type="json_array")
+     * @var mixed
+     */
+    private $insightMiscellaneousComments = array();
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -566,6 +572,15 @@ class Paper
         return $this->insightEditsDueDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInsightMiscellaneousComments()
+    {
+        return $this->insightMiscellaneousComments;
+    }
+
+
 
 
     /**
@@ -652,7 +667,7 @@ class Paper
             $this->insightCommissioned = true;
             $this->insightDueDate = $event->getInsightDueDate();
             $this->insightManuscriptNo = $event->getInsightManuscriptNo();
-            $this->insightCommissioningDecisionComment = $event->getInsightCommissionedComment();
+            $this->insightMiscellaneousComments = $event->getInsightMiscellaneousComment();
         }
         if ($event instanceof NoInsightDecided){
             $this->insightCommissioned = false;
@@ -661,6 +676,7 @@ class Paper
         if ($event instanceof InsightAuthorAsked){
             $this->activeInsightAuthor = $event->getActiveInsightAuthor();
             $this->askedInsightAuthors[] = $event->getActiveInsightAuthor();
+            $this->insightCommissioningDecisionComment = $event->getInsightCommissioningReason();
         }
         if ($event instanceof InsightAuthorRefused){
             $this->insightAuthorRefusalReason = $event->getinsightAuthorRefusalReason();

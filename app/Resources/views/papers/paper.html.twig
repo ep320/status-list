@@ -81,7 +81,6 @@
 
         </div>
 
-
         {% if not paper.insightCommissioned == true and paper.activeInsightAuthor == null %}
             <!-- Button trigger for no insight modal -->
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#noInsightModal">
@@ -141,6 +140,7 @@
                                     </div>
                                 </div>
                             {% endif %}
+                            {{ form_row(insightAuthorAskedForm.insightCommissioningReason, {'attr': {'novalidate': 'novalidate'}}) }}
                             {{ form_row(insightAuthorAskedForm.insightAuthor) }}
                         </div>
                         <div class="modal-footer">
@@ -183,7 +183,7 @@
 
                             {{ form_row(insightCommissionedForm.insightManuscriptNo) }}
                             {{ form_row(insightCommissionedForm.insightDueDate) }}
-                            {{ form_row(insightCommissionedForm.insightCommissionedComment, {'attr': {'novalidate': 'novalidate'}}) }}
+                            {{ form_row(insightCommissionedForm.insightMiscellaneousComment, {'attr': {'novalidate': 'novalidate'}}) }}
 
 
                         </div>
