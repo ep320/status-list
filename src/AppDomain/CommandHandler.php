@@ -262,7 +262,8 @@ class CommandHandler
         $event = (new InsightAuthorAsked(
             $command->paperId,
             $this->getEventCount($command->paperId) + 1,
-            $command->insightAuthor
+            $command->insightAuthor,
+            $command->insightCommissioningReason
         ));
 
         $this->publish($event);

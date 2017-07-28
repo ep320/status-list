@@ -18,7 +18,7 @@ class InsightCommissionedType extends AbstractType
             ->add('insightManuscriptNo', IntegerType::class, array(
                 'label' => 'Insight manuscript no.'
             ))
-            ->add('insightCommissionedComment', TextType::class, array(
+            ->add('insightMiscellaneousComment', TextType::class, array(
                 'label' => 'Comment (optional)',
                 'required' => false
             ))

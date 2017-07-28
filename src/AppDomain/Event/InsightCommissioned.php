@@ -18,14 +18,14 @@ class InsightCommissioned extends PaperEvent
      * @param int $sequence
      * @param int $insightManuscriptNo
      * @param DateTime $insightDueDate
-     * @param string $insightCommissionedComment
+     * @param string $insightMiscellaneousComment
      */
-    public function __construct(string $paperId, int $sequence, int $insightManuscriptNo, \DateTime $insightDueDate, $insightCommissionedComment)
+    public function __construct(string $paperId, int $sequence, int $insightManuscriptNo, \DateTime $insightDueDate, $insightMiscellaneousComment)
     {
         parent::__construct($paperId, $sequence, [
             'insightManuscriptNo' => $insightManuscriptNo,
             'insightDueDate' => $insightDueDate,
-            'insightCommissionedComment' => $insightCommissionedComment
+            'insightCommissionedComment' => $insightMiscellaneousComment
         ]);
     }
 
@@ -39,7 +39,7 @@ class InsightCommissioned extends PaperEvent
         return $this->getDateTimeFromPayload('insightDueDate');
     }
 
-    public function getInsightCommissionedComment()
+    public function getInsightMiscellaneousComment()
     {
         return $this->getFromPayload('insightCommissionedComment');
     }

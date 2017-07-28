@@ -16,11 +16,13 @@ class InsightAuthorAsked extends PaperEvent
      * @param string $paperId
      * @param int $sequence
      * @param string $insightAuthor
+     * @param string $insightCommissioningReason
      */
-    public function __construct(string $paperId, int $sequence, string $insightAuthor)
+    public function __construct(string $paperId, int $sequence, string $insightAuthor, $insightCommissioningReason)
     {
         parent::__construct($paperId, $sequence, [
             'activeInsightAuthor' => $insightAuthor,
+            'insightCommissioningReason' => $insightCommissioningReason
         ]);
     }
 
@@ -29,4 +31,8 @@ class InsightAuthorAsked extends PaperEvent
         return $this->getFromPayload('activeInsightAuthor');
     }
 
+    public function getInsightCommissioningReason()
+    {
+        return $this->getFromPayload('insightCommissioningReason');
+    }
 }

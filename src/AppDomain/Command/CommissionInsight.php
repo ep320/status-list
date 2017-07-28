@@ -19,6 +19,6 @@ class CommissionInsight extends AbstractPaperCommand
     /**
      * @var string, nullable=true
      */
-    public $insightCommissionedComment;
+    public $insightMiscellaneousComment;
 
 }

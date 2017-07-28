@@ -11,5 +11,9 @@ class AskInsightAuthor extends AbstractPaperCommand
      */
     public $insightAuthor;
 
+    /**
+     * @var string, nullable=true
+     */
+    public $insightCommissioningReason;
 
 }
