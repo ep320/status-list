@@ -155,7 +155,7 @@ class EjpPaper implements EjpComparable
     /**
      * @param string $insightComment
      */
-    public function setInsightComment(string $insightComment)
+    public function setInsightComment($insightComment)
     {
         $this->insightComment = $insightComment;
     }
